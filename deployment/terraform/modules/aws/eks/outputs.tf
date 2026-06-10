@@ -1,0 +1,29 @@
+output "cluster_name" {
+  value = module.eks.cluster_name
+}
+
+output "cluster_endpoint" {
+  value = module.eks.cluster_endpoint
+}
+
+output "cluster_certificate_authority_data" {
+  value     = module.eks.cluster_certificate_authority_data
+  sensitive = true
+}
+
+output "workload_irsa_role_arn" {
+  description = "ARN of the IAM role for workloads (S3 + optional RDS)"
+  value       = length(module.irsa-workload-access) > 0 ? module.irsa-workload-access[0].iam_role_arn : null
+}
+
+# Re-exported from the upstream eks module so the craft_sandbox module can
+# trust-scope its IRSA role to the cluster's OIDC provider.
+output "oidc_provider_arn" {
+  description = "EKS OIDC provider ARN (for IRSA roles)"
+  value       = module.eks.oidc_provider_arn
+}
+
+output "oidc_provider" {
+  description = "EKS OIDC issuer host/path (no https://)"
+  value       = module.eks.oidc_provider
+}
