@@ -1,0 +1,6 @@
+rag-security-readiness-review/03_reports/phase_3_baseline_inventory_report.md
+rag-security-readiness-review/02_evidence/phase_3/baseline_inventory.md
+rag-security-readiness-review/02_evidence/phase_3/important_files_index.md
+rag-security-readiness-review/02_evidence/phase_3/security_relevant_files.md
+rag-security-readiness-review/02_evidence/phase_3/raw_outputs/all_files.txt
+rag-security-readiness-review/02_evidence/phase_3/raw_outputs/security_relevant_files_raw.txt

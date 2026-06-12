@@ -1,0 +1,12 @@
+backend/Dockerfile
+web/Dockerfile
+deployment/docker_compose/docker-compose.yml
+deployment/helm/charts/onyx/templates/configmap.yaml
+deployment/helm/charts/onyx/templates/auth-secrets.yaml
+deployment/data/nginx/app.conf.template
+deployment/terraform/modules/aws/onyx/main.tf
+pyproject.toml
+backend/uv.lock
+web/package.json
+uv.lock
+.github/workflows/*

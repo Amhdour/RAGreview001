@@ -1,0 +1,13 @@
+backend/onyx/connectors/factory.py
+backend/onyx/connectors/credentials_provider.py
+backend/onyx/connectors/connector_runner.py
+backend/onyx/db/credentials.py
+backend/onyx/auth/oauth_token_manager.py
+backend/onyx/auth/oauth_refresher.py
+backend/ee/onyx/server/oauth/api.py
+backend/ee/onyx/server/oauth/api_router.py
+backend/ee/onyx/server/oauth/google_drive.py
+backend/ee/onyx/server/oauth/confluence_cloud.py
+backend/ee/onyx/server/oauth/slack.py
+backend/ee/onyx/external_permissions/google_drive/permission_retrieval.py
+backend/ee/onyx/external_permissions/sharepoint/permission_utils.py

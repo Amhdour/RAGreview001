@@ -1,0 +1,16 @@
+rag-security-readiness-review/03_reports/phase_7_risk_taxonomy_report.md
+rag-security-readiness-review/02_evidence/phase_7/risk_taxonomy.md
+rag-security-readiness-review/02_evidence/phase_7/rag_risks.md
+rag-security-readiness-review/02_evidence/phase_7/agent_risks.md
+rag-security-readiness-review/02_evidence/phase_7/auth_risks.md
+rag-security-readiness-review/02_evidence/phase_7/authorization_risks.md
+rag-security-readiness-review/02_evidence/phase_7/retrieval_acl_risks.md
+rag-security-readiness-review/02_evidence/phase_7/prompt_injection_risks.md
+rag-security-readiness-review/02_evidence/phase_7/connector_risks.md
+rag-security-readiness-review/02_evidence/phase_7/tool_mcp_risks.md
+rag-security-readiness-review/02_evidence/phase_7/logging_telemetry_risks.md
+rag-security-readiness-review/02_evidence/phase_7/deployment_supply_chain_risks.md
+rag-security-readiness-review/02_evidence/phase_7/risk_to_threat_map.md
+rag-security-readiness-review/02_evidence/phase_7/risk_to_architecture_map.md
+rag-security-readiness-review/02_evidence/phase_7/risk_taxonomy_limitations.md
+rag-security-readiness-review/02_evidence/phase_7/raw_outputs/

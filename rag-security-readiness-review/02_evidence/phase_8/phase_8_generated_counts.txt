@@ -1,0 +1,9 @@
+PHASE 8 generated at 2026-06-12T11:20:54Z
+Category count: 9
+Total mappings: 27
+Existing candidates: 18
+Missing mapping labels: 5
+Missing control candidates: 6
+Unverified mappings: 4
+Phase 7 risks covered: 50
+Phase 6 threats covered: 16
