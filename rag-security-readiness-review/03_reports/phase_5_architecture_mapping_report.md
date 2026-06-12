@@ -1,10 +1,12 @@
 # PHASE 5 Architecture Mapping Report
 
 ## Executive summary
-This report consolidates the PHASE 5 architecture maps into a source-only evidence package. The support tables contain 74 claims: 62 supported and 12 unsupported. The package is complete with limitations and does not claim runtime validation, security control verification, CI/test success, or production readiness.
+This report consolidates the PHASE 5 architecture maps into a source-only evidence package. The support tables contain 74 claims: 62 supported and 12 unsupported. The package is complete with limitations and does not claim runtime validation, security control verification, CI/test success, or production readiness. Raw file-search outputs have been added for the architecture evidence categories covered by this phase.
 
 ## Architecture scope
 - Canonical evidence source: `rag-security-readiness-review/02_evidence/phase_5/`
+- Raw evidence output directory: `rag-security-readiness-review/02_evidence/phase_5/raw_outputs/`
+- Raw evidence command log: `rag-security-readiness-review/02_evidence/commands/phase_5_raw_architecture_evidence_commands.md`
 - Mirror location: `docs/security/`
 - Architecture areas covered: backend architecture, frontend architecture, API routes, authentication flow, authorization flow, data model, RAG pipeline, agent/tool/MCP, logging/telemetry, and deployment.
 - Out of scope: runtime observation, live service health, live database state, dynamic call graphs, and deployed configuration validation.
@@ -49,10 +51,27 @@ This report consolidates the PHASE 5 architecture maps into a source-only eviden
 - Deployment evidence includes backend and frontend Dockerfiles, compose manifests, nginx templates, Helm/Kubernetes support, AWS ECS/Fargate files, and build-sandbox runtime code.
 - The maps do not confirm which deployment target is currently active.
 
+## Raw evidence outputs
+The following raw file-search outputs were added under `rag-security-readiness-review/02_evidence/phase_5/raw_outputs/`:
+
+- Backend architecture file search: `backend_architecture_file_search.txt`
+- Frontend architecture file search: `frontend_architecture_file_search.txt`
+- API route file search: `api_route_file_search.txt`
+- Auth file search: `auth_file_search.txt`
+- Authorization file search: `authorization_file_search.txt`
+- Data model file search: `data_model_file_search.txt`
+- RAG pipeline file search: `rag_pipeline_file_search.txt`
+- Agent/tool/MCP file search: `agent_tool_mcp_file_search.txt`
+- Logging/telemetry file search: `logging_telemetry_file_search.txt`
+- Deployment file search: `deployment_file_search.txt`
+
+These outputs are supporting file/path inventories, not runtime validation artifacts.
+
 ## Claim support method
 - Claims were extracted from the support tables in the existing PHASE 5 architecture maps.
 - Support was assessed from source-file and path inspection only.
 - No runtime execution, test execution, or live service observation was used to elevate any claim.
+- Raw architecture outputs were generated with read-only `rg --files` path searches and recorded in the PHASE 5 raw architecture evidence command log.
 
 ## Missing evidence
 - Dynamic call graphs.
@@ -71,6 +90,7 @@ This report consolidates the PHASE 5 architecture maps into a source-only eviden
 - No CI/test validation.
 - No production validation.
 - File/path search limitation.
+- Raw search pattern limitation; path searches may include false positives and may miss relevant files without matching names.
 - Inference limitation.
 - Missing dynamic call graph limitation.
 - Missing running service limitation.
