@@ -1,0 +1,3 @@
+# Protected Assets
+
+Template placeholder.

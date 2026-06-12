@@ -1,0 +1,31 @@
+# Threat Model Source Links
+
+The following PHASE 5 architecture evidence files were used as the evidence basis for PHASE 6:
+- architecture_map.md
+- backend_architecture.md
+- frontend_architecture.md
+- api_routes_map.md
+- auth_flow_map.md
+- authorization_flow_map.md
+- data_model_map.md
+- rag_pipeline_map.md
+- agent_tool_mcp_map.md
+- logging_telemetry_map.md
+- deployment_flow_map.md
+- architecture_claims_register.md
+- architecture_limitations.md
+
+Selected supporting paths observed in those files:
+- backend/onyx/main.py
+- backend/onyx/server/
+- backend/onyx/db/models.py
+- backend/onyx/connectors/
+- backend/onyx/indexing/
+- backend/onyx/document_index/
+- backend/onyx/chat/
+- backend/onyx/llm/
+- backend/onyx/server/features/mcp/api.py
+- web/src/app/api/[...path]/route.ts
+- web/src/app/mcp/[[...path]]/route.ts
+- deployment/
+- backend/onyx/server/features/build/sandbox/
