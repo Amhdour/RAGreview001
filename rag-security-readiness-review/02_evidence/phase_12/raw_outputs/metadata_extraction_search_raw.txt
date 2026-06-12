@@ -1,0 +1,1489 @@
+backend/onyx/document_index/vespa_constants.py:49:SOURCE_LINKS = "source_links"
+backend/onyx/document_index/vespa_constants.py:50:SEMANTIC_IDENTIFIER = "semantic_identifier"
+backend/onyx/document_index/vespa_constants.py:51:TITLE = "title"
+backend/onyx/document_index/vespa_constants.py:52:SKIP_TITLE_EMBEDDING = "skip_title"
+backend/onyx/document_index/vespa_constants.py:55:TITLE_EMBEDDING = "title_embedding"
+backend/onyx/document_index/vespa_constants.py:57:DOCUMENT_SETS = "document_sets"
+backend/onyx/document_index/vespa_constants.py:63:METADATA = "metadata"
+backend/onyx/document_index/vespa_constants.py:64:METADATA_LIST = "metadata_list"
+backend/onyx/document_index/vespa_constants.py:65:METADATA_SUFFIX = "metadata_suffix"
+backend/onyx/document_index/vespa_constants.py:71:PRIMARY_OWNERS = "primary_owners"
+backend/onyx/document_index/vespa_constants.py:72:SECONDARY_OWNERS = "secondary_owners"
+backend/onyx/document_index/vespa_constants.py:92:    f"{SOURCE_LINKS}, "
+backend/onyx/document_index/vespa_constants.py:93:    f"{SEMANTIC_IDENTIFIER}, "
+backend/onyx/document_index/vespa_constants.py:94:    f"{TITLE}, "
+backend/onyx/document_index/vespa_constants.py:101:    f"{PRIMARY_OWNERS}, "
+backend/onyx/document_index/vespa_constants.py:102:    f"{SECONDARY_OWNERS}, "
+backend/onyx/document_index/vespa_constants.py:104:    f"{METADATA}, "
+backend/onyx/document_index/vespa_constants.py:105:    f"{METADATA_SUFFIX}, "
+backend/onyx/connectors/file/connector.py:14:    process_onyx_metadata,
+backend/onyx/connectors/file/connector.py:42:    link: str | None = None,
+backend/onyx/connectors/file/connector.py:60:    file_id = f"{parent_file_name}_embedded_{idx}" if idx > 0 else parent_file_name
+backend/onyx/connectors/file/connector.py:66:            file_id=file_id,
+backend/onyx/connectors/file/connector.py:71:            link=link,
+backend/onyx/connectors/file/connector.py:81:    file_id: str,
+backend/onyx/connectors/file/connector.py:84:    metadata: dict[str, Any] | None,
+backend/onyx/connectors/file/connector.py:93:    if metadata is None:
+backend/onyx/connectors/file/connector.py:94:        metadata = {}
+backend/onyx/connectors/file/connector.py:105:    # If a zip is uploaded with a metadata file, we can process it here
+backend/onyx/connectors/file/connector.py:106:    onyx_metadata, custom_tags = process_onyx_metadata(metadata)
+backend/onyx/connectors/file/connector.py:107:    file_display_name = onyx_metadata.file_display_name or os.path.basename(file_name)
+backend/onyx/connectors/file/connector.py:108:    time_updated = onyx_metadata.doc_updated_at or datetime.now(timezone.utc)
+backend/onyx/connectors/file/connector.py:109:    primary_owners = onyx_metadata.primary_owners
+backend/onyx/connectors/file/connector.py:110:    secondary_owners = onyx_metadata.secondary_owners
+backend/onyx/connectors/file/connector.py:111:    link = onyx_metadata.link
+backend/onyx/connectors/file/connector.py:113:    # These metadata items are not settable by the user
+backend/onyx/connectors/file/connector.py:114:    source_type = onyx_metadata.source_type or DocumentSource.FILE
+backend/onyx/connectors/file/connector.py:116:    doc_id = onyx_metadata.document_id or f"FILE_CONNECTOR__{file_id}"
+backend/onyx/connectors/file/connector.py:117:    title = metadata.get("title") or file_display_name
+backend/onyx/connectors/file/connector.py:131:                parent_file_name=file_id,
+backend/onyx/connectors/file/connector.py:132:                display_name=title,
+backend/onyx/connectors/file/connector.py:141:                    semantic_identifier=file_display_name,
+backend/onyx/connectors/file/connector.py:142:                    title=title,
+backend/onyx/connectors/file/connector.py:144:                    primary_owners=primary_owners,
+backend/onyx/connectors/file/connector.py:145:                    secondary_owners=secondary_owners,
+backend/onyx/connectors/file/connector.py:146:                    metadata=custom_tags,
+backend/onyx/connectors/file/connector.py:164:    # Each file may have file-specific ONYX_METADATA https://docs.onyx.app/admins/connectors/official/file
+backend/onyx/connectors/file/connector.py:165:    # If so, we should add it to any metadata processed so far
+backend/onyx/connectors/file/connector.py:166:    if extraction_result.metadata:
+backend/onyx/connectors/file/connector.py:168:            "Found file-specific metadata for %s: %s",
+backend/onyx/connectors/file/connector.py:170:            extraction_result.metadata,
+backend/onyx/connectors/file/connector.py:172:        onyx_metadata, more_custom_tags = process_onyx_metadata(
+backend/onyx/connectors/file/connector.py:173:            extraction_result.metadata
+backend/onyx/connectors/file/connector.py:179:        # File-specific metadata overrides metadata processed so far
+backend/onyx/connectors/file/connector.py:180:        source_type = onyx_metadata.source_type or source_type
+backend/onyx/connectors/file/connector.py:181:        primary_owners = onyx_metadata.primary_owners or primary_owners
+backend/onyx/connectors/file/connector.py:182:        secondary_owners = onyx_metadata.secondary_owners or secondary_owners
+backend/onyx/connectors/file/connector.py:183:        time_updated = onyx_metadata.doc_updated_at or time_updated
+backend/onyx/connectors/file/connector.py:184:        file_display_name = onyx_metadata.file_display_name or file_display_name
+backend/onyx/connectors/file/connector.py:185:        title = onyx_metadata.title or onyx_metadata.file_display_name or title
+backend/onyx/connectors/file/connector.py:186:        link = onyx_metadata.link or link
+backend/onyx/connectors/file/connector.py:190:    # `Document.file_id` doubles as the "stage these bytes into the
+backend/onyx/connectors/file/connector.py:195:    # `Document.file_id=NULL`, forcing `_user_can_access_connector_file`
+backend/onyx/connectors/file/connector.py:197:    # TODO: stamp `Document.file_id` unconditionally here and add the
+backend/onyx/connectors/file/connector.py:201:    doc_file_id = None
+backend/onyx/connectors/file/connector.py:203:        doc_file_id = file_id
+backend/onyx/connectors/file/connector.py:219:                    link=link or "",
+backend/onyx/connectors/file/connector.py:229:        logger.debug("Creating TextSection for %s with link: %s", file_name, link)
+backend/onyx/connectors/file/connector.py:231:            TextSection(link=link, text=extraction_result.text_content.strip())
+backend/onyx/connectors/file/connector.py:243:                parent_file_name=file_id,
+backend/onyx/connectors/file/connector.py:244:                display_name=f"{title} - image {idx}",
+backend/onyx/connectors/file/connector.py:265:            semantic_identifier=file_display_name,
+backend/onyx/connectors/file/connector.py:266:            title=title,
+backend/onyx/connectors/file/connector.py:268:            primary_owners=primary_owners,
+backend/onyx/connectors/file/connector.py:269:            secondary_owners=secondary_owners,
+backend/onyx/connectors/file/connector.py:270:            metadata=custom_tags,
+backend/onyx/connectors/file/connector.py:271:            file_id=doc_file_id,
+backend/onyx/connectors/file/connector.py:292:        zip_metadata_file_id: str | None = None,
+backend/onyx/connectors/file/connector.py:293:        zip_metadata: dict[str, Any] | None = None,  # Deprecated, for backwards compat
+backend/onyx/connectors/file/connector.py:299:        self._zip_metadata_file_id = zip_metadata_file_id
+backend/onyx/connectors/file/connector.py:300:        self._zip_metadata_deprecated = zip_metadata
+backend/onyx/connectors/file/connector.py:312:        # Load metadata dict at start (from file store or deprecated inline format)
+backend/onyx/connectors/file/connector.py:313:        zip_metadata: dict[str, Any] = {}
+backend/onyx/connectors/file/connector.py:314:        if self._zip_metadata_file_id:
+backend/onyx/connectors/file/connector.py:317:                metadata_io = file_store.read_file(
+backend/onyx/connectors/file/connector.py:318:                    file_id=self._zip_metadata_file_id, mode="b"
+backend/onyx/connectors/file/connector.py:320:                metadata_bytes = metadata_io.read()
+backend/onyx/connectors/file/connector.py:321:                loaded_metadata = json.loads(metadata_bytes)
+backend/onyx/connectors/file/connector.py:322:                if isinstance(loaded_metadata, list):
+backend/onyx/connectors/file/connector.py:323:                    zip_metadata = {d["filename"]: d for d in loaded_metadata}
+backend/onyx/connectors/file/connector.py:325:                    zip_metadata = loaded_metadata
+backend/onyx/connectors/file/connector.py:327:                logger.warning("Failed to load metadata from file store: %s", e)
+backend/onyx/connectors/file/connector.py:328:        elif self._zip_metadata_deprecated:
+backend/onyx/connectors/file/connector.py:330:                "Using deprecated inline zip_metadata dict. Re-upload files to use the new file store format."
+backend/onyx/connectors/file/connector.py:332:            zip_metadata = self._zip_metadata_deprecated
+backend/onyx/connectors/file/connector.py:336:        for file_id in self.file_locations:
+backend/onyx/connectors/file/connector.py:338:            file_record = file_store.read_file_record(file_id=file_id)
+backend/onyx/connectors/file/connector.py:342:                    "No file record found for '%s' in PG; skipping.", file_id
+backend/onyx/connectors/file/connector.py:346:            metadata = zip_metadata.get(
+backend/onyx/connectors/file/connector.py:348:            ) or zip_metadata.get(os.path.basename(file_record.display_name), {})
+backend/onyx/connectors/file/connector.py:349:            file_io = file_store.read_file(file_id=file_id, mode="b")
+backend/onyx/connectors/file/connector.py:351:                file_id=file_id,
+backend/onyx/connectors/file/connector.py:354:                metadata=metadata,
+backend/onyx/document_index/vespa/vespa_document_index.py:30:from onyx.configs.chat_configs import TITLE_CONTENT_RATIO
+backend/onyx/document_index/vespa/vespa_document_index.py:43:from onyx.document_index.interfaces_new import IndexingMetadata
+backend/onyx/document_index/vespa/vespa_document_index.py:44:from onyx.document_index.interfaces_new import MetadataUpdateRequest
+backend/onyx/document_index/vespa/vespa_document_index.py:78:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/document_index/vespa/vespa_document_index.py:167:        r"(field title type string \{[^}]*indexing: summary \| index \| attribute)",
+backend/onyx/document_index/vespa/vespa_document_index.py:453:    update_request: MetadataUpdateRequest,
+backend/onyx/document_index/vespa/vespa_document_index.py:465:        update_request: Metadata update request object received in the bulk
+backend/onyx/document_index/vespa/vespa_document_index.py:499:        document_sets: _DocumentSets | None = None
+backend/onyx/document_index/vespa/vespa_document_index.py:514:    document_sets_update: _DocumentSets | None = (
+backend/onyx/document_index/vespa/vespa_document_index.py:516:            assign={document_set: 1 for document_set in update_request.document_sets}
+backend/onyx/document_index/vespa/vespa_document_index.py:518:        if update_request.document_sets is not None
+backend/onyx/document_index/vespa/vespa_document_index.py:546:        document_sets=document_sets_update,
+backend/onyx/document_index/vespa/vespa_document_index.py:645:        chunks: Iterable[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/vespa/vespa_document_index.py:646:        indexing_metadata: IndexingMetadata,
+backend/onyx/document_index/vespa/vespa_document_index.py:648:        doc_id_to_chunk_cnt_diff = indexing_metadata.doc_id_to_chunk_cnt_diff
+backend/onyx/document_index/vespa/vespa_document_index.py:670:            chunks_iter: Iterable[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/vespa/vespa_document_index.py:673:        ) -> Generator[DocMetadataAwareIndexChunk, None, None]:
+backend/onyx/document_index/vespa/vespa_document_index.py:723:            # indexing_metadata.doc_id_to_chunk_cnt_diff as the source of truth
+backend/onyx/document_index/vespa/vespa_document_index.py:806:        update_requests: list[MetadataUpdateRequest],
+backend/onyx/document_index/vespa/vespa_document_index.py:808:        # WARNING: This method can be called by document_index_metadata_sync_task,
+backend/onyx/document_index/vespa/vespa_document_index.py:910:            + f"or ({{targetHits: {target_hits}}}nearestNeighbor(title_embedding, query_embedding)) "
+backend/onyx/document_index/vespa/vespa_document_index.py:942:            "input.query(title_content_ratio)": TITLE_CONTENT_RATIO,
+backend/onyx/document_index/vespa/vespa_document_index.py:1033:        # Vespa returns other metadata around the actual document chunk. The raw
+backend/onyx/document_index/vespa/vespa_document_index.py:1175:        """Applies a batch of knowledge-graph metadata updates to chunks in
+backend/onyx/document_index/vespa/vespa_document_index.py:1277:        chunks: Iterable[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/vespa/vespa_document_index.py:1278:        indexing_metadata: IndexingMetadata,
+backend/onyx/document_index/vespa/vespa_document_index.py:1281:        return self._primary.index(chunks, indexing_metadata)
+backend/onyx/document_index/vespa/vespa_document_index.py:1289:    def update(self, update_requests: list[MetadataUpdateRequest]) -> None:
+backend/onyx/document_index/vespa/indexing_utils.py:40:from onyx.document_index.vespa_constants import DOCUMENT_SETS
+backend/onyx/document_index/vespa/indexing_utils.py:45:from onyx.document_index.vespa_constants import METADATA
+backend/onyx/document_index/vespa/indexing_utils.py:46:from onyx.document_index.vespa_constants import METADATA_LIST
+backend/onyx/document_index/vespa/indexing_utils.py:47:from onyx.document_index.vespa_constants import METADATA_SUFFIX
+backend/onyx/document_index/vespa/indexing_utils.py:50:from onyx.document_index.vespa_constants import PRIMARY_OWNERS
+backend/onyx/document_index/vespa/indexing_utils.py:51:from onyx.document_index.vespa_constants import SECONDARY_OWNERS
+backend/onyx/document_index/vespa/indexing_utils.py:53:from onyx.document_index.vespa_constants import SEMANTIC_IDENTIFIER
+backend/onyx/document_index/vespa/indexing_utils.py:54:from onyx.document_index.vespa_constants import SKIP_TITLE_EMBEDDING
+backend/onyx/document_index/vespa/indexing_utils.py:55:from onyx.document_index.vespa_constants import SOURCE_LINKS
+backend/onyx/document_index/vespa/indexing_utils.py:58:from onyx.document_index.vespa_constants import TITLE
+backend/onyx/document_index/vespa/indexing_utils.py:59:from onyx.document_index.vespa_constants import TITLE_EMBEDDING
+backend/onyx/document_index/vespa/indexing_utils.py:61:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/document_index/vespa/indexing_utils.py:104:    chunks: list[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/vespa/indexing_utils.py:140:    chunk: DocMetadataAwareIndexChunk,
+backend/onyx/document_index/vespa/indexing_utils.py:162:    title = document.get_title_for_document_index()
+backend/onyx/document_index/vespa/indexing_utils.py:164:    metadata_json = document.metadata
+backend/onyx/document_index/vespa/indexing_utils.py:165:    cleaned_metadata_json: dict[str, str | list[str]] = {}
+backend/onyx/document_index/vespa/indexing_utils.py:166:    for key, value in metadata_json.items():
+backend/onyx/document_index/vespa/indexing_utils.py:169:            cleaned_metadata_json[cleaned_key] = [
+backend/onyx/document_index/vespa/indexing_utils.py:173:            cleaned_metadata_json[cleaned_key] = remove_invalid_unicode_chars(value)
+backend/onyx/document_index/vespa/indexing_utils.py:175:    metadata_list = document.get_metadata_str_attributes()
+backend/onyx/document_index/vespa/indexing_utils.py:176:    if metadata_list:
+backend/onyx/document_index/vespa/indexing_utils.py:177:        metadata_list = [
+backend/onyx/document_index/vespa/indexing_utils.py:178:            remove_invalid_unicode_chars(metadata) for metadata in metadata_list
+backend/onyx/document_index/vespa/indexing_utils.py:185:        TITLE: remove_invalid_unicode_chars(title) if title else None,
+backend/onyx/document_index/vespa/indexing_utils.py:186:        SKIP_TITLE_EMBEDDING: not title,
+backend/onyx/document_index/vespa/indexing_utils.py:188:        # natural language representation of the metadata section
+backend/onyx/document_index/vespa/indexing_utils.py:194:        # which contains the title prefix and metadata suffix
+backend/onyx/document_index/vespa/indexing_utils.py:197:        SOURCE_LINKS: json.dumps(chunk.source_links),
+backend/onyx/document_index/vespa/indexing_utils.py:198:        SEMANTIC_IDENTIFIER: remove_invalid_unicode_chars(document.semantic_identifier),
+backend/onyx/document_index/vespa/indexing_utils.py:201:        METADATA: json.dumps(cleaned_metadata_json),
+backend/onyx/document_index/vespa/indexing_utils.py:203:        METADATA_LIST: metadata_list,
+backend/onyx/document_index/vespa/indexing_utils.py:204:        METADATA_SUFFIX: remove_invalid_unicode_chars(chunk.metadata_suffix_keyword),
+backend/onyx/document_index/vespa/indexing_utils.py:208:        TITLE_EMBEDDING: chunk.title_embedding,
+backend/onyx/document_index/vespa/indexing_utils.py:210:        PRIMARY_OWNERS: get_experts_stores_representations(document.primary_owners),
+backend/onyx/document_index/vespa/indexing_utils.py:211:        SECONDARY_OWNERS: get_experts_stores_representations(document.secondary_owners),
+backend/onyx/document_index/vespa/indexing_utils.py:214:        # rkuo: acl, docset and boost metadata are also updated through the metadata sync queue
+backend/onyx/document_index/vespa/indexing_utils.py:217:        DOCUMENT_SETS: {document_set: 1 for document_set in chunk.document_sets},
+backend/onyx/document_index/vespa/indexing_utils.py:219:        IMAGE_FILE_NAME: chunk.image_file_id,
+backend/onyx/document_index/vespa/indexing_utils.py:329:    chunks: list[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/vespa/indexing_utils.py:367:    chunk: DocMetadataAwareIndexChunk,
+backend/onyx/document_index/vespa/indexing_utils.py:368:) -> DocMetadataAwareIndexChunk:
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:27:        field semantic_identifier type string {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:30:        # Must have an additional field for whether to skip title embeddings
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:31:        # This information cannot be extracted from either the title field nor title embedding
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:32:        field skip_title type bool {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:35:        # May not always match the `semantic_identifier` e.g. for Slack docs the
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:36:        # `semantic_identifier` will be the channel name, but the `title` will be empty
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:37:        field title type string {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:52:        # Title embedding (x1)
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:53:        field title_embedding type tensor<{{ embedding_precision }}>(x[{{ dim }}]) {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:80:        # Can also index links https://docs.vespa.ai/en/reference/schema-reference.html#attribute
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:82:        field source_links type string {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:129:        field metadata_list type array<string> {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:138:        field metadata type string {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:147:        field metadata_suffix type string {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:153:        field primary_owners type array<string> {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:156:        field secondary_owners type array<string> {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:164:        field document_sets type weightedset<string> {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:193:    # + 'or ({grammar: "weakAnd", defaultIndex:"title"}userInput(@query)) '
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:197:        fields: content, title
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:234:        function title_vector_score() {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:236:                # If no good matching titles, then it should use the context embeddings rather than having some
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:237:                # irrelevant title have a vector score of 1. This way at least it will be the doc with the highest
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:239:                max(closeness(field, embeddings), closeness(field, title_embedding))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:245:            expression: query(title_content_ratio) * closeness(field, title_embedding) + (1 - query(title_content_ratio)) * closeness(field, embeddings)
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:255:                            (query(title_content_ratio) * normalize_linear(title_vector_score))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:257:                            ((1 - query(title_content_ratio)) * normalize_linear(closeness(field, embeddings)))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:264:                    # Note: for the BM25 Title score, it requires decent stopword removal in the query
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:265:                    # This needs to be the case so there aren't irrelevant titles being normalized to a score of 1
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:268:                            (query(title_content_ratio) * normalize_linear(bm25(title)))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:270:                            ((1 - query(title_content_ratio)) * normalize_linear(bm25(content)))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:286:            bm25(title)
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:288:            closeness(field, title_embedding)
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:303:        function title_vector_score() {
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:305:                # If no good matching titles, then it should use the context embeddings rather than having some
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:306:                # irrelevant title have a vector score of 1. This way at least it will be the doc with the highest
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:308:                max(closeness(field, embeddings), closeness(field, title_embedding))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:314:            expression: query(title_content_ratio) * bm25(title) + (1 - query(title_content_ratio)) * bm25(content)
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:324:                            (query(title_content_ratio) * normalize_linear(title_vector_score))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:326:                            ((1 - query(title_content_ratio)) * normalize_linear(closeness(field, embeddings)))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:333:                    # Note: for the BM25 Title score, it requires decent stopword removal in the query
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:334:                    # This needs to be the case so there aren't irrelevant titles being normalized to a score of 1
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:337:                            (query(title_content_ratio) * normalize_linear(bm25(title)))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:339:                            ((1 - query(title_content_ratio)) * normalize_linear(bm25(content)))
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:355:            bm25(title)
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:357:            closeness(field, title_embedding)
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:367:    # Very heavily prioritize title
+backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja:370:            expression: bm25(content) + (5 * bm25(title))
+backend/onyx/db/kg_temp_view.py:104:#     external_user_docs AS (
+backend/onyx/db/kg_temp_view.py:109:#         AND :user_email = ANY(external_user_emails)
+backend/onyx/db/kg_temp_view.py:115:#         JOIN "{tenant_id}".user__external_user_group_id ueg ON ueg.external_user_group_id = ANY(d.external_user_group_ids)
+backend/onyx/db/kg_temp_view.py:127:#         SELECT allowed_doc_id FROM external_user_docs
+backend/onyx/db/notification.py:39:    title: str,
+backend/onyx/db/notification.py:77:        title=title,
+backend/onyx/db/notification.py:199:    title: str,
+backend/onyx/db/notification.py:225:            "title": title,
+backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:12:from onyx.document_index.vespa_constants import DOCUMENT_SETS
+backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:14:from onyx.document_index.vespa_constants import METADATA_LIST
+backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:200:    _append(filter_parts, _build_or_filters(METADATA_LIST, tag_attributes))
+backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:215:        knowledge_scope_parts, _build_or_filters(DOCUMENT_SETS, filters.document_set)
+backend/onyx/db/entities.py:49:    name = name.title()
+backend/onyx/document_index/vespa/chunk_retrieval.py:51:from onyx.document_index.vespa_constants import METADATA
+backend/onyx/document_index/vespa/chunk_retrieval.py:52:from onyx.document_index.vespa_constants import METADATA_SUFFIX
+backend/onyx/document_index/vespa/chunk_retrieval.py:53:from onyx.document_index.vespa_constants import PRIMARY_OWNERS
+backend/onyx/document_index/vespa/chunk_retrieval.py:55:from onyx.document_index.vespa_constants import SECONDARY_OWNERS
+backend/onyx/document_index/vespa/chunk_retrieval.py:57:from onyx.document_index.vespa_constants import SEMANTIC_IDENTIFIER
+backend/onyx/document_index/vespa/chunk_retrieval.py:58:from onyx.document_index.vespa_constants import SOURCE_LINKS
+backend/onyx/document_index/vespa/chunk_retrieval.py:61:from onyx.document_index.vespa_constants import TITLE
+backend/onyx/document_index/vespa/chunk_retrieval.py:113:    metadata = json.loads(fields[METADATA]) if METADATA in fields else {}
+backend/onyx/document_index/vespa/chunk_retrieval.py:125:    semantic_identifier = fields.get(SEMANTIC_IDENTIFIER, "")
+backend/onyx/document_index/vespa/chunk_retrieval.py:126:    if not semantic_identifier:
+backend/onyx/document_index/vespa/chunk_retrieval.py:132:    source_links = fields.get(SOURCE_LINKS, {})
+backend/onyx/document_index/vespa/chunk_retrieval.py:133:    source_links_dict_unprocessed = (
+backend/onyx/document_index/vespa/chunk_retrieval.py:134:        json.loads(source_links) if isinstance(source_links, str) else source_links
+backend/onyx/document_index/vespa/chunk_retrieval.py:136:    source_links_dict = {
+backend/onyx/document_index/vespa/chunk_retrieval.py:138:        for k, v in cast(dict[str, str], source_links_dict_unprocessed).items()
+backend/onyx/document_index/vespa/chunk_retrieval.py:144:        content=fields[CONTENT],  # Includes extra title prefix and metadata suffix;
+backend/onyx/document_index/vespa/chunk_retrieval.py:146:        source_links=source_links_dict or {0: ""},
+backend/onyx/document_index/vespa/chunk_retrieval.py:151:        image_file_id=fields.get(IMAGE_FILE_NAME),
+backend/onyx/document_index/vespa/chunk_retrieval.py:152:        title=fields.get(TITLE),
+backend/onyx/document_index/vespa/chunk_retrieval.py:153:        semantic_identifier=fields[SEMANTIC_IDENTIFIER],
+backend/onyx/document_index/vespa/chunk_retrieval.py:157:        primary_owners=fields.get(PRIMARY_OWNERS),
+backend/onyx/document_index/vespa/chunk_retrieval.py:158:        secondary_owners=fields.get(SECONDARY_OWNERS),
+backend/onyx/document_index/vespa/chunk_retrieval.py:160:        metadata=metadata,
+backend/onyx/document_index/vespa/chunk_retrieval.py:161:        metadata_suffix=fields.get(METADATA_SUFFIX),
+backend/onyx/db/chat.py:65:                selectinload(Persona.document_sets),
+backend/onyx/db/chat.py:205:            if file_info.get("user_file_id"):
+backend/onyx/db/chat.py:208:            file_store.delete_file(file_id=file_info["id"], error_on_missing=False)
+backend/onyx/db/chat.py:504:    Link SearchDocs to a ChatMessage by creating entries in the chat_message__search_doc junction table.
+backend/onyx/db/chat.py:508:        search_doc_ids: List of search document IDs to link
+backend/onyx/db/chat.py:522:    Link SearchDocs to a ToolCall by creating entries in the tool_call__search_doc junction table.
+backend/onyx/db/chat.py:526:        search_doc_ids: List of search document IDs to link
+backend/onyx/db/chat.py:817:        semantic_id=sanitize_string(server_search_doc.semantic_identifier),
+backend/onyx/db/chat.py:818:        link=(
+backend/onyx/db/chat.py:819:            sanitize_string(server_search_doc.link)
+backend/onyx/db/chat.py:820:            if server_search_doc.link is not None
+backend/onyx/db/chat.py:827:        doc_metadata=server_search_doc.metadata,
+backend/onyx/db/chat.py:839:        primary_owners=(
+backend/onyx/db/chat.py:840:            [sanitize_string(o) for o in server_search_doc.primary_owners]
+backend/onyx/db/chat.py:841:            if server_search_doc.primary_owners is not None
+backend/onyx/db/chat.py:844:        secondary_owners=(
+backend/onyx/db/chat.py:845:            [sanitize_string(o) for o in server_search_doc.secondary_owners]
+backend/onyx/db/chat.py:846:            if server_search_doc.secondary_owners is not None
+backend/onyx/db/chat.py:887:        semantic_identifier=db_search_doc.semantic_id,
+backend/onyx/db/chat.py:888:        link=db_search_doc.link,
+backend/onyx/db/chat.py:893:        metadata=db_search_doc.doc_metadata if not remove_doc_content else {},
+backend/onyx/db/chat.py:900:        primary_owners=db_search_doc.primary_owners if not remove_doc_content else [],
+backend/onyx/db/chat.py:901:        secondary_owners=(
+backend/onyx/db/chat.py:902:            db_search_doc.secondary_owners if not remove_doc_content else []
+backend/onyx/db/chat.py:919:    # Convert citations from {citation_num: db_doc_id} to {citation_num: document_id}
+backend/onyx/db/chat.py:920:    converted_citations = None
+backend/onyx/db/chat.py:921:    if chat_message.citations and chat_message.search_docs:
+backend/onyx/db/chat.py:927:        converted_citations = {}
+backend/onyx/db/chat.py:928:        for citation_num, db_doc_id in chat_message.citations.items():
+backend/onyx/db/chat.py:931:                converted_citations[citation_num] = document_id
+backend/onyx/db/chat.py:951:        citations=converted_citations,
+backend/onyx/db/chat.py:995:        semantic_id=inference_section.center_chunk.semantic_identifier,
+backend/onyx/db/chat.py:996:        link=(
+backend/onyx/db/chat.py:997:            inference_section.center_chunk.source_links.get(0)
+backend/onyx/db/chat.py:998:            if inference_section.center_chunk.source_links
+backend/onyx/db/chat.py:1005:        doc_metadata=inference_section.center_chunk.metadata,
+backend/onyx/db/chat.py:1011:        primary_owners=inference_section.center_chunk.primary_owners or [],
+backend/onyx/db/chat.py:1012:        secondary_owners=inference_section.center_chunk.secondary_owners or [],
+backend/onyx/db/chat.py:1032:        # Map Pydantic semantic_identifier -> DB semantic_id; ensure non-null
+backend/onyx/db/chat.py:1033:        semantic_id=saved_search_doc.semantic_identifier or "Unknown",
+backend/onyx/db/chat.py:1034:        link=saved_search_doc.link,
+backend/onyx/db/chat.py:1039:        # Map metadata -> doc_metadata (DB column name)
+backend/onyx/db/chat.py:1040:        doc_metadata=saved_search_doc.metadata,
+backend/onyx/db/chat.py:1045:        primary_owners=saved_search_doc.primary_owners,
+backend/onyx/db/chat.py:1046:        secondary_owners=saved_search_doc.secondary_owners,
+backend/onyx/document_index/chunk_content_enrichment.py:6:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/document_index/chunk_content_enrichment.py:9:def generate_enriched_content_for_chunk_text(chunk: DocMetadataAwareIndexChunk) -> str:
+backend/onyx/document_index/chunk_content_enrichment.py:10:    return f"{chunk.title_prefix}{chunk.doc_summary}{chunk.content}{chunk.chunk_context}{chunk.metadata_suffix_keyword}"
+backend/onyx/document_index/chunk_content_enrichment.py:14:    return f"{chunk.title_prefix}{chunk.doc_summary}{chunk.content}{chunk.chunk_context}{chunk.metadata_suffix_semantic}"
+backend/onyx/document_index/chunk_content_enrichment.py:26:    - Title prepended to content (for better keyword/semantic matching)
+backend/onyx/document_index/chunk_content_enrichment.py:27:    - Metadata suffix appended to content
+backend/onyx/document_index/chunk_content_enrichment.py:32:    1. Title removal:
+backend/onyx/document_index/chunk_content_enrichment.py:33:        - Full match: Strips exact title from beginning
+backend/onyx/document_index/chunk_content_enrichment.py:34:        - Partial match: If content starts with title[:BLURB_SIZE], splits on
+backend/onyx/document_index/chunk_content_enrichment.py:35:          RETURN_SEPARATOR to remove title section
+backend/onyx/document_index/chunk_content_enrichment.py:36:    2. Metadata suffix removal:
+backend/onyx/document_index/chunk_content_enrichment.py:37:        - Strips metadata_suffix from end, plus trailing RETURN_SEPARATOR
+backend/onyx/document_index/chunk_content_enrichment.py:54:    def _remove_title(chunk: InferenceChunkUncleaned) -> str:
+backend/onyx/document_index/chunk_content_enrichment.py:57:        # think this logic is correct. In Vespa at least we set the title field
+backend/onyx/document_index/chunk_content_enrichment.py:58:        # from the output of get_title_for_document_index, which is not
+backend/onyx/document_index/chunk_content_enrichment.py:60:        # from title_prefix.
+backend/onyx/document_index/chunk_content_enrichment.py:67:        if not chunk.title or not chunk.content:
+backend/onyx/document_index/chunk_content_enrichment.py:70:        if chunk.content.startswith(chunk.title):
+backend/onyx/document_index/chunk_content_enrichment.py:71:            return chunk.content[len(chunk.title) :].lstrip()
+backend/onyx/document_index/chunk_content_enrichment.py:74:        # If this prefix matches the content, it's assumed the title was prepended
+backend/onyx/document_index/chunk_content_enrichment.py:75:        if chunk.content.startswith(chunk.title[:BLURB_SIZE]):
+backend/onyx/document_index/chunk_content_enrichment.py:83:    def _remove_metadata_suffix(chunk: InferenceChunkUncleaned) -> str:
+backend/onyx/document_index/chunk_content_enrichment.py:84:        if not chunk.metadata_suffix:
+backend/onyx/document_index/chunk_content_enrichment.py:86:        return chunk.content.removesuffix(chunk.metadata_suffix).rstrip(
+backend/onyx/document_index/chunk_content_enrichment.py:102:        chunk.content = _remove_title(chunk)
+backend/onyx/document_index/chunk_content_enrichment.py:103:        chunk.content = _remove_metadata_suffix(chunk)
+backend/onyx/document_index/interfaces_new.py:15:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/document_index/interfaces_new.py:31:    "IndexingMetadata",
+backend/onyx/document_index/interfaces_new.py:32:    "MetadataUpdateRequest",
+backend/onyx/document_index/interfaces_new.py:108:class IndexingMetadata(BaseModel):
+backend/onyx/document_index/interfaces_new.py:130:class MetadataUpdateRequest(BaseModel):
+backend/onyx/document_index/interfaces_new.py:147:    document_sets: set[str] | None = None
+backend/onyx/document_index/interfaces_new.py:159:    Used to filter on permissions and other Onyx-specific metadata rather than
+backend/onyx/document_index/interfaces_new.py:213:        chunks: Iterable[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/interfaces_new.py:214:        indexing_metadata: IndexingMetadata,
+backend/onyx/document_index/interfaces_new.py:233:            indexing_metadata: Information about chunk counts for efficient
+backend/onyx/document_index/interfaces_new.py:296:        update_requests: list[MetadataUpdateRequest],
+backend/onyx/db/_deprecated/pg_file_store.py:136:            pg_conn.lobject(lobj_oid).unlink()
+backend/onyx/db/_deprecated/pg_file_store.py:141:        db_session.execute(text("SELECT lo_unlink(:oid)"), {"oid": lobj_oid})
+backend/onyx/document_index/document_metadata.py:1:"""Document-level metadata used during indexing.
+backend/onyx/document_index/document_metadata.py:16:class DocumentMetadata:
+backend/onyx/document_index/document_metadata.py:25:    semantic_identifier: str
+backend/onyx/document_index/document_metadata.py:26:    first_link: str
+backend/onyx/document_index/document_metadata.py:29:    primary_owners: list[str] | None = None
+backend/onyx/document_index/document_metadata.py:30:    secondary_owners: list[str] | None = None
+backend/onyx/document_index/document_metadata.py:34:    doc_metadata: dict[str, Any] | None = None
+backend/onyx/document_index/document_metadata.py:40:    file_id: str | None = None
+backend/onyx/document_index/document_index_utils.py:12:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/document_index/document_index_utils.py:180:def get_uuid_from_chunk(chunk: DocMetadataAwareIndexChunk) -> uuid.UUID:
+backend/onyx/document_index/document_index_utils.py:190:    chunk: DocMetadataAwareIndexChunk, large_chunk_reference_ids: list[int] = []
+backend/onyx/document_index/opensearch/constants.py:24:# Number of bi-directional links per element. Higher values improve search
+backend/onyx/document_index/opensearch/constants.py:67:    TITLE_VECTOR_CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD = 1
+backend/onyx/document_index/opensearch/constants.py:69:    CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD = 2
+backend/onyx/document_index/opensearch/constants.py:74:# CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD.
+backend/onyx/document_index/opensearch/constants.py:80:    else HybridSearchSubqueryConfiguration.CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD
+backend/onyx/db/slack_channel_config.py:31:    # delete existing persona-document_set relationships
+backend/onyx/db/slack_channel_config.py:44:    document_set_ids: list[int],
+backend/onyx/db/slack_channel_config.py:73:        document_set_ids=document_set_ids,
+backend/onyx/db/users.py:527:    # Null out ownership on document sets and personas so they're
+backend/onyx/document_index/opensearch/opensearch_document_index.py:15:from onyx.connectors.models import convert_metadata_list_of_strings_to_dict
+backend/onyx/document_index/opensearch/opensearch_document_index.py:29:from onyx.document_index.interfaces_new import IndexingMetadata
+backend/onyx/document_index/opensearch/opensearch_document_index.py:30:from onyx.document_index.interfaces_new import MetadataUpdateRequest
+backend/onyx/document_index/opensearch/opensearch_document_index.py:39:from onyx.document_index.opensearch.schema import DOCUMENT_SETS_FIELD_NAME
+backend/onyx/document_index/opensearch/opensearch_document_index.py:58:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/document_index/opensearch/opensearch_document_index.py:156:        source_links=(
+backend/onyx/document_index/opensearch/opensearch_document_index.py:157:            {int(k): v for k, v in json.loads(chunk.source_links).items()}
+backend/onyx/document_index/opensearch/opensearch_document_index.py:158:            if chunk.source_links
+backend/onyx/document_index/opensearch/opensearch_document_index.py:161:        image_file_id=chunk.image_file_id,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:166:        semantic_identifier=chunk.semantic_identifier,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:167:        title=chunk.title,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:171:        metadata=(
+backend/onyx/document_index/opensearch/opensearch_document_index.py:172:            convert_metadata_list_of_strings_to_dict(chunk.metadata_list)
+backend/onyx/document_index/opensearch/opensearch_document_index.py:173:            if chunk.metadata_list
+backend/onyx/document_index/opensearch/opensearch_document_index.py:186:        primary_owners=chunk.primary_owners,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:187:        secondary_owners=chunk.secondary_owners,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:189:        metadata_suffix=chunk.metadata_suffix,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:194:    chunk: DocMetadataAwareIndexChunk,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:197:    _title = chunk.source_document.get_title_for_document_index()
+backend/onyx/document_index/opensearch/opensearch_document_index.py:198:    filtered_title = remove_invalid_unicode_chars(_title) if _title else None
+backend/onyx/document_index/opensearch/opensearch_document_index.py:202:    filtered_semantic_identifier = remove_invalid_unicode_chars(
+backend/onyx/document_index/opensearch/opensearch_document_index.py:203:        chunk.source_document.semantic_identifier
+backend/onyx/document_index/opensearch/opensearch_document_index.py:205:    filtered_metadata_suffix = remove_invalid_unicode_chars(
+backend/onyx/document_index/opensearch/opensearch_document_index.py:206:        chunk.metadata_suffix_keyword
+backend/onyx/document_index/opensearch/opensearch_document_index.py:208:    _metadata_list = chunk.source_document.get_metadata_str_attributes()
+backend/onyx/document_index/opensearch/opensearch_document_index.py:209:    filtered_metadata_list = (
+backend/onyx/document_index/opensearch/opensearch_document_index.py:210:        [remove_invalid_unicode_chars(metadata) for metadata in _metadata_list]
+backend/onyx/document_index/opensearch/opensearch_document_index.py:211:        if _metadata_list
+backend/onyx/document_index/opensearch/opensearch_document_index.py:217:        # Use get_title_for_document_index to match the logic used when creating
+backend/onyx/document_index/opensearch/opensearch_document_index.py:218:        # the title_embedding in the embedder. This method falls back to
+backend/onyx/document_index/opensearch/opensearch_document_index.py:219:        # semantic_identifier when title is None (but not empty string).
+backend/onyx/document_index/opensearch/opensearch_document_index.py:220:        title=filtered_title,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:221:        title_vector=chunk.title_embedding,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:225:        metadata_list=filtered_metadata_list,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:226:        metadata_suffix=filtered_metadata_suffix,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:233:        semantic_identifier=filtered_semantic_identifier,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:234:        image_file_id=chunk.image_file_id,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:238:        source_links=json.dumps(chunk.source_links) if chunk.source_links else None,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:245:        document_sets=list(chunk.document_sets) if chunk.document_sets else None,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:251:        primary_owners=get_experts_stores_representations(
+backend/onyx/document_index/opensearch/opensearch_document_index.py:252:            chunk.source_document.primary_owners
+backend/onyx/document_index/opensearch/opensearch_document_index.py:254:        secondary_owners=get_experts_stores_representations(
+backend/onyx/document_index/opensearch/opensearch_document_index.py:255:            chunk.source_document.secondary_owners
+backend/onyx/document_index/opensearch/opensearch_document_index.py:258:        # DocMetadataAwareIndexChunk and instead using OpenSearchDocumentIndex's
+backend/onyx/document_index/opensearch/opensearch_document_index.py:379:        chunks: Iterable[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/opensearch/opensearch_document_index.py:380:        indexing_metadata: IndexingMetadata,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:393:            indexing_metadata: Information about chunk counts for efficient
+backend/onyx/document_index/opensearch/opensearch_document_index.py:407:            for cc in indexing_metadata.doc_id_to_chunk_cnt_diff.values()
+backend/onyx/document_index/opensearch/opensearch_document_index.py:412:            len(indexing_metadata.doc_id_to_chunk_cnt_diff),
+backend/onyx/document_index/opensearch/opensearch_document_index.py:421:        current_chunks: list[DocMetadataAwareIndexChunk] = []
+backend/onyx/document_index/opensearch/opensearch_document_index.py:423:        def _flush_chunks(doc_chunks: list[DocMetadataAwareIndexChunk]) -> None:
+backend/onyx/document_index/opensearch/opensearch_document_index.py:544:        update_requests: list[MetadataUpdateRequest],
+backend/onyx/document_index/opensearch/opensearch_document_index.py:584:            if update_request.document_sets is not None:
+backend/onyx/document_index/opensearch/opensearch_document_index.py:585:                properties_to_update[DOCUMENT_SETS_FIELD_NAME] = list(
+backend/onyx/document_index/opensearch/opensearch_document_index.py:586:                    update_request.document_sets
+backend/onyx/document_index/opensearch/opensearch_document_index.py:676:                # NOTE: Index filters includes metadata tags which were filtered
+backend/onyx/document_index/opensearch/opensearch_document_index.py:731:            # NOTE: Index filters includes metadata tags which were filtered
+backend/onyx/document_index/opensearch/opensearch_document_index.py:779:            # NOTE: Index filters includes metadata tags which were filtered
+backend/onyx/document_index/opensearch/opensearch_document_index.py:823:            # NOTE: Index filters includes metadata tags which were filtered
+backend/onyx/document_index/opensearch/opensearch_document_index.py:963:        chunks: Iterable[DocMetadataAwareIndexChunk],
+backend/onyx/document_index/opensearch/opensearch_document_index.py:964:        indexing_metadata: IndexingMetadata,
+backend/onyx/document_index/opensearch/opensearch_document_index.py:966:        return self._primary.index(chunks, indexing_metadata)
+backend/onyx/document_index/opensearch/opensearch_document_index.py:974:    def update(self, update_requests: list[MetadataUpdateRequest]) -> None:
+backend/onyx/db/mcp.py:46:def get_mcp_servers_by_owner(owner_email: str, db_session: Session) -> list[MCPServer]:
+backend/onyx/db/mcp.py:50:            select(MCPServer).where(MCPServer.owner == owner_email)
+backend/onyx/db/mcp.py:102:    owner_email: str,
+backend/onyx/db/mcp.py:119:        owner=owner_email,
+backend/onyx/document_index/opensearch/README.md:61:Because the Title is included in the Contents for both embedding and keyword searches, the Title scores are very low relative to
+backend/onyx/db/skill.py:10:`bundle_file_id` so the caller can drop the blob from the file store
+backend/onyx/db/skill.py:232:    bundle_file_id: str,
+backend/onyx/db/skill.py:249:        bundle_file_id=bundle_file_id,
+backend/onyx/db/skill.py:302:        bundle_file_id=None,
+backend/onyx/db/skill.py:324:    new_bundle_file_id: str,
+backend/onyx/db/skill.py:330:    """Swap a custom skill's bundle blob and refresh its display metadata.
+backend/onyx/db/skill.py:332:    Returns ``(skill, old_bundle_file_id)`` so the caller can delete the
+backend/onyx/db/skill.py:355:    if skill.bundle_file_id is None:
+backend/onyx/db/skill.py:361:    old_bundle_file_id = skill.bundle_file_id
+backend/onyx/db/skill.py:362:    skill.bundle_file_id = new_bundle_file_id
+backend/onyx/db/skill.py:367:    return skill, old_bundle_file_id
+backend/onyx/db/skill.py:421:    """Hard-delete a skill and return its `bundle_file_id` for caller cleanup."""
+backend/onyx/db/skill.py:425:    bundle_file_id = skill.bundle_file_id
+backend/onyx/db/skill.py:428:    return bundle_file_id
+backend/onyx/document_index/opensearch/schema.py:35:TITLE_FIELD_NAME = "title"
+backend/onyx/document_index/opensearch/schema.py:36:TITLE_VECTOR_FIELD_NAME = "title_vector"
+backend/onyx/document_index/opensearch/schema.py:40:METADATA_LIST_FIELD_NAME = "metadata_list"
+backend/onyx/document_index/opensearch/schema.py:46:SEMANTIC_IDENTIFIER_FIELD_NAME = "semantic_identifier"
+backend/onyx/document_index/opensearch/schema.py:47:IMAGE_FILE_ID_FIELD_NAME = "image_file_id"
+backend/onyx/document_index/opensearch/schema.py:48:SOURCE_LINKS_FIELD_NAME = "source_links"
+backend/onyx/document_index/opensearch/schema.py:49:DOCUMENT_SETS_FIELD_NAME = "document_sets"
+backend/onyx/document_index/opensearch/schema.py:59:METADATA_SUFFIX_FIELD_NAME = "metadata_suffix"
+backend/onyx/document_index/opensearch/schema.py:60:PRIMARY_OWNERS_FIELD_NAME = "primary_owners"
+backend/onyx/document_index/opensearch/schema.py:61:SECONDARY_OWNERS_FIELD_NAME = "secondary_owners"
+backend/onyx/document_index/opensearch/schema.py:165:    title: str | None = None
+backend/onyx/document_index/opensearch/schema.py:170:    # convert_metadata_dict_to_list_of_strings.
+backend/onyx/document_index/opensearch/schema.py:171:    metadata_list: list[str] | None = None
+backend/onyx/document_index/opensearch/schema.py:182:    semantic_identifier: str
+backend/onyx/document_index/opensearch/schema.py:183:    image_file_id: str | None = None
+backend/onyx/document_index/opensearch/schema.py:185:    # chunk text to the link corresponding to that point.
+backend/onyx/document_index/opensearch/schema.py:186:    source_links: str | None = None
+backend/onyx/document_index/opensearch/schema.py:188:    # doc_summary, chunk_context, and metadata_suffix are all stored simply to
+backend/onyx/document_index/opensearch/schema.py:194:    metadata_suffix: str | None = None
+backend/onyx/document_index/opensearch/schema.py:196:    document_sets: list[str] | None = None
+backend/onyx/document_index/opensearch/schema.py:199:    primary_owners: list[str] | None = None
+backend/onyx/document_index/opensearch/schema.py:200:    secondary_owners: list[str] | None = None
+backend/onyx/document_index/opensearch/schema.py:344:    title_vector: list[float] | None = None
+backend/onyx/document_index/opensearch/schema.py:355:    def check_title_and_title_vector_are_consistent(self) -> Self:
+backend/onyx/document_index/opensearch/schema.py:356:        # title and title_vector should both either be None or not.
+backend/onyx/document_index/opensearch/schema.py:357:        if self.title is not None and self.title_vector is None:
+backend/onyx/document_index/opensearch/schema.py:358:            raise ValueError("Bug: Title vector must not be None if title is not None.")
+backend/onyx/document_index/opensearch/schema.py:359:        if self.title_vector is not None and self.title is None:
+backend/onyx/document_index/opensearch/schema.py:360:            raise ValueError("Bug: Title must not be None if title vector is not None.")
+backend/onyx/document_index/opensearch/schema.py:413:                TITLE_FIELD_NAME: {
+backend/onyx/document_index/opensearch/schema.py:421:                        # Subfield accessed as title.keyword. Not indexed for
+backend/onyx/document_index/opensearch/schema.py:437:                TITLE_VECTOR_FIELD_NAME: {
+backend/onyx/document_index/opensearch/schema.py:460:                METADATA_LIST_FIELD_NAME: {"type": "keyword"},
+backend/onyx/document_index/opensearch/schema.py:491:                # just metadata.
+backend/onyx/document_index/opensearch/schema.py:492:                SEMANTIC_IDENTIFIER_FIELD_NAME: {
+backend/onyx/document_index/opensearch/schema.py:500:                IMAGE_FILE_ID_FIELD_NAME: {
+backend/onyx/document_index/opensearch/schema.py:507:                # Same as above; used to link to the source doc.
+backend/onyx/document_index/opensearch/schema.py:508:                SOURCE_LINKS_FIELD_NAME: {
+backend/onyx/document_index/opensearch/schema.py:544:                METADATA_SUFFIX_FIELD_NAME: {
+backend/onyx/document_index/opensearch/schema.py:551:                DOCUMENT_SETS_FIELD_NAME: {"type": "keyword"},
+backend/onyx/document_index/opensearch/schema.py:554:                PRIMARY_OWNERS_FIELD_NAME: {"type": "keyword"},
+backend/onyx/document_index/opensearch/schema.py:555:                SECONDARY_OWNERS_FIELD_NAME: {"type": "keyword"},
+backend/onyx/document_index/opensearch/schema.py:556:                # OpenSearch metadata fields.
+backend/onyx/db/external_app.py:222:    bundle_file_id: str,
+backend/onyx/db/external_app.py:236:    skill owns display metadata + lifecycle; the external_app owns gateway state.
+backend/onyx/db/external_app.py:271:            bundle_file_id=bundle_file_id,
+backend/onyx/db/external_app.py:305:    new_bundle_file_id: str | None = None,
+backend/onyx/db/external_app.py:309:    """Partial-update the external app and its linked skill (flush only — the
+backend/onyx/db/external_app.py:311:    ``(app, old_bundle_file_id)``.
+backend/onyx/db/external_app.py:315:    cross-editing built-in vs custom. Passing ``new_bundle_file_id`` swaps the
+backend/onyx/db/external_app.py:345:    old_bundle_file_id: str | None = None
+backend/onyx/db/external_app.py:346:    if new_bundle_file_id is not None:
+backend/onyx/db/external_app.py:348:        old_bundle_file_id = app.skill.bundle_file_id
+backend/onyx/db/external_app.py:349:        app.skill.bundle_file_id = new_bundle_file_id
+backend/onyx/db/external_app.py:367:    return app, old_bundle_file_id
+backend/onyx/db/external_app.py:423:    """Delete the linked Skill (cascade removes the external_app row and user
+backend/onyx/db/external_app.py:425:    failure rolls back. Returns the skill's ``bundle_file_id`` for post-commit
+backend/onyx/db/external_app.py:435:    bundle_file_id = app.skill.bundle_file_id
+backend/onyx/db/external_app.py:438:    return bundle_file_id
+backend/onyx/document_index/opensearch/search.py:39:from onyx.document_index.opensearch.schema import DOCUMENT_SETS_FIELD_NAME
+backend/onyx/document_index/opensearch/search.py:43:from onyx.document_index.opensearch.schema import METADATA_LIST_FIELD_NAME
+backend/onyx/document_index/opensearch/search.py:49:from onyx.document_index.opensearch.schema import TITLE_FIELD_NAME
+backend/onyx/document_index/opensearch/search.py:50:from onyx.document_index.opensearch.schema import TITLE_VECTOR_FIELD_NAME
+backend/onyx/document_index/opensearch/search.py:71:        is HybridSearchSubqueryConfiguration.TITLE_VECTOR_CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD
+backend/onyx/document_index/opensearch/search.py:73:        # Since the titles are included in the contents, the embedding matches
+backend/onyx/document_index/opensearch/search.py:76:        search_title_vector_weight = 0.1
+backend/onyx/document_index/opensearch/search.py:78:        # Single keyword weight for both title and content (merged from former
+backend/onyx/document_index/opensearch/search.py:79:        # title keyword + content keyword).
+backend/onyx/document_index/opensearch/search.py:85:            search_title_vector_weight,
+backend/onyx/document_index/opensearch/search.py:91:        is HybridSearchSubqueryConfiguration.CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD
+backend/onyx/document_index/opensearch/search.py:94:        # Single keyword weight for both title and content (merged from former
+backend/onyx/document_index/opensearch/search.py:95:        # title keyword + content keyword).
+backend/onyx/document_index/opensearch/search.py:217:                metadata; the source data will be omitted from the response. Use
+backend/onyx/document_index/opensearch/search.py:230:            document_sets=index_filters.document_set or [],
+backend/onyx/document_index/opensearch/search.py:250:                "excludes": [TITLE_VECTOR_FIELD_NAME, CONTENT_VECTOR_FIELD_NAME]
+backend/onyx/document_index/opensearch/search.py:296:            document_sets=[],
+backend/onyx/document_index/opensearch/search.py:368:            document_sets=index_filters.document_set or [],
+backend/onyx/document_index/opensearch/search.py:407:                "excludes": [TITLE_VECTOR_FIELD_NAME, CONTENT_VECTOR_FIELD_NAME]
+backend/onyx/document_index/opensearch/search.py:463:            document_sets=index_filters.document_set or [],
+backend/onyx/document_index/opensearch/search.py:474:            DocumentQuery._get_title_content_combined_keyword_search_query(
+backend/onyx/document_index/opensearch/search.py:486:                "excludes": [TITLE_VECTOR_FIELD_NAME, CONTENT_VECTOR_FIELD_NAME]
+backend/onyx/document_index/opensearch/search.py:545:            document_sets=index_filters.document_set or [],
+backend/onyx/document_index/opensearch/search.py:570:                "excludes": [TITLE_VECTOR_FIELD_NAME, CONTENT_VECTOR_FIELD_NAME]
+backend/onyx/document_index/opensearch/search.py:606:            document_sets=index_filters.document_set or [],
+backend/onyx/document_index/opensearch/search.py:637:                "excludes": [TITLE_VECTOR_FIELD_NAME, CONTENT_VECTOR_FIELD_NAME]
+backend/onyx/document_index/opensearch/search.py:706:            is HybridSearchSubqueryConfiguration.TITLE_VECTOR_CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD
+backend/onyx/document_index/opensearch/search.py:709:                DocumentQuery._get_title_vector_similarity_search_query(
+backend/onyx/document_index/opensearch/search.py:715:                DocumentQuery._get_title_content_combined_keyword_search_query(
+backend/onyx/document_index/opensearch/search.py:721:            is HybridSearchSubqueryConfiguration.CONTENT_VECTOR_TITLE_CONTENT_COMBINED_KEYWORD
+backend/onyx/document_index/opensearch/search.py:727:                DocumentQuery._get_title_content_combined_keyword_search_query(
+backend/onyx/document_index/opensearch/search.py:737:    def _get_title_vector_similarity_search_query(
+backend/onyx/document_index/opensearch/search.py:743:                TITLE_VECTOR_FIELD_NAME: {
+backend/onyx/document_index/opensearch/search.py:773:    def _get_title_content_combined_keyword_search_query(
+backend/onyx/document_index/opensearch/search.py:782:                            TITLE_FIELD_NAME: {
+backend/onyx/document_index/opensearch/search.py:785:                                # The title fields are strongly discounted as
+backend/onyx/document_index/opensearch/search.py:794:                            TITLE_FIELD_NAME: {
+backend/onyx/document_index/opensearch/search.py:845:        document_sets: list[str],
+backend/onyx/document_index/opensearch/search.py:881:            tags: If supplied, only documents with an entry in their metadata
+backend/onyx/document_index/opensearch/search.py:883:            document_sets: If supplied, only documents with at least one
+backend/onyx/document_index/opensearch/search.py:1035:            # convert_metadata_dict_to_list_of_strings for why metadata list
+backend/onyx/document_index/opensearch/search.py:1044:            return {"terms": {METADATA_LIST_FIELD_NAME: tag_str_list}}
+backend/onyx/document_index/opensearch/search.py:1046:        def _get_document_set_filter(document_sets: list[str]) -> TermsQuery[str]:
+backend/onyx/document_index/opensearch/search.py:1053:                document_sets: The document sets to restrict documents to.
+backend/onyx/document_index/opensearch/search.py:1063:            if not document_sets:
+backend/onyx/document_index/opensearch/search.py:1065:                    "document_sets cannot be empty if trying to create a document set filter."
+backend/onyx/document_index/opensearch/search.py:1067:            if len(document_sets) > MAX_NUM_TERMS_ALLOWED_IN_TERMS_QUERY:
+backend/onyx/document_index/opensearch/search.py:1069:                    f"Too many document sets: {len(document_sets)}. Max allowed: {MAX_NUM_TERMS_ALLOWED_IN_TERMS_QUERY}."
+backend/onyx/document_index/opensearch/search.py:1075:            return {"terms": {DOCUMENT_SETS_FIELD_NAME: list(document_sets)}}
+backend/onyx/document_index/opensearch/search.py:1219:            # document's metadata list.
+backend/onyx/document_index/opensearch/search.py:1235:            or document_sets
+backend/onyx/document_index/opensearch/search.py:1254:            if document_sets:
+backend/onyx/document_index/opensearch/search.py:1256:                    _get_document_set_filter(document_sets)
+backend/onyx/db/document_set.py:21:from onyx.db.federated import create_federated_connector_document_set_mapping
+backend/onyx/db/document_set.py:32:from onyx.server.features.document_set.models import DocumentSetCreationRequest
+backend/onyx/db/document_set.py:33:from onyx.server.features.document_set.models import DocumentSetUpdateRequest
+backend/onyx/db/document_set.py:79:            DocumentSet__UG.document_set_id == DocumentSetDBModel.id
+backend/onyx/db/document_set.py:90:def _delete_document_set_cc_pairs__no_commit(
+backend/onyx/db/document_set.py:91:    db_session: Session, document_set_id: int, is_current: bool | None = None
+backend/onyx/db/document_set.py:95:        DocumentSet__ConnectorCredentialPair.document_set_id == document_set_id
+backend/onyx/db/document_set.py:102:def _mark_document_set_cc_pairs_as_outdated__no_commit(
+backend/onyx/db/document_set.py:103:    db_session: Session, document_set_id: int
+backend/onyx/db/document_set.py:107:        DocumentSet__ConnectorCredentialPair.document_set_id == document_set_id
+backend/onyx/db/document_set.py:113:def delete_document_set_privacy__no_commit(
+backend/onyx/db/document_set.py:114:    document_set_id: int, db_session: Session
+backend/onyx/db/document_set.py:119:def get_document_set_by_id_for_user(
+backend/onyx/db/document_set.py:121:    document_set_id: int,
+backend/onyx/db/document_set.py:126:    stmt = stmt.where(DocumentSetDBModel.id == document_set_id)
+backend/onyx/db/document_set.py:131:def get_document_set_by_id(
+backend/onyx/db/document_set.py:133:    document_set_id: int,
+backend/onyx/db/document_set.py:142:    stmt = stmt.where(DocumentSetDBModel.id == document_set_id)
+backend/onyx/db/document_set.py:146:def get_document_set_by_name(
+backend/onyx/db/document_set.py:147:    db_session: Session, document_set_name: str
+backend/onyx/db/document_set.py:150:        select(DocumentSetDBModel).where(DocumentSetDBModel.name == document_set_name)
+backend/onyx/db/document_set.py:154:def get_document_sets_by_name(
+backend/onyx/db/document_set.py:155:    db_session: Session, document_set_names: list[str]
+backend/onyx/db/document_set.py:159:            DocumentSetDBModel.name.in_(document_set_names)
+backend/onyx/db/document_set.py:164:def filter_document_set_names_by_user_access(
+backend/onyx/db/document_set.py:166:    document_set_names: list[str],
+backend/onyx/db/document_set.py:169:    """Return the subset of ``document_set_names`` the user has view access to.
+backend/onyx/db/document_set.py:173:    if not document_set_names:
+backend/onyx/db/document_set.py:176:        DocumentSetDBModel.name.in_(document_set_names)
+backend/onyx/db/document_set.py:182:def get_document_sets_by_ids(
+backend/onyx/db/document_set.py:183:    db_session: Session, document_set_ids: list[int]
+backend/onyx/db/document_set.py:185:    if not document_set_ids:
+backend/onyx/db/document_set.py:188:        select(DocumentSetDBModel).where(DocumentSetDBModel.id.in_(document_set_ids))
+backend/onyx/db/document_set.py:193:    document_set_id: int,  # noqa: ARG001
+backend/onyx/db/document_set.py:241:def insert_document_set(
+backend/onyx/db/document_set.py:242:    document_set_creation_request: DocumentSetCreationRequest,
+backend/onyx/db/document_set.py:248:        not document_set_creation_request.cc_pair_ids
+backend/onyx/db/document_set.py:249:        and not document_set_creation_request.federated_connectors
+backend/onyx/db/document_set.py:253:    if not document_set_creation_request.is_public:
+backend/onyx/db/document_set.py:256:            cc_pair_ids=document_set_creation_request.cc_pair_ids,
+backend/onyx/db/document_set.py:257:            group_ids=document_set_creation_request.groups or [],
+backend/onyx/db/document_set.py:260:    new_document_set_row: DocumentSetDBModel
+backend/onyx/db/document_set.py:263:        new_document_set_row = DocumentSetDBModel(
+backend/onyx/db/document_set.py:264:            name=document_set_creation_request.name,
+backend/onyx/db/document_set.py:265:            description=document_set_creation_request.description,
+backend/onyx/db/document_set.py:267:            is_public=document_set_creation_request.is_public,
+backend/onyx/db/document_set.py:271:        db_session.add(new_document_set_row)
+backend/onyx/db/document_set.py:277:                document_set_id=new_document_set_row.id,
+backend/onyx/db/document_set.py:281:            for cc_pair_id in document_set_creation_request.cc_pair_ids
+backend/onyx/db/document_set.py:286:        from onyx.db.federated import create_federated_connector_document_set_mapping
+backend/onyx/db/document_set.py:288:        for fc_config in document_set_creation_request.federated_connectors:
+backend/onyx/db/document_set.py:289:            create_federated_connector_document_set_mapping(
+backend/onyx/db/document_set.py:292:                document_set_id=new_document_set_row.id,
+backend/onyx/db/document_set.py:297:            "onyx.db.document_set", "make_doc_set_private"
+backend/onyx/db/document_set.py:302:            document_set_id=new_document_set_row.id,
+backend/onyx/db/document_set.py:303:            user_ids=document_set_creation_request.users,
+backend/onyx/db/document_set.py:304:            group_ids=document_set_creation_request.groups,
+backend/onyx/db/document_set.py:314:    return new_document_set_row, ds_cc_pairs
+backend/onyx/db/document_set.py:317:def update_document_set(
+backend/onyx/db/document_set.py:319:    document_set_update_request: DocumentSetUpdateRequest,
+backend/onyx/db/document_set.py:322:    """If successful, this sets document_set_row.is_up_to_date = False.
+backend/onyx/db/document_set.py:328:        not document_set_update_request.cc_pair_ids
+backend/onyx/db/document_set.py:329:        and not document_set_update_request.federated_connectors
+backend/onyx/db/document_set.py:333:    if not document_set_update_request.is_public:
+backend/onyx/db/document_set.py:336:            cc_pair_ids=document_set_update_request.cc_pair_ids,
+backend/onyx/db/document_set.py:337:            group_ids=document_set_update_request.groups,
+backend/onyx/db/document_set.py:342:        document_set_row = get_document_set_by_id_for_user(
+backend/onyx/db/document_set.py:344:            document_set_id=document_set_update_request.id,
+backend/onyx/db/document_set.py:348:        if document_set_row is None:
+backend/onyx/db/document_set.py:350:                f"No document set with ID '{document_set_update_request.id}'"
+backend/onyx/db/document_set.py:352:        if not document_set_row.is_up_to_date:
+backend/onyx/db/document_set.py:357:        document_set_row.name = document_set_update_request.name
+backend/onyx/db/document_set.py:358:        document_set_row.description = document_set_update_request.description
+backend/onyx/db/document_set.py:360:            document_set_row.is_up_to_date = False
+backend/onyx/db/document_set.py:361:        document_set_row.is_public = document_set_update_request.is_public
+backend/onyx/db/document_set.py:362:        document_set_row.time_last_modified_by_user = func.now()
+backend/onyx/db/document_set.py:364:            "onyx.db.document_set", "make_doc_set_private"
+backend/onyx/db/document_set.py:369:            document_set_id=document_set_row.id,
+backend/onyx/db/document_set.py:370:            user_ids=document_set_update_request.users,
+backend/onyx/db/document_set.py:371:            group_ids=document_set_update_request.groups,
+backend/onyx/db/document_set.py:377:        _mark_document_set_cc_pairs_as_outdated__no_commit(
+backend/onyx/db/document_set.py:378:            db_session=db_session, document_set_id=document_set_row.id
+backend/onyx/db/document_set.py:383:                document_set_id=document_set_update_request.id,
+backend/onyx/db/document_set.py:387:            for cc_pair_id in document_set_update_request.cc_pair_ids
+backend/onyx/db/document_set.py:394:            FederatedConnector__DocumentSet.document_set_id == document_set_row.id
+backend/onyx/db/document_set.py:399:        for fc_config in document_set_update_request.federated_connectors:
+backend/onyx/db/document_set.py:400:            create_federated_connector_document_set_mapping(
+backend/onyx/db/document_set.py:403:                document_set_id=document_set_row.id,
+backend/onyx/db/document_set.py:412:    return document_set_row, ds_cc_pairs
+backend/onyx/db/document_set.py:415:def mark_document_set_as_synced(document_set_id: int, db_session: Session) -> None:
+backend/onyx/db/document_set.py:416:    stmt = select(DocumentSetDBModel).where(DocumentSetDBModel.id == document_set_id)
+backend/onyx/db/document_set.py:417:    document_set = db_session.scalar(stmt)
+backend/onyx/db/document_set.py:418:    if document_set is None:
+backend/onyx/db/document_set.py:419:        raise ValueError(f"No document set with ID: {document_set_id}")
+backend/onyx/db/document_set.py:422:    document_set.is_up_to_date = True
+backend/onyx/db/document_set.py:424:    _delete_document_set_cc_pairs__no_commit(
+backend/onyx/db/document_set.py:425:        db_session=db_session, document_set_id=document_set_id, is_current=False
+backend/onyx/db/document_set.py:430:def delete_document_set(
+backend/onyx/db/document_set.py:431:    document_set_row: DocumentSetDBModel, db_session: Session
+backend/onyx/db/document_set.py:434:    _delete_document_set_cc_pairs__no_commit(
+backend/onyx/db/document_set.py:435:        db_session=db_session, document_set_id=document_set_row.id
+backend/onyx/db/document_set.py:437:    db_session.delete(document_set_row)
+backend/onyx/db/document_set.py:441:def mark_document_set_as_to_be_deleted(
+backend/onyx/db/document_set.py:443:    document_set_id: int,
+backend/onyx/db/document_set.py:446:    """Cleans up all document_set -> cc_pair relationships and marks the document set
+backend/onyx/db/document_set.py:451:        document_set_row = get_document_set_by_id_for_user(
+backend/onyx/db/document_set.py:453:            document_set_id=document_set_id,
+backend/onyx/db/document_set.py:457:        if document_set_row is None:
+backend/onyx/db/document_set.py:458:            error_msg = f"Document set with ID: '{document_set_id}' does not exist "
+backend/onyx/db/document_set.py:462:        if not document_set_row.is_up_to_date:
+backend/onyx/db/document_set.py:468:        _delete_document_set_cc_pairs__no_commit(
+backend/onyx/db/document_set.py:469:            db_session=db_session, document_set_id=document_set_id
+backend/onyx/db/document_set.py:475:            FederatedConnector__DocumentSet.document_set_id == document_set_id
+backend/onyx/db/document_set.py:481:            "onyx.db.document_set", "delete_document_set_privacy__no_commit"
+backend/onyx/db/document_set.py:484:            document_set_id=document_set_id, db_session=db_session
+backend/onyx/db/document_set.py:489:        document_set_row.is_up_to_date = False
+backend/onyx/db/document_set.py:496:def delete_document_set_cc_pair_relationship__no_commit(
+backend/onyx/db/document_set.py:513:def fetch_document_sets(
+backend/onyx/db/document_set.py:526:            == DocumentSet__ConnectorCredentialPair.document_set_id,
+backend/onyx/db/document_set.py:553:    for document_set, cc_pair in results:
+backend/onyx/db/document_set.py:554:        if document_set.id not in aggregated_results:
+backend/onyx/db/document_set.py:555:            aggregated_results[document_set.id] = (
+backend/onyx/db/document_set.py:556:                document_set,
+backend/onyx/db/document_set.py:561:                aggregated_results[document_set.id][1].append(cc_pair)
+backend/onyx/db/document_set.py:564:        (document_set, cc_pairs)
+backend/onyx/db/document_set.py:565:        for document_set, cc_pairs in aggregated_results.values()
+backend/onyx/db/document_set.py:569:def fetch_all_document_sets_for_user(
+backend/onyx/db/document_set.py:592:def fetch_documents_for_document_set_paginated(
+backend/onyx/db/document_set.py:593:    document_set_id: int,
+backend/onyx/db/document_set.py:622:            == DocumentSet__ConnectorCredentialPair.document_set_id,
+backend/onyx/db/document_set.py:624:        .where(DocumentSetDBModel.id == document_set_id)
+backend/onyx/db/document_set.py:641:    document_set_id: int,
+backend/onyx/db/document_set.py:671:            == DocumentSet__ConnectorCredentialPair.document_set_id,
+backend/onyx/db/document_set.py:673:        .where(DocumentSetDBModel.id == document_set_id)
+backend/onyx/db/document_set.py:686:def fetch_document_sets_for_document(
+backend/onyx/db/document_set.py:697:    result = fetch_document_sets_for_documents([document_id], db_session)
+backend/onyx/db/document_set.py:703:def fetch_document_sets_for_documents(
+backend/onyx/db/document_set.py:707:    """Gives back a list of (document_id, list[document_set_names]) tuples"""
+backend/onyx/db/document_set.py:724:    valid_document_set__cc_pairs_subquery = aliased(
+backend/onyx/db/document_set.py:737:            ).label("document_set_names"),
+backend/onyx/db/document_set.py:756:            valid_document_set__cc_pairs_subquery,
+backend/onyx/db/document_set.py:758:            == valid_document_set__cc_pairs_subquery.connector_credential_pair_id,
+backend/onyx/db/document_set.py:763:            == valid_document_set__cc_pairs_subquery.document_set_id,
+backend/onyx/db/document_set.py:771:def get_or_create_document_set_by_name(
+backend/onyx/db/document_set.py:773:    document_set_name: str,
+backend/onyx/db/document_set.py:774:    document_set_description: str = "Default Persona created Document-Set, please update description",
+backend/onyx/db/document_set.py:778:    doc_set = get_document_set_by_name(db_session, document_set_name)
+backend/onyx/db/document_set.py:783:        name=document_set_name,
+backend/onyx/db/document_set.py:784:        description=document_set_description,
+backend/onyx/db/document_set.py:795:def check_document_sets_are_public(
+backend/onyx/db/document_set.py:797:    document_set_ids: list[int],
+backend/onyx/db/document_set.py:806:            DocumentSet__ConnectorCredentialPair.document_set_id.in_(document_set_ids)
+backend/onyx/db/release_notes.py:62:        # Convert version to anchor format for external docs links
+backend/onyx/db/release_notes.py:74:        link = f"{DOCS_CHANGELOG_BASE_URL}#{version_anchor}?{urlencode(utm_params)}"
+backend/onyx/db/release_notes.py:78:            "link": link,
+backend/onyx/db/release_notes.py:85:            title=entry.title,
+backend/onyx/document_index/FILTER_SEMANTICS.md:13:| **Knowledge scope** | `document_set`, `attached_document_ids`, `hierarchy_node_ids`, `persona_id_filter` | OR within group, AND with rest |
+backend/onyx/document_index/FILTER_SEMANTICS.md:46:When `document_set`, `attached_document_ids`, `hierarchy_node_ids`, and `persona_id_filter` are all empty/None:
+backend/onyx/document_index/FILTER_SEMANTICS.md:55:AND (document_sets contains "Engineering" OR document_sets contains "Legal")
+backend/onyx/document_index/FILTER_SEMANTICS.md:66:    document_sets contains "Engineering"
+backend/onyx/document_index/FILTER_SEMANTICS.md:78:    document_sets contains "Engineering"
+backend/onyx/document_index/FILTER_SEMANTICS.md:104:| `document_set` | `document_sets` | `weightedset<string>` | Connector doc sets attached to assistant |
+backend/onyx/document_index/FILTER_SEMANTICS.md:111:| `tags` | `metadata_list` | `array<string>` | Document metadata tags |
+backend/onyx/document_index/disabled.py:17:from onyx.document_index.interfaces_new import IndexingMetadata
+backend/onyx/document_index/disabled.py:18:from onyx.document_index.interfaces_new import MetadataUpdateRequest
+backend/onyx/document_index/disabled.py:19:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/document_index/disabled.py:43:        chunks: Iterable[DocMetadataAwareIndexChunk],  # noqa: ARG002
+backend/onyx/document_index/disabled.py:44:        indexing_metadata: IndexingMetadata,  # noqa: ARG002
+backend/onyx/document_index/disabled.py:57:        update_requests: list[MetadataUpdateRequest],  # noqa: ARG002
+backend/onyx/indexing/indexing_pipeline.py:30:from onyx.connectors.models import IndexAttemptMetadata
+backend/onyx/indexing/indexing_pipeline.py:43:from onyx.db.hierarchy import link_hierarchy_nodes_to_documents
+backend/onyx/indexing/indexing_pipeline.py:52:from onyx.document_index.document_metadata import DocumentMetadata
+backend/onyx/indexing/indexing_pipeline.py:55:from onyx.document_index.interfaces_new import IndexingMetadata
+backend/onyx/indexing/indexing_pipeline.py:62:from onyx.hooks.points.document_ingestion import DocumentIngestionOwner
+backend/onyx/indexing/indexing_pipeline.py:73:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/indexing_pipeline.py:160:        index_attempt_metadata: IndexAttemptMetadata,
+backend/onyx/indexing/indexing_pipeline.py:166:    index_attempt_metadata: IndexAttemptMetadata,
+backend/onyx/indexing/indexing_pipeline.py:169:    # Metadata here refers to basic document info, not metadata about the actual content
+backend/onyx/indexing/indexing_pipeline.py:170:    document_metadata_list: list[DocumentMetadata] = []
+backend/onyx/indexing/indexing_pipeline.py:172:        first_link = next(
+backend/onyx/indexing/indexing_pipeline.py:173:            (section.link for section in doc.sections if section.link), ""
+backend/onyx/indexing/indexing_pipeline.py:175:        db_doc_metadata = DocumentMetadata(
+backend/onyx/indexing/indexing_pipeline.py:176:            connector_id=index_attempt_metadata.connector_id,
+backend/onyx/indexing/indexing_pipeline.py:177:            credential_id=index_attempt_metadata.credential_id,
+backend/onyx/indexing/indexing_pipeline.py:179:            semantic_identifier=doc.semantic_identifier,
+backend/onyx/indexing/indexing_pipeline.py:180:            first_link=first_link,
+backend/onyx/indexing/indexing_pipeline.py:181:            primary_owners=get_experts_stores_representations(doc.primary_owners),
+backend/onyx/indexing/indexing_pipeline.py:182:            secondary_owners=get_experts_stores_representations(doc.secondary_owners),
+backend/onyx/indexing/indexing_pipeline.py:185:            doc_metadata=doc.doc_metadata,
+backend/onyx/indexing/indexing_pipeline.py:188:            file_id=doc.file_id,
+backend/onyx/indexing/indexing_pipeline.py:190:        document_metadata_list.append(db_doc_metadata)
+backend/onyx/indexing/indexing_pipeline.py:192:    upsert_documents(db_session, document_metadata_list)
+backend/onyx/indexing/indexing_pipeline.py:194:    # Insert document content metadata
+backend/onyx/indexing/indexing_pipeline.py:199:            metadata=doc.metadata,
+backend/onyx/indexing/indexing_pipeline.py:341:      overridden (e.g. GDrive in-place image replacement: same image_file_id, but image
+backend/onyx/indexing/indexing_pipeline.py:439:                        document_link=(
+backend/onyx/indexing/indexing_pipeline.py:440:                            document.sections[0].link if document.sections else None
+backend/onyx/indexing/indexing_pipeline.py:455:    previous_file_ids: dict[str, str],
+backend/onyx/indexing/indexing_pipeline.py:458:    """Queue STAGING → CONNECTOR origin flips for every new file_id in the batch.
+backend/onyx/indexing/indexing_pipeline.py:461:    flip lands in the same commit as the `Document.file_id` write. Does not
+backend/onyx/indexing/indexing_pipeline.py:465:        new_file_id = doc.file_id
+backend/onyx/indexing/indexing_pipeline.py:466:        if new_file_id is None or new_file_id == previous_file_ids.get(doc.id):
+backend/onyx/indexing/indexing_pipeline.py:468:        promote_staged_file(db_session=db_session, file_id=new_file_id)
+backend/onyx/indexing/indexing_pipeline.py:473:    previous_file_ids: dict[str, str],
+backend/onyx/indexing/indexing_pipeline.py:475:    """Best-effort blob deletes for file_ids replaced in this batch.
+backend/onyx/indexing/indexing_pipeline.py:477:    Must run AFTER `Document.file_id` has been committed to the new
+backend/onyx/indexing/indexing_pipeline.py:478:    file_id.
+backend/onyx/indexing/indexing_pipeline.py:482:        new_file_id = doc.file_id
+backend/onyx/indexing/indexing_pipeline.py:483:        old_file_id = previous_file_ids.get(doc.id)
+backend/onyx/indexing/indexing_pipeline.py:484:        if old_file_id is None or old_file_id == new_file_id:
+backend/onyx/indexing/indexing_pipeline.py:487:            file_store.delete_file(old_file_id, error_on_missing=False)
+backend/onyx/indexing/indexing_pipeline.py:489:            logger.exception("Failed to delete replaced file_id=%s.", old_file_id)
+backend/onyx/indexing/indexing_pipeline.py:494:    index_attempt_metadata: IndexAttemptMetadata,
+backend/onyx/indexing/indexing_pipeline.py:498:    """Sets up the documents in the relational DB (source of truth) for permissions, metadata, etc.
+backend/onyx/indexing/indexing_pipeline.py:510:    # Capture previous file_ids BEFORE any writes so we know what to reap.
+backend/onyx/indexing/indexing_pipeline.py:511:    previous_file_ids: dict[str, str] = {
+backend/onyx/indexing/indexing_pipeline.py:512:        db_doc.id: db_doc.file_id for db_doc in db_docs if db_doc.file_id is not None
+backend/onyx/indexing/indexing_pipeline.py:535:        # so `upsert_documents`' commit flushes Document.file_id and the origin
+backend/onyx/indexing/indexing_pipeline.py:539:            previous_file_ids=previous_file_ids,
+backend/onyx/indexing/indexing_pipeline.py:544:            index_attempt_metadata=index_attempt_metadata,
+backend/onyx/indexing/indexing_pipeline.py:547:        # Blob deletes run only after Document.file_id is durable.
+backend/onyx/indexing/indexing_pipeline.py:550:            previous_file_ids=previous_file_ids,
+backend/onyx/indexing/indexing_pipeline.py:562:        index_attempt_metadata.connector_id,
+backend/onyx/indexing/indexing_pipeline.py:563:        index_attempt_metadata.credential_id,
+backend/onyx/indexing/indexing_pipeline.py:567:    # Link hierarchy nodes to documents for sources where pages can be both
+backend/onyx/indexing/indexing_pipeline.py:571:        link_hierarchy_nodes_to_documents(
+backend/onyx/indexing/indexing_pipeline.py:606:            (not document.title or not document.title.strip())
+backend/onyx/indexing/indexing_pipeline.py:607:            and not document.semantic_identifier.strip()
+backend/onyx/indexing/indexing_pipeline.py:610:            # Skip documents that have neither title nor content
+backend/onyx/indexing/indexing_pipeline.py:615:                "Skipping document with ID %s as it has neither title nor content.",
+backend/onyx/indexing/indexing_pipeline.py:620:        if document.title is not None and not document.title.strip() and empty_contents:
+backend/onyx/indexing/indexing_pipeline.py:621:            # The title is explicitly empty ("" and not None) and the document is empty
+backend/onyx/indexing/indexing_pipeline.py:637:            len(document.title or document.semantic_identifier) + section_chars
+backend/onyx/indexing/indexing_pipeline.py:657:                        document_link=(
+backend/onyx/indexing/indexing_pipeline.py:658:                            document.sections[0].link if document.sections else None
+backend/onyx/indexing/indexing_pipeline.py:662:                        f"Document '{document.semantic_identifier}' is too large to index "
+backend/onyx/indexing/indexing_pipeline.py:738:                        link=section.link,
+backend/onyx/indexing/indexing_pipeline.py:739:                        image_file_id=(
+backend/onyx/indexing/indexing_pipeline.py:740:                            section.image_file_id
+backend/onyx/indexing/indexing_pipeline.py:767:                        link=section.link,
+backend/onyx/indexing/indexing_pipeline.py:768:                        image_file_id=None,
+backend/onyx/indexing/indexing_pipeline.py:775:                link=section.link,
+backend/onyx/indexing/indexing_pipeline.py:776:                image_file_id=section.image_file_id,
+backend/onyx/indexing/indexing_pipeline.py:782:                file_record = file_store.read_file_record(file_id=section.image_file_id)
+backend/onyx/indexing/indexing_pipeline.py:785:                        "Image file %s not found in FileStore", section.image_file_id
+backend/onyx/indexing/indexing_pipeline.py:790:                image_data = file_store.read_file(file_id=section.image_file_id).read()
+backend/onyx/indexing/indexing_pipeline.py:845:    # and possibly metadata took up too much space)
+backend/onyx/indexing/indexing_pipeline.py:1037:            title=doc.title,
+backend/onyx/indexing/indexing_pipeline.py:1038:            semantic_identifier=doc.semantic_identifier,
+backend/onyx/indexing/indexing_pipeline.py:1043:                    link=s.link,
+backend/onyx/indexing/indexing_pipeline.py:1044:                    image_file_id=(
+backend/onyx/indexing/indexing_pipeline.py:1045:                        s.image_file_id if isinstance(s, ImageSection) else None
+backend/onyx/indexing/indexing_pipeline.py:1050:            metadata={
+backend/onyx/indexing/indexing_pipeline.py:1051:                k: v if isinstance(v, list) else [v] for k, v in doc.metadata.items()
+backend/onyx/indexing/indexing_pipeline.py:1056:            primary_owners=(
+backend/onyx/indexing/indexing_pipeline.py:1058:                    DocumentIngestionOwner(
+backend/onyx/indexing/indexing_pipeline.py:1062:                    for o in doc.primary_owners
+backend/onyx/indexing/indexing_pipeline.py:1064:                if doc.primary_owners
+backend/onyx/indexing/indexing_pipeline.py:1067:            secondary_owners=(
+backend/onyx/indexing/indexing_pipeline.py:1069:                    DocumentIngestionOwner(
+backend/onyx/indexing/indexing_pipeline.py:1073:                    for o in doc.secondary_owners
+backend/onyx/indexing/indexing_pipeline.py:1075:                if doc.secondary_owners
+backend/onyx/indexing/indexing_pipeline.py:1095:            if s.image_file_id is not None:
+backend/onyx/indexing/indexing_pipeline.py:1097:                    ImageSection(image_file_id=s.image_file_id, link=s.link)
+backend/onyx/indexing/indexing_pipeline.py:1100:                new_sections.append(TextSection(text=s.text, link=s.link))
+backend/onyx/indexing/indexing_pipeline.py:1103:                    "Document ingestion hook returned a section with neither text nor image_file_id for doc_id=%r — skipping section.",
+backend/onyx/indexing/indexing_pipeline.py:1193:                title=doc.title or doc.semantic_identifier,
+backend/onyx/indexing/indexing_pipeline.py:1198:                        s.link
+backend/onyx/indexing/indexing_pipeline.py:1200:                        if isinstance(s, TextSection) and s.link
+backend/onyx/indexing/indexing_pipeline.py:1207:                metadata={
+backend/onyx/indexing/indexing_pipeline.py:1209:                    for k, v in (doc.metadata or {}).items()
+backend/onyx/indexing/indexing_pipeline.py:1259:    # mandate an ``index_attempt_metadata`` field, so non-attempt callers
+backend/onyx/indexing/indexing_pipeline.py:1262:    _attempt_metadata = getattr(adapter, "index_attempt_metadata", None)
+backend/onyx/indexing/indexing_pipeline.py:1264:        _attempt_metadata.attempt_id if _attempt_metadata is not None else None
+backend/onyx/indexing/indexing_pipeline.py:1365:            doc_id_to_chunk_cnt_diff: dict[str, IndexingMetadata.ChunkCounts] = {}
+backend/onyx/indexing/indexing_pipeline.py:1370:                doc_id_to_chunk_cnt_diff[doc_id] = IndexingMetadata.ChunkCounts(
+backend/onyx/indexing/indexing_pipeline.py:1374:            indexing_metadata = IndexingMetadata(
+backend/onyx/indexing/indexing_pipeline.py:1393:                def _enriched_stream() -> Iterator[DocMetadataAwareIndexChunk]:
+backend/onyx/indexing/indexing_pipeline.py:1402:                        indexing_metadata=indexing_metadata,
+backend/onyx/indexing/models.py:40:    # Holds the link and the offsets into the raw Chunk text
+backend/onyx/indexing/models.py:41:    source_links: dict[int, str] | None
+backend/onyx/indexing/models.py:42:    image_file_id: str | None
+backend/onyx/indexing/models.py:54:    # This could be an empty string if the title is too long and taking up too much of the chunk
+backend/onyx/indexing/models.py:55:    # This does not mean necessarily that the document does not have a title
+backend/onyx/indexing/models.py:56:    title_prefix: str
+backend/onyx/indexing/models.py:58:    # During indexing we also (optionally) build a metadata string from the metadata dict
+backend/onyx/indexing/models.py:60:    # multiple iterations of metadata representation for backwards compatibility
+backend/onyx/indexing/models.py:61:    metadata_suffix_semantic: str
+backend/onyx/indexing/models.py:62:    metadata_suffix_keyword: str
+backend/onyx/indexing/models.py:83:    def get_link(self) -> str | None:
+backend/onyx/indexing/models.py:85:            self.source_document.sections[0].link
+backend/onyx/indexing/models.py:93:    title_embedding: Embedding | None
+backend/onyx/indexing/models.py:96:# TODO(rkuo): currently, this extra metadata sent during indexing is just for speed,
+backend/onyx/indexing/models.py:98:class DocMetadataAwareIndexChunk(IndexChunk):
+backend/onyx/indexing/models.py:99:    """An `IndexChunk` that contains all necessary metadata to be indexed. This includes
+backend/onyx/indexing/models.py:104:    document_sets: all document sets the source document for this chunk is a part
+backend/onyx/indexing/models.py:114:    document_sets: set[str]
+backend/onyx/indexing/models.py:129:        document_sets: set[str],
+backend/onyx/indexing/models.py:136:    ) -> "DocMetadataAwareIndexChunk":
+backend/onyx/indexing/models.py:140:            document_sets=document_sets,
+backend/onyx/indexing/models.py:248:    """Returned by prepare_enrichment. Holds pre-computed metadata lookups
+backend/onyx/indexing/models.py:256:    ) -> DocMetadataAwareIndexChunk: ...
+backend/onyx/indexing/vector_db_insertion.py:15:from onyx.document_index.interfaces_new import IndexingMetadata
+backend/onyx/indexing/vector_db_insertion.py:16:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/vector_db_insertion.py:34:    make_chunks: Callable[[], Iterable[DocMetadataAwareIndexChunk]],
+backend/onyx/indexing/vector_db_insertion.py:35:    indexing_metadata: IndexingMetadata,
+backend/onyx/indexing/vector_db_insertion.py:50:                indexing_metadata=indexing_metadata,
+backend/onyx/indexing/vector_db_insertion.py:80:    def key(chunk: DocMetadataAwareIndexChunk) -> str:
+backend/onyx/indexing/vector_db_insertion.py:98:                    indexing_metadata=indexing_metadata,
+backend/onyx/indexing/vector_db_insertion.py:119:                        document_link=first_chunk.get_link(),
+backend/onyx/indexing/persistent_indexing.py:43:        document_link: str | None = None
+backend/onyx/indexing/persistent_indexing.py:45:            document_link = document.sections[0].link
+backend/onyx/indexing/persistent_indexing.py:49:                document_link=document_link,
+backend/onyx/db/models.py:503:    owner_id: Mapped[UUID | None] = mapped_column(ForeignKey("user.id"), nullable=True)
+backend/onyx/db/models.py:578:    title: Mapped[str] = mapped_column(String)
+backend/onyx/db/models.py:605:    __tablename__ = "persona__document_set"
+backend/onyx/db/models.py:608:    document_set_id: Mapped[int] = mapped_column(
+backend/onyx/db/models.py:609:        ForeignKey("document_set.id"), primary_key=True
+backend/onyx/db/models.py:623:    __tablename__ = "document_set__user"
+backend/onyx/db/models.py:625:    document_set_id: Mapped[int] = mapped_column(
+backend/onyx/db/models.py:626:        ForeignKey("document_set.id"), primary_key=True
+backend/onyx/db/models.py:634:    __tablename__ = "document_set__connector_credential_pair"
+backend/onyx/db/models.py:636:    document_set_id: Mapped[int] = mapped_column(
+backend/onyx/db/models.py:637:        ForeignKey("document_set.id"), primary_key=True
+backend/onyx/db/models.py:654:    document_set: Mapped["DocumentSet"] = relationship("DocumentSet")
+backend/onyx/db/models.py:836:    document_sets: Mapped[list["DocumentSet"]] = relationship(
+backend/onyx/db/models.py:844:        overlaps="document_set",
+backend/onyx/db/models.py:869:    permission model as Documents (external_user_emails, external_user_group_ids,
+backend/onyx/db/models.py:890:    # Link to view this node in the source system
+backend/onyx/db/models.py:891:    link: Mapped[str | None] = mapped_column(NullFilteredString, nullable=True)
+backend/onyx/db/models.py:905:    external_user_emails: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:909:    external_user_group_ids: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:976:    semantic_id: Mapped[str] = mapped_column(NullFilteredString)
+backend/onyx/db/models.py:977:    # First Section's link
+backend/onyx/db/models.py:978:    link: Mapped[str | None] = mapped_column(NullFilteredString, nullable=True)
+backend/onyx/db/models.py:979:    file_id: Mapped[str | None] = mapped_column(String, nullable=True)
+backend/onyx/db/models.py:985:    # with the local last modified time of the doc and any associated metadata
+backend/onyx/db/models.py:995:    # MD5 hash of title + section text at last successful index.
+backend/onyx/db/models.py:1000:    # last time any vespa relevant row metadata or the doc changed.
+backend/onyx/db/models.py:1013:    primary_owners: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:1016:    secondary_owners: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:1023:    external_user_emails: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:1027:    external_user_group_ids: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:1054:    doc_metadata: Mapped[dict[str, Any] | None] = mapped_column(
+backend/onyx/db/models.py:1959:    document_sets: Mapped[list["FederatedConnector__DocumentSet"]] = relationship(
+backend/onyx/db/models.py:1990:    __tablename__ = "federated_connector__document_set"
+backend/onyx/db/models.py:1996:    document_set_id: Mapped[int] = mapped_column(
+backend/onyx/db/models.py:1997:        ForeignKey("document_set.id", ondelete="CASCADE"), nullable=False
+backend/onyx/db/models.py:2003:        "FederatedConnector", back_populates="document_sets"
+backend/onyx/db/models.py:2005:    document_set: Mapped["DocumentSet"] = relationship(
+backend/onyx/db/models.py:2012:            "document_set_id",
+backend/onyx/db/models.py:2013:            name="uq_federated_connector_document_set",
+backend/onyx/db/models.py:2287:    # targeted reindex; links back to the `targeted_reindex_job` row.
+backend/onyx/db/models.py:2512:    document_link: Mapped[str | None] = mapped_column(String, nullable=True)
+backend/onyx/db/models.py:2849:    # Maps the citation numbers to a SearchDoc id
+backend/onyx/db/models.py:2850:    citations: Mapped[dict[int, int] | None] = mapped_column(
+backend/onyx/db/models.py:2854:    # Metadata
+backend/onyx/db/models.py:3013:    semantic_id: Mapped[str] = mapped_column(String)
+backend/onyx/db/models.py:3014:    link: Mapped[str | None] = mapped_column(String, nullable=True)
+backend/onyx/db/models.py:3021:    doc_metadata: Mapped[dict[str, str | list[str]]] = mapped_column(postgresql.JSONB())
+backend/onyx/db/models.py:3028:    primary_owners: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:3031:    secondary_owners: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:3409:    __tablename__ = "document_set"
+backend/onyx/db/models.py:3432:            (DocumentSet__ConnectorCredentialPair.document_set_id == id)
+backend/onyx/db/models.py:3439:        back_populates="document_sets",
+backend/onyx/db/models.py:3440:        overlaps="document_set",
+backend/onyx/db/models.py:3445:        back_populates="document_sets",
+backend/onyx/db/models.py:3456:        secondary="document_set__user_group",
+backend/onyx/db/models.py:3462:            back_populates="document_set",
+backend/onyx/db/models.py:3549:    # Metadata
+backend/onyx/db/models.py:3592:    # Metadata
+backend/onyx/db/models.py:3691:    document_sets: Mapped[list[DocumentSet]] = relationship(
+backend/onyx/db/models.py:3701:    # Owner
+backend/onyx/db/models.py:3763:    user_file_id: Mapped[UUID] = mapped_column(
+backend/onyx/db/models.py:3769:    """Association table linking personas to hierarchy nodes.
+backend/onyx/db/models.py:3786:    """Association table linking personas to individual documents.
+backend/onyx/db/models.py:3946:    registration_key is a one-time key used to link a Discord server to this tenant.
+backend/onyx/db/models.py:4159:    file_id: Mapped[str] = mapped_column(String, primary_key=True)
+backend/onyx/db/models.py:4164:    file_metadata: Mapped[JSON_ro] = mapped_column(postgresql.JSONB(), nullable=True)
+backend/onyx/db/models.py:4185:    file_id: Mapped[str] = mapped_column(
+backend/onyx/db/models.py:4187:        ForeignKey("file_record.file_id", ondelete="CASCADE"),
+backend/onyx/db/models.py:4198:    Skill metadata is shared schema state. Group-based grants use user_group,
+backend/onyx/db/models.py:4209:    # Admin-controlled metadata (editable post-creation via PATCH).
+backend/onyx/db/models.py:4216:    # row is a custom (admin-uploaded) skill and bundle_file_id is set.
+backend/onyx/db/models.py:4217:    # Exactly one of (built_in_skill_id, bundle_file_id) is non-null —
+backend/onyx/db/models.py:4223:    bundle_file_id: Mapped[str | None] = mapped_column(String, nullable=True)
+backend/onyx/db/models.py:4258:            "(built_in_skill_id IS NULL) <> (bundle_file_id IS NULL)",
+backend/onyx/db/models.py:4432:    __tablename__ = "document_set__user_group"
+backend/onyx/db/models.py:4434:    document_set_id: Mapped[int] = mapped_column(
+backend/onyx/db/models.py:4435:        ForeignKey("document_set.id"), primary_key=True
+backend/onyx/db/models.py:4501:    document_sets: Mapped[list[DocumentSet]] = relationship(
+backend/onyx/db/models.py:4614:    # option to link the error to a specific CC Pair
+backend/onyx/db/models.py:4633:    __tablename__ = "user__external_user_group_id"
+backend/onyx/db/models.py:4637:    external_user_group_id: Mapped[str] = mapped_column(String, primary_key=True)
+backend/onyx/db/models.py:4663:    as `Anyone with the link` or `Anyone in the domain`
+backend/onyx/db/models.py:4666:    __tablename__ = "public_external_user_group"
+backend/onyx/db/models.py:4668:    external_user_group_id: Mapped[str] = mapped_column(String, primary_key=True)
+backend/onyx/db/models.py:4691:    """This stores metadata about usage reports generated by admin including user who generated
+backend/onyx/db/models.py:4699:    report_name: Mapped[str] = mapped_column(ForeignKey("file_record.file_id"))
+backend/onyx/db/models.py:4761:    user_file_id: Mapped[UUID] = mapped_column(
+backend/onyx/db/models.py:4815:    file_id: Mapped[str] = mapped_column(nullable=False)
+backend/onyx/db/models.py:4844:    link_url: Mapped[str | None] = mapped_column(String, nullable=True)
+backend/onyx/db/models.py:4924:    # Owner email of user who configured this server
+backend/onyx/db/models.py:4925:    owner: Mapped[str] = mapped_column(String, nullable=False)
+backend/onyx/db/models.py:5287:    """Stores metadata about CLI agent build sessions."""
+backend/onyx/db/models.py:5362:    """Stores sandbox container metadata for users (one sandbox per user)."""
+backend/onyx/db/models.py:5402:    """Stores metadata about artifacts generated by CLI agents."""
+backend/onyx/db/models.py:5442:    """Stores metadata about session output snapshots."""
+backend/onyx/db/models.py:5473:    All message data is stored in message_metadata as JSON (the raw sandbox event packet).
+backend/onyx/db/models.py:5476:    Packet types stored in message_metadata:
+backend/onyx/db/models.py:5498:    message_metadata: Mapped[dict[str, Any]] = mapped_column(PGJSONB, nullable=False)
+backend/onyx/db/models.py:5980:    # via skill presence) live on the linked Skill row. ON DELETE
+backend/onyx/db/models.py:5989:    # from the linked skill's name so renaming the skill doesn't
+backend/onyx/indexing/chunker.py:7:from onyx.configs.app_configs import SKIP_METADATA_IN_CHUNK
+backend/onyx/indexing/chunker.py:14:    get_metadata_keys_to_ignore,
+backend/onyx/indexing/chunker.py:29:# Fairly arbitrary numbers but the general concept is we don't want the title/metadata to
+backend/onyx/indexing/chunker.py:31:MAX_METADATA_PERCENTAGE = 0.25
+backend/onyx/indexing/chunker.py:37:def _get_metadata_suffix_for_document_index(
+backend/onyx/indexing/chunker.py:38:    metadata: dict[str, str | list[str]], include_separator: bool = False
+backend/onyx/indexing/chunker.py:41:    Returns the metadata as a natural language string representation with all of the keys and values
+backend/onyx/indexing/chunker.py:44:    if not metadata:
+backend/onyx/indexing/chunker.py:47:    metadata_str = "Metadata:\n"
+backend/onyx/indexing/chunker.py:48:    metadata_values = []
+backend/onyx/indexing/chunker.py:49:    for key, value in metadata.items():
+backend/onyx/indexing/chunker.py:50:        if key in get_metadata_keys_to_ignore():
+backend/onyx/indexing/chunker.py:56:            metadata_values.extend(value)
+backend/onyx/indexing/chunker.py:58:            metadata_values.append(value)
+backend/onyx/indexing/chunker.py:60:        metadata_str += f"\t{key} - {value_str}\n"
+backend/onyx/indexing/chunker.py:62:    metadata_semantic = metadata_str.strip()
+backend/onyx/indexing/chunker.py:63:    metadata_keyword = " ".join(metadata_values)
+backend/onyx/indexing/chunker.py:66:        return RETURN_SEPARATOR + metadata_semantic, RETURN_SEPARATOR + metadata_keyword
+backend/onyx/indexing/chunker.py:67:    return metadata_semantic, metadata_keyword
+backend/onyx/indexing/chunker.py:73:    appending the content and adjusting source_links accordingly.
+backend/onyx/indexing/chunker.py:80:        source_links=chunks[0].source_links or {},
+backend/onyx/indexing/chunker.py:81:        image_file_id=None,
+backend/onyx/indexing/chunker.py:83:        title_prefix=chunks[0].title_prefix,
+backend/onyx/indexing/chunker.py:84:        metadata_suffix_semantic=chunks[0].metadata_suffix_semantic,
+backend/onyx/indexing/chunker.py:85:        metadata_suffix_keyword=chunks[0].metadata_suffix_keyword,
+backend/onyx/indexing/chunker.py:99:        for link_offset, link_text in (chunks[i].source_links or {}).items():
+backend/onyx/indexing/chunker.py:100:            if merged_chunk.source_links is None:
+backend/onyx/indexing/chunker.py:101:                merged_chunk.source_links = {}
+backend/onyx/indexing/chunker.py:102:            merged_chunk.source_links[link_offset + offset] = link_text
+backend/onyx/indexing/chunker.py:132:        include_metadata: bool = not SKIP_METADATA_IN_CHUNK,
+backend/onyx/indexing/chunker.py:138:        self.include_metadata = include_metadata
+backend/onyx/indexing/chunker.py:194:            logger.debug("Chunking %s", document.semantic_identifier)
+backend/onyx/indexing/chunker.py:196:        # Title prep
+backend/onyx/indexing/chunker.py:197:        title = extract_blurb(
+backend/onyx/indexing/chunker.py:198:            document.get_title_for_document_index() or "",
+backend/onyx/indexing/chunker.py:201:        title_prefix = title + RETURN_SEPARATOR if title else ""
+backend/onyx/indexing/chunker.py:202:        title_tokens = len(self.tokenizer.encode(title_prefix))
+backend/onyx/indexing/chunker.py:204:        # Metadata prep
+backend/onyx/indexing/chunker.py:205:        metadata_suffix_semantic = ""
+backend/onyx/indexing/chunker.py:206:        metadata_suffix_keyword = ""
+backend/onyx/indexing/chunker.py:207:        metadata_tokens = 0
+backend/onyx/indexing/chunker.py:208:        if self.include_metadata:
+backend/onyx/indexing/chunker.py:210:                metadata_suffix_semantic,
+backend/onyx/indexing/chunker.py:211:                metadata_suffix_keyword,
+backend/onyx/indexing/chunker.py:212:            ) = _get_metadata_suffix_for_document_index(
+backend/onyx/indexing/chunker.py:213:                document.metadata, include_separator=True
+backend/onyx/indexing/chunker.py:215:            metadata_tokens = len(self.tokenizer.encode(metadata_suffix_semantic))
+backend/onyx/indexing/chunker.py:217:        # If metadata is too large, skip it in the semantic content
+backend/onyx/indexing/chunker.py:218:        if metadata_tokens >= self.chunk_token_limit * MAX_METADATA_PERCENTAGE:
+backend/onyx/indexing/chunker.py:219:            metadata_suffix_semantic = ""
+backend/onyx/indexing/chunker.py:220:            metadata_tokens = 0
+backend/onyx/indexing/chunker.py:229:            # check if doc + title + metadata fits in a single chunk. If so, no need for contextual RAG
+backend/onyx/indexing/chunker.py:231:                doc_token_count + title_tokens + metadata_tokens
+backend/onyx/indexing/chunker.py:244:        # Adjust content token limit to accommodate title + metadata
+backend/onyx/indexing/chunker.py:246:            self.chunk_token_limit - title_tokens - metadata_tokens - context_size
+backend/onyx/indexing/chunker.py:255:                self.chunk_token_limit - title_tokens - metadata_tokens
+backend/onyx/indexing/chunker.py:262:            title_prefix = ""
+backend/onyx/indexing/chunker.py:263:            metadata_suffix_semantic = ""
+backend/onyx/indexing/chunker.py:271:            title_prefix,
+backend/onyx/indexing/chunker.py:272:            metadata_suffix_semantic,
+backend/onyx/indexing/chunker.py:273:            metadata_suffix_keyword,
+backend/onyx/indexing/chunker.py:290:        while persisting the document metadata.
+backend/onyx/db/projects.py:63:    link_url: str | None = None,
+backend/onyx/db/projects.py:68:    # NOTE: At the moment, zip metadata is not used for user files.
+backend/onyx/db/projects.py:88:            file_id=file_path,
+backend/onyx/db/projects.py:93:            link_url=link_url,
+backend/onyx/db/projects.py:105:                user_file_id=new_file.id,
+backend/onyx/db/projects.py:127:        if not check_project_ownership(project_id, user.id, db_session):
+backend/onyx/db/projects.py:154:                "Queued in-process processing for user_file_id=%s", user_file.id
+backend/onyx/db/projects.py:162:                kwargs={"user_file_id": user_file.id, "tenant_id": tenant_id},
+backend/onyx/db/projects.py:168:                "Triggered indexing for user_file_id=%s with task_id=%s",
+backend/onyx/db/projects.py:181:def check_project_ownership(
+backend/onyx/db/projects.py:204:    if not check_project_ownership(project_id, user_id, db_session):
+backend/onyx/indexing/embedder.py:124:        """Adds embeddings to the chunks, the title and metadata suffixes are added to the chunk as well
+backend/onyx/indexing/embedder.py:135:            ) or chunk.source_document.get_title_for_document_index()
+backend/onyx/indexing/embedder.py:160:        chunk_titles = {
+backend/onyx/indexing/embedder.py:161:            chunk.source_document.get_title_for_document_index() for chunk in chunks
+backend/onyx/indexing/embedder.py:165:        # If there is no title or the title is empty, the title embedding field will be null
+backend/onyx/indexing/embedder.py:167:        chunk_titles_list = [title for title in chunk_titles if title]
+backend/onyx/indexing/embedder.py:169:        # Cache the Title embeddings to only have to do it once
+backend/onyx/indexing/embedder.py:170:        title_embed_dict: dict[str, Embedding] = {}
+backend/onyx/indexing/embedder.py:171:        if chunk_titles_list:
+backend/onyx/indexing/embedder.py:172:            title_embeddings = self.embedding_model.encode(
+backend/onyx/indexing/embedder.py:173:                chunk_titles_list,
+backend/onyx/indexing/embedder.py:178:            title_embed_dict.update(
+backend/onyx/indexing/embedder.py:180:                    title: vector
+backend/onyx/indexing/embedder.py:181:                    for title, vector in zip(chunk_titles_list, title_embeddings)
+backend/onyx/indexing/embedder.py:196:            title = chunk.source_document.get_title_for_document_index()
+backend/onyx/indexing/embedder.py:198:            title_embedding = None
+backend/onyx/indexing/embedder.py:199:            if title:
+backend/onyx/indexing/embedder.py:200:                if title in title_embed_dict:
+backend/onyx/indexing/embedder.py:202:                    title_embedding = title_embed_dict[title]
+backend/onyx/indexing/embedder.py:205:                        "Title had to be embedded separately, this should not happen!"
+backend/onyx/indexing/embedder.py:207:                    title_embedding = self.embedding_model.encode(
+backend/onyx/indexing/embedder.py:208:                        [title],
+backend/onyx/indexing/embedder.py:213:                    title_embed_dict[title] = title_embedding
+backend/onyx/indexing/embedder.py:221:                title_embedding=title_embedding,
+backend/onyx/indexing/embedder.py:307:                        document_link=(
+backend/onyx/indexing/embedder.py:308:                            chunks_for_doc[0].get_link() if chunks_for_doc else None
+backend/onyx/db/targeted_reindex.py:182:    # (failure-driven) and manual specs in any order; the linkage-bearing
+backend/onyx/db/targeted_reindex.py:368:    failure context (message, link) it failed on. Arbitrary targets
+backend/onyx/db/targeted_reindex.py:392:                    document_link=err.document_link if err else None,
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:225:        ignore_metadata_chunks: bool = False,
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:228:        self.ignore_metadata_chunks = ignore_metadata_chunks
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:254:        if not self.ignore_metadata_chunks and headers:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:277:                "TabularChunker: skipping unparseable section (link=%s)", section.link
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:287:                    links={0: section.link or ""},
+backend/onyx/indexing/chunking/document_chunker.py:49:        title_prefix: str,
+backend/onyx/indexing/chunking/document_chunker.py:50:        metadata_suffix_semantic: str,
+backend/onyx/indexing/chunking/document_chunker.py:51:        metadata_suffix_keyword: str,
+backend/onyx/indexing/chunking/document_chunker.py:61:            payloads.append(ChunkPayload(text="", links={0: ""}))
+backend/onyx/indexing/chunking/document_chunker.py:69:                title_prefix=title_prefix,
+backend/onyx/indexing/chunking/document_chunker.py:70:                metadata_suffix_semantic=metadata_suffix_semantic,
+backend/onyx/indexing/chunking/document_chunker.py:71:                metadata_suffix_keyword=metadata_suffix_keyword,
+backend/onyx/indexing/chunking/document_chunker.py:88:            if not section_text and (not document.title or section_idx > 0):
+backend/onyx/indexing/chunking/document_chunker.py:90:                    "Skipping empty or irrelevant section in doc %s, link=%s",
+backend/onyx/indexing/chunking/document_chunker.py:91:                    document.semantic_identifier,
+backend/onyx/indexing/chunking/document_chunker.py:92:                    section.link,
+backend/onyx/indexing/chunking/text_section_chunker.py:40:        section_link = section.link or ""
+backend/onyx/indexing/chunking/text_section_chunker.py:47:                section_link=section_link,
+backend/onyx/indexing/chunking/text_section_chunker.py:66:                    link_offsets={**accumulator.link_offsets, offset: section_link},
+backend/onyx/indexing/chunking/text_section_chunker.py:75:                link_offsets={0: section_link},
+backend/onyx/indexing/chunking/text_section_chunker.py:82:        section_link: str,
+backend/onyx/indexing/chunking/text_section_chunker.py:101:                            links={0: section_link},
+backend/onyx/indexing/chunking/text_section_chunker.py:109:                        links={0: section_link},
+backend/onyx/indexing/chunking/image_section_chunker.py:16:        assert section.image_file_id is not None
+backend/onyx/indexing/chunking/image_section_chunker.py:19:        section_link = section.link or ""
+backend/onyx/indexing/chunking/image_section_chunker.py:26:                links={0: section_link} if section_link else {},
+backend/onyx/indexing/chunking/image_section_chunker.py:27:                image_file_id=section.image_file_id,
+backend/onyx/indexing/chunking/section_chunker.py:36:    title/metadata.
+backend/onyx/indexing/chunking/section_chunker.py:40:    links: dict[int, str]
+backend/onyx/indexing/chunking/section_chunker.py:42:    image_file_id: str | None = None
+backend/onyx/indexing/chunking/section_chunker.py:49:        title_prefix: str = "",
+backend/onyx/indexing/chunking/section_chunker.py:50:        metadata_suffix_semantic: str = "",
+backend/onyx/indexing/chunking/section_chunker.py:51:        metadata_suffix_keyword: str = "",
+backend/onyx/indexing/chunking/section_chunker.py:59:            source_links=self.links or {0: ""},
+backend/onyx/indexing/chunking/section_chunker.py:60:            image_file_id=self.image_file_id,
+backend/onyx/indexing/chunking/section_chunker.py:62:            title_prefix=title_prefix,
+backend/onyx/indexing/chunking/section_chunker.py:63:            metadata_suffix_semantic=metadata_suffix_semantic,
+backend/onyx/indexing/chunking/section_chunker.py:64:            metadata_suffix_keyword=metadata_suffix_keyword,
+backend/onyx/indexing/chunking/section_chunker.py:77:    link_offsets: dict[int, str] = Field(default_factory=dict)
+backend/onyx/indexing/chunking/section_chunker.py:85:        return [ChunkPayload(text=self.text, links=self.link_offsets)]
+backend/onyx/db/scheduled_task.py:5:ownership / NOT_FOUND raising is consistent.
+backend/onyx/db/scheduled_task.py:402:    Returns the run row. Ownership checks are the caller's responsibility —
+backend/onyx/db/scheduled_task.py:435:    # Ownership check up front — raises NOT_FOUND if invalid.
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:31:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:45:def _acquire_user_file_locks(db_session: Session, user_file_ids: list[str]) -> bool:
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:48:    user_file_uuid_list = [UUID(user_file_id) for user_file_id in user_file_ids]
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:58:    if len(documents) != len(set(user_file_ids)):
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:92:                        user_file_ids=[doc.id for doc in documents],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:119:        """Do all DB lookups and pre-compute file metadata from chunks."""
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:124:        # appear in the dict. Without this, IndexingMetadata silently omits such
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:139:            external_user_emails=[],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:140:            external_user_group_ids=[],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:144:        user_file_id_to_project_ids = fetch_user_project_ids_for_user_files(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:145:            user_file_ids=updatable_ids,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:148:        user_file_id_to_persona_ids = fetch_persona_ids_for_user_files(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:149:            user_file_ids=updatable_ids,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:152:        user_file_id_to_access: dict[str, DocumentAccess] = get_access_for_user_files(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:153:            user_file_ids=updatable_ids,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:156:        user_file_id_to_previous_chunk_cnt: dict[str, int] = {
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:157:            user_file_id: chunk_count
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:158:            for user_file_id, chunk_count in fetch_chunk_counts_for_user_files(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:159:                user_file_ids=updatable_ids,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:175:        user_file_id_to_raw_text: dict[str, str] = {}
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:176:        user_file_id_to_token_count: dict[str, int | None] = {}
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:177:        for user_file_id in updatable_ids:
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:178:            contents = content_by_file.get(user_file_id)
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:181:                user_file_id_to_raw_text[str(user_file_id)] = combined_content
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:187:                user_file_id_to_token_count[str(user_file_id)] = token_count
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:189:                user_file_id_to_raw_text[str(user_file_id)] = ""
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:190:                user_file_id_to_token_count[str(user_file_id)] = None
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:193:            user_file_id_to_access=user_file_id_to_access,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:194:            user_file_id_to_project_ids=user_file_id_to_project_ids,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:195:            user_file_id_to_persona_ids=user_file_id_to_persona_ids,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:196:            doc_id_to_previous_chunk_cnt=user_file_id_to_previous_chunk_cnt,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:198:            user_file_id_to_raw_text=user_file_id_to_raw_text,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:199:            user_file_id_to_token_count=user_file_id_to_token_count,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:204:    def _notify_assistant_owners_if_files_ready(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:208:        Check if all files for associated assistants are processed and notify owners.
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:214:                    # Skip assistants without owners
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:231:                            title="Your files are ready!",
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:235:                                "link": f"/assistants/{assistant.id}",
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:249:        user_file_ids = [doc.id for doc in context.updatable_docs]
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:254:            .filter(UserFile.id.in_(user_file_ids))
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:267:            user_file.token_count = enrichment.user_file_id_to_token_count[
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:271:        # Notify assistant owners if all their files are now processed
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:272:        self._notify_assistant_owners_if_files_ready(user_files, db_session)
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:277:        for user_file_id, raw_text in enrichment.user_file_id_to_raw_text.items():
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:279:                user_file_id=UUID(user_file_id),
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:285:    """Pre-computed metadata for per-chunk enrichment of user-uploaded files."""
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:289:        user_file_id_to_access: dict[str, DocumentAccess],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:290:        user_file_id_to_project_ids: dict[str, list[int]],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:291:        user_file_id_to_persona_ids: dict[str, list[int]],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:294:        user_file_id_to_raw_text: dict[str, str],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:295:        user_file_id_to_token_count: dict[str, int | None],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:299:        self._user_file_id_to_access = user_file_id_to_access
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:300:        self._user_file_id_to_project_ids = user_file_id_to_project_ids
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:301:        self._user_file_id_to_persona_ids = user_file_id_to_persona_ids
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:306:        self.user_file_id_to_raw_text = user_file_id_to_raw_text
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:307:        self.user_file_id_to_token_count = user_file_id_to_token_count
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:311:    ) -> DocMetadataAwareIndexChunk:
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:312:        return DocMetadataAwareIndexChunk.from_index_chunk(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:314:            access=self._user_file_id_to_access.get(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:317:            document_sets=set(),
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:318:            user_project=self._user_file_id_to_project_ids.get(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:321:            personas=self._user_file_id_to_persona_ids.get(
+backend/onyx/db/README.md:11:The assistant message includes the response, tool calls, feedback, citations, etc.
+backend/onyx/indexing/adapters/document_indexing_adapter.py:10:from onyx.connectors.models import IndexAttemptMetadata
+backend/onyx/indexing/adapters/document_indexing_adapter.py:18:from onyx.db.document_set import fetch_document_sets_for_documents
+backend/onyx/indexing/adapters/document_indexing_adapter.py:24:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/adapters/document_indexing_adapter.py:36:    """Default adapter: handles DB prep, locking, metadata enrichment, and finalize.
+backend/onyx/indexing/adapters/document_indexing_adapter.py:48:        index_attempt_metadata: IndexAttemptMetadata,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:53:        self.index_attempt_metadata = index_attempt_metadata
+backend/onyx/indexing/adapters/document_indexing_adapter.py:66:                index_attempt_metadata=self.index_attempt_metadata,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:76:                    connector_id=self.index_attempt_metadata.connector_id,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:77:                    credential_id=self.index_attempt_metadata.credential_id,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:121:            external_user_emails=[],
+backend/onyx/indexing/adapters/document_indexing_adapter.py:122:            external_user_group_ids=[],
+backend/onyx/indexing/adapters/document_indexing_adapter.py:130:            doc_id_to_document_set={
+backend/onyx/indexing/adapters/document_indexing_adapter.py:131:                document_id: document_sets
+backend/onyx/indexing/adapters/document_indexing_adapter.py:132:                for document_id, document_sets in fetch_document_sets_for_documents(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:226:            connector_id=self.index_attempt_metadata.connector_id,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:227:            credential_id=self.index_attempt_metadata.credential_id,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:239:    """Pre-computed metadata for per-chunk enrichment of connector documents."""
+backend/onyx/indexing/adapters/document_indexing_adapter.py:244:        doc_id_to_document_set: dict[str, list[str]],
+backend/onyx/indexing/adapters/document_indexing_adapter.py:253:        self._doc_id_to_document_set = doc_id_to_document_set
+backend/onyx/indexing/adapters/document_indexing_adapter.py:263:    ) -> DocMetadataAwareIndexChunk:
+backend/onyx/indexing/adapters/document_indexing_adapter.py:264:        return DocMetadataAwareIndexChunk.from_index_chunk(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:269:            document_sets=set(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:270:                self._doc_id_to_document_set.get(chunk.source_document.id, [])
+backend/onyx/db/index_attempt.py:988:        document_link=(
+backend/onyx/db/index_attempt.py:989:            failure.failed_document.document_link if failure.failed_document else None
+backend/onyx/db/persona.py:61:            selectinload(Persona.document_sets),
+backend/onyx/db/persona.py:117:    # If curator ownership restriction is enabled, curators can only access their own assistants
+backend/onyx/db/persona.py:150:    # Owner always sees their own agents (regardless of is_listed)
+backend/onyx/db/persona.py:245:                    title="A new agent was shared with you!",
+backend/onyx/db/persona.py:288:        converted_user_file_ids = None
+backend/onyx/db/persona.py:289:        if create_persona_request.user_file_ids is not None:
+backend/onyx/db/persona.py:291:                converted_user_file_ids = [
+backend/onyx/db/persona.py:292:                    UUID(str_id) for str_id in create_persona_request.user_file_ids
+backend/onyx/db/persona.py:295:                raise ValueError("Invalid user_file_ids; must be UUID strings")
+backend/onyx/db/persona.py:303:            document_set_ids=create_persona_request.document_set_ids,
+backend/onyx/db/persona.py:319:            user_file_ids=converted_user_file_ids,
+backend/onyx/db/persona.py:446:        selectinload(Persona.document_sets).options(
+backend/onyx/db/persona.py:486:        selectinload(Persona.document_sets).options(
+backend/onyx/db/persona.py:592:        selectinload(Persona.document_sets).options(
+backend/onyx/db/persona.py:660:        selectinload(Persona.document_sets).options(
+backend/onyx/db/persona.py:790:    affected_file_ids = [uf.id for uf in persona.user_files]
+backend/onyx/db/persona.py:791:    if affected_file_ids:
+backend/onyx/db/persona.py:792:        _mark_files_need_persona_sync(db_session, affected_file_ids)
+backend/onyx/db/persona.py:807:    affected_file_ids = [uf.id for uf in persona.user_files]
+backend/onyx/db/persona.py:808:    if affected_file_ids:
+backend/onyx/db/persona.py:809:        _mark_files_need_persona_sync(db_session, affected_file_ids)
+backend/onyx/db/persona.py:890:    file_ids = [uf.id for uf in persona.user_files]
+backend/onyx/db/persona.py:891:    _mark_files_need_persona_sync(db_session, file_ids)
+backend/onyx/db/persona.py:896:    user_file_ids: list[UUID],
+backend/onyx/db/persona.py:899:    and updates their persona metadata in the vector DB."""
+backend/onyx/db/persona.py:900:    if not user_file_ids:
+backend/onyx/db/persona.py:902:    db_session.query(UserFile).filter(UserFile.id.in_(user_file_ids)).update(
+backend/onyx/db/persona.py:920:    document_set_ids: list[int] | None = None,
+backend/onyx/db/persona.py:933:    user_file_ids: list[UUID] | None = None,
+backend/onyx/db/persona.py:976:    # Fetch and attach document_sets by IDs
+backend/onyx/db/persona.py:977:    document_sets = None
+backend/onyx/db/persona.py:978:    if document_set_ids is not None:
+backend/onyx/db/persona.py:979:        document_sets = (
+backend/onyx/db/persona.py:981:            .filter(DocumentSet.id.in_(document_set_ids))
+backend/onyx/db/persona.py:984:        if not document_sets and document_set_ids:
+backend/onyx/db/persona.py:985:            raise ValueError("document_sets not found")
+backend/onyx/db/persona.py:989:    if user_file_ids is not None:
+backend/onyx/db/persona.py:991:            db_session.query(UserFile).filter(UserFile.id.in_(user_file_ids)).all()
+backend/onyx/db/persona.py:993:        if not user_files and user_file_ids:
+backend/onyx/db/persona.py:1072:        if document_sets is not None:
+backend/onyx/db/persona.py:1073:            existing_persona.document_sets.clear()
+backend/onyx/db/persona.py:1074:            existing_persona.document_sets = document_sets or []
+backend/onyx/db/persona.py:1081:        if user_file_ids is not None:
+backend/onyx/db/persona.py:1082:            old_file_ids = {uf.id for uf in existing_persona.user_files}
+backend/onyx/db/persona.py:1083:            new_file_ids = {uf.id for uf in (user_files or [])}
+backend/onyx/db/persona.py:1084:            affected_file_ids = old_file_ids | new_file_ids
+backend/onyx/db/persona.py:1087:            if affected_file_ids:
+backend/onyx/db/persona.py:1088:                _mark_files_need_persona_sync(db_session, list(affected_file_ids))
+backend/onyx/db/persona.py:1117:            document_sets=document_sets or [],
+backend/onyx/db/file_record.py:23:                    FileRecord.file_id.like(f"{QUERY_REPORT_NAME_PREFIX}-%"),
+backend/onyx/db/file_record.py:32:def get_filerecord_by_file_id_optional(
+backend/onyx/db/file_record.py:33:    file_id: str,
+backend/onyx/db/file_record.py:36:    return db_session.query(FileRecord).filter_by(file_id=file_id).first()
+backend/onyx/db/file_record.py:48:def get_filerecord_by_file_id(
+backend/onyx/db/file_record.py:49:    file_id: str,
+backend/onyx/db/file_record.py:52:    filestore = db_session.query(FileRecord).filter_by(file_id=file_id).first()
+backend/onyx/db/file_record.py:56:            f"File by id {file_id} does not exist or was deleted"
+backend/onyx/db/file_record.py:69:        db_session.query(FileRecord).filter(FileRecord.file_id.like(f"{prefix}%")).all()
+backend/onyx/db/file_record.py:73:def delete_filerecord_by_file_id(
+backend/onyx/db/file_record.py:74:    file_id: str,
+backend/onyx/db/file_record.py:77:    db_session.query(FileRecord).filter_by(file_id=file_id).delete()
+backend/onyx/db/file_record.py:81:    file_id: str,
+backend/onyx/db/file_record.py:90:        FileRecord.file_id == file_id,
+backend/onyx/db/file_record.py:95:def get_staged_file_ids_by_index_attempt_id(
+backend/onyx/db/file_record.py:99:    """Return every `INDEXING_STAGING` file_id tagged with this attempt."""
+backend/onyx/db/file_record.py:102:            select(FileRecord.file_id)
+backend/onyx/db/file_record.py:105:                FileRecord.file_metadata["index_attempt_id"].as_string()
+backend/onyx/db/file_record.py:112:def get_staged_file_ids_for_cc_pair_excluding_attempt(
+backend/onyx/db/file_record.py:118:    """Return `INDEXING_STAGING` file_ids for this cc_pair eligible for
+backend/onyx/db/file_record.py:136:            select(FileRecord.file_id)
+backend/onyx/db/file_record.py:139:                FileRecord.file_metadata["cc_pair_id"].as_string() == str(cc_pair_id)
+backend/onyx/db/file_record.py:141:            .where(FileRecord.file_metadata["tenant_id"].as_string() == tenant_id)
+backend/onyx/db/file_record.py:143:                FileRecord.file_metadata["index_attempt_id"].as_string()
+backend/onyx/db/file_record.py:147:                FileRecord.file_metadata["index_attempt_id"]
+backend/onyx/db/file_record.py:156:    file_id: str,
+backend/onyx/db/file_record.py:163:    file_metadata: dict | None = None,
+backend/onyx/db/file_record.py:166:    race conditions when concurrent calls target the same file_id."""
+backend/onyx/db/file_record.py:168:        file_id=file_id,
+backend/onyx/db/file_record.py:172:        file_metadata=file_metadata,
+backend/onyx/db/file_record.py:177:        index_elements=[FileRecord.file_id],
+backend/onyx/db/file_record.py:182:            "file_metadata": stmt.excluded.file_metadata,
+backend/onyx/db/file_record.py:189:    return db_session.get(FileRecord, file_id)  # ty: ignore[invalid-return-type]
+backend/onyx/db/feedback.py:115:        order_func(DbDocument.boost), order_func(DbDocument.semantic_id)
+backend/onyx/db/api_key.py:109:        owner_id=user_id,
+backend/onyx/db/hierarchy.py:37:    return source.value.replace("_", " ").title()
+backend/onyx/db/hierarchy.py:104:        link=None,
+backend/onyx/db/hierarchy.py:179:    Walks ``raw_parent_id`` links iteratively (not recursively) so deeply nested
+backend/onyx/db/hierarchy.py:261:        external_user_emails: list[str] | None = None
+backend/onyx/db/hierarchy.py:262:        external_user_group_ids: list[str] | None = None
+backend/onyx/db/hierarchy.py:265:        external_user_emails = (
+backend/onyx/db/hierarchy.py:266:            list(node.external_access.external_user_emails)
+backend/onyx/db/hierarchy.py:267:            if node.external_access.external_user_emails
+backend/onyx/db/hierarchy.py:270:        external_user_group_ids = (
+backend/onyx/db/hierarchy.py:271:            list(node.external_access.external_user_group_ids)
+backend/onyx/db/hierarchy.py:272:            if node.external_access.external_user_group_ids
+backend/onyx/db/hierarchy.py:277:        external_user_emails = None
+backend/onyx/db/hierarchy.py:278:        external_user_group_ids = None
+backend/onyx/db/hierarchy.py:286:        existing_node.link = node.link
+backend/onyx/db/hierarchy.py:291:        existing_node.external_user_emails = external_user_emails
+backend/onyx/db/hierarchy.py:292:        existing_node.external_user_group_ids = external_user_group_ids
+backend/onyx/db/hierarchy.py:299:            link=node.link,
+backend/onyx/db/hierarchy.py:304:            external_user_emails=external_user_emails,
+backend/onyx/db/hierarchy.py:305:            external_user_group_ids=external_user_group_ids,
+backend/onyx/db/hierarchy.py:375:def link_hierarchy_nodes_to_documents(
+backend/onyx/db/hierarchy.py:382:    Link hierarchy nodes to their corresponding documents.
+backend/onyx/db/hierarchy.py:396:        Number of hierarchy nodes that were linked to documents
+backend/onyx/db/hierarchy.py:410:        HierarchyNode.document_id.is_(None),  # Only update if not already linked
+backend/onyx/db/hierarchy.py:423:            "Linked %s hierarchy nodes to documents for source %s",
+backend/onyx/db/hierarchy.py:613:    external_user_emails: list[str] | None,
+backend/onyx/db/hierarchy.py:614:    external_user_group_ids: list[str] | None,
+backend/onyx/db/hierarchy.py:628:        external_user_emails: List of user emails with access
+backend/onyx/db/hierarchy.py:629:        external_user_group_ids: List of group IDs with access
+backend/onyx/db/hierarchy.py:646:    existing_node.external_user_emails = external_user_emails
+backend/onyx/db/hierarchy.py:647:    existing_node.external_user_group_ids = external_user_group_ids
+backend/onyx/db/tools.py:276:        generated_images: Optional list of generated image metadata for replay
+backend/onyx/db/document.py:54:from onyx.document_index.document_metadata import DocumentMetadata
+backend/onyx/db/document.py:184:        DbDocument.id, DbDocument.doc_metadata, DbDocument.external_user_group_ids
+backend/onyx/db/document.py:200:            doc_metadata=row.doc_metadata,
+backend/onyx/db/document.py:201:            external_user_group_ids=row.external_user_group_ids or [],
+backend/onyx/db/document.py:355:            DbDocument.semantic_id > cursor_name,
+backend/onyx/db/document.py:357:                DbDocument.semantic_id == cursor_name,
+backend/onyx/db/document.py:374:            DbDocument.semantic_id < cursor_name,
+backend/onyx/db/document.py:376:                DbDocument.semantic_id == cursor_name,
+backend/onyx/db/document.py:409:            stmt = stmt.order_by(DbDocument.semantic_id.asc(), DbDocument.id.asc())
+backend/onyx/db/document.py:412:            stmt = stmt.order_by(DbDocument.semantic_id.desc(), DbDocument.id.desc())
+backend/onyx/db/document.py:467:def fetch_document_ids_by_links(
+backend/onyx/db/document.py:469:    links: list[str],
+backend/onyx/db/document.py:471:    """Fetch document IDs for documents whose link matches any of the provided values."""
+backend/onyx/db/document.py:472:    if not links:
+backend/onyx/db/document.py:475:    stmt = select(DbDocument.link, DbDocument.id).where(DbDocument.link.in_(links))
+backend/onyx/db/document.py:477:    return {link: doc_id for link, doc_id in rows if link}
+backend/onyx/db/document.py:651:    document_metadata_batch: list[DocumentMetadata],
+backend/onyx/db/document.py:657:    seen_documents: dict[str, DocumentMetadata] = {}
+backend/onyx/db/document.py:658:    for document_metadata in document_metadata_batch:
+backend/onyx/db/document.py:659:        doc_id = document_metadata.document_id
+backend/onyx/db/document.py:661:            seen_documents[doc_id] = document_metadata
+backend/onyx/db/document.py:677:                    semantic_id=doc.semantic_identifier,
+backend/onyx/db/document.py:678:                    link=doc.first_link,
+backend/onyx/db/document.py:681:                    primary_owners=doc.primary_owners,
+backend/onyx/db/document.py:682:                    secondary_owners=doc.secondary_owners,
+backend/onyx/db/document.py:687:                            "external_user_emails": list(
+backend/onyx/db/document.py:688:                                doc.external_access.external_user_emails
+backend/onyx/db/document.py:690:                            "external_user_group_ids": list(
+backend/onyx/db/document.py:691:                                doc.external_access.external_user_group_ids
+backend/onyx/db/document.py:698:                    doc_metadata=doc.doc_metadata,
+backend/onyx/db/document.py:699:                    file_id=doc.file_id,
+backend/onyx/db/document.py:710:        "semantic_id": insert_stmt.excluded.semantic_id,
+backend/onyx/db/document.py:711:        "link": insert_stmt.excluded.link,
+backend/onyx/db/document.py:712:        "primary_owners": insert_stmt.excluded.primary_owners,
+backend/onyx/db/document.py:713:        "secondary_owners": insert_stmt.excluded.secondary_owners,
+backend/onyx/db/document.py:714:        "doc_metadata": insert_stmt.excluded.doc_metadata,
+backend/onyx/db/document.py:716:        "file_id": insert_stmt.excluded.file_id,
+backend/onyx/db/document.py:724:                "external_user_emails": func.coalesce(
+backend/onyx/db/document.py:725:                    insert_stmt.excluded.external_user_emails,
+backend/onyx/db/document.py:726:                    DbDocument.external_user_emails,
+backend/onyx/db/document.py:728:                "external_user_group_ids": func.coalesce(
+backend/onyx/db/document.py:729:                    insert_stmt.excluded.external_user_group_ids,
+backend/onyx/db/document.py:730:                    DbDocument.external_user_group_ids,
+backend/onyx/db/document.py:943:def get_file_ids_for_document_ids(
+backend/onyx/db/document.py:947:    """Return the non-null `file_id` values attached to the given documents."""
+backend/onyx/db/document.py:951:        db_session.query(DbDocument.file_id)
+backend/onyx/db/document.py:953:        .filter(DbDocument.file_id.isnot(None))
+backend/onyx/db/document.py:956:    return [row.file_id for row in rows if row.file_id is not None]
+backend/onyx/db/document.py:959:def get_document_id_to_file_id_map(
+backend/onyx/db/document.py:963:    """Return a `{document_id: file_id}` map for docs that have a file_id."""
+backend/onyx/db/document.py:967:        db_session.query(DbDocument.id, DbDocument.file_id)
+backend/onyx/db/document.py:969:        .filter(DbDocument.file_id.isnot(None))
+backend/onyx/db/document.py:972:    return {doc_id: file_id for doc_id, file_id in rows}
+backend/onyx/db/document.py:1027:    file_ids_to_delete = get_file_ids_for_document_ids(
+backend/onyx/db/document.py:1036:    delete_files_best_effort(file_ids_to_delete)
+backend/onyx/db/document.py:1414:            f"""* [{bare_doc.semantic_id}]({bare_doc.link}) ({bare_doc.doc_updated_at})"""
+backend/onyx/db/document.py:1505:#     Get the semantic ID and the link for an entity name.
+backend/onyx/db/document.py:1509:#         db_session.query(Document.semantic_id, Document.link)
+backend/onyx/db/document.py:1517:#             doc_semantic_id=None,
+backend/onyx/db/document.py:1518:#             doc_link=None,
+backend/onyx/db/document.py:1520:#             semantic_linked_entity_name=f"{entity_type}:{document_id}",
+backend/onyx/db/document.py:1525:#         doc_semantic_id=result[0],
+backend/onyx/db/document.py:1526:#         doc_link=result[1],
+backend/onyx/db/document.py:1528:#         semantic_linked_entity_name=f"[{entity_type.upper()}:{result[0]}]({result[1]})",
+backend/onyx/db/document.py:1666:def update_document_metadata__no_commit(
+backend/onyx/db/document.py:1669:    doc_metadata: dict[str, Any],
+backend/onyx/db/document.py:1671:    """Update the doc_metadata field for a document.
+backend/onyx/db/document.py:1678:        doc_metadata: The new metadata dictionary to set
+backend/onyx/db/document.py:1683:        .values(doc_metadata=doc_metadata)
+backend/onyx/db/user_file.py:16:    user_file_ids: list[str],
+backend/onyx/db/user_file.py:20:    Return a list of (user_file_id, chunk_count) tuples.
+backend/onyx/db/user_file.py:21:    If a user_file_id is not found in the database, it will be returned with a chunk_count of 0.
+backend/onyx/db/user_file.py:24:        UserFile.id.in_(user_file_ids)
+backend/onyx/db/user_file.py:29:    # Create a dictionary of user_file_id to chunk_count
+backend/onyx/db/user_file.py:36:        (user_file_id, chunk_counts.get(user_file_id, 0))
+backend/onyx/db/user_file.py:37:        for user_file_id in user_file_ids
+backend/onyx/db/user_file.py:41:def calculate_user_files_token_count(file_ids: list[UUID], db_session: Session) -> int:
+backend/onyx/db/user_file.py:46:    if file_ids:
+backend/onyx/db/user_file.py:49:            .filter(UserFile.id.in_(file_ids))
+backend/onyx/db/user_file.py:59:    user_file_ids: list[str],
+backend/onyx/db/user_file.py:63:    user_file_uuid_ids = [UUID(user_file_id) for user_file_id in user_file_ids]
+backend/onyx/db/user_file.py:64:    stmt = select(Project__UserFile.user_file_id, Project__UserFile.project_id).where(
+backend/onyx/db/user_file.py:65:        Project__UserFile.user_file_id.in_(user_file_uuid_ids)
+backend/onyx/db/user_file.py:69:    user_file_id_to_project_ids: dict[str, list[int]] = {
+backend/onyx/db/user_file.py:70:        user_file_id: [] for user_file_id in user_file_ids
+backend/onyx/db/user_file.py:72:    for user_file_id, project_id in rows:
+backend/onyx/db/user_file.py:73:        user_file_id_to_project_ids[str(user_file_id)].append(project_id)
+backend/onyx/db/user_file.py:75:    return user_file_id_to_project_ids
+backend/onyx/db/user_file.py:79:    user_file_ids: list[str],
+backend/onyx/db/user_file.py:85:        .where(UserFile.id.in_(user_file_ids))
+backend/onyx/db/user_file.py:96:    user_file_ids: list[UUID],
+backend/onyx/db/user_file.py:100:    if not user_file_ids:
+backend/onyx/db/user_file.py:105:        .filter(UserFile.id.in_(user_file_ids))
+backend/onyx/db/user_file.py:111:def get_file_id_by_user_file_id(user_file_id: str, db_session: Session) -> str | None:
+backend/onyx/db/user_file.py:112:    """Resolve a `UserFile.id` to its underlying `FileRecord.file_id`.
+backend/onyx/db/user_file.py:115:    caller is already passing a storage `file_id`), so the caller can fall
+backend/onyx/db/user_file.py:118:    user_file = db_session.query(UserFile).filter(UserFile.id == user_file_id).first()
+backend/onyx/db/user_file.py:120:        return user_file.file_id
+backend/onyx/db/user_file.py:124:def get_file_ids_by_user_file_ids(
+backend/onyx/db/user_file.py:125:    user_file_ids: list[UUID], db_session: Session
+backend/onyx/db/user_file.py:127:    user_files = db_session.query(UserFile).filter(UserFile.id.in_(user_file_ids)).all()
+backend/onyx/db/user_file.py:128:    return [user_file.file_id for user_file in user_files]
+backend/onyx/db/user_file.py:132:    user_file_ids: list[str],
+backend/onyx/db/user_file.py:136:    """Fetch user files with the owner and assistant relationships
+backend/onyx/db/user_file.py:154:        .filter(UserFile.id.in_(user_file_ids))
+backend/onyx/db/file_content.py:8:def get_file_content_by_file_id(
+backend/onyx/db/file_content.py:9:    file_id: str,
+backend/onyx/db/file_content.py:12:    record = db_session.query(FileContent).filter_by(file_id=file_id).first()
+backend/onyx/db/file_content.py:15:            f"File content for file_id {file_id} does not exist or was deleted"
+backend/onyx/db/file_content.py:20:def get_file_content_by_file_id_optional(
+backend/onyx/db/file_content.py:21:    file_id: str,
+backend/onyx/db/file_content.py:24:    return db_session.query(FileContent).filter_by(file_id=file_id).first()
+backend/onyx/db/file_content.py:28:    file_id: str,
+backend/onyx/db/file_content.py:34:    race conditions when concurrent calls target the same file_id."""
+backend/onyx/db/file_content.py:36:        file_id=file_id,
+backend/onyx/db/file_content.py:41:        index_elements=[FileContent.file_id],
+backend/onyx/db/file_content.py:50:    return db_session.get(FileContent, file_id)  # ty: ignore[invalid-return-type]
+backend/onyx/db/file_content.py:53:def transfer_file_content_file_id(
+backend/onyx/db/file_content.py:54:    old_file_id: str,
+backend/onyx/db/file_content.py:55:    new_file_id: str,
+backend/onyx/db/file_content.py:58:    """Move a file_content row from old_file_id to new_file_id in-place.
+backend/onyx/db/file_content.py:61:    keeping OID ownership unique at all times.  The caller must ensure that
+backend/onyx/db/file_content.py:62:    new_file_id already exists in file_record (FK target)."""
+backend/onyx/db/file_content.py:65:        .filter_by(file_id=old_file_id)
+backend/onyx/db/file_content.py:66:        .update({"file_id": new_file_id})
+backend/onyx/db/file_content.py:70:            f"File content for file_id {old_file_id} does not exist or was deleted"
+backend/onyx/db/file_content.py:74:def delete_file_content_by_file_id(
+backend/onyx/db/file_content.py:75:    file_id: str,
+backend/onyx/db/file_content.py:78:    db_session.query(FileContent).filter_by(file_id=file_id).delete()
+backend/onyx/db/entity_type.py:67:        for prop in et.parsed_attributes.metadata_attribute_conversion.values():
+backend/onyx/db/federated.py:38:        selectinload(FederatedConnector.document_sets),
+backend/onyx/db/federated.py:166:def create_federated_connector_document_set_mapping(
+backend/onyx/db/federated.py:169:    document_set_id: int,
+backend/onyx/db/federated.py:175:        document_set_id=document_set_id,
+backend/onyx/db/federated.py:183:def update_federated_connector_document_set_entities(
+backend/onyx/db/federated.py:186:    document_set_id: int,
+backend/onyx/db/federated.py:193:        FederatedConnector__DocumentSet.document_set_id == document_set_id,
+backend/onyx/db/federated.py:205:def get_federated_connector_document_set_mappings(
+backend/onyx/db/federated.py:217:def delete_federated_connector_document_set_mapping(
+backend/onyx/db/federated.py:220:    document_set_id: int,
+backend/onyx/db/federated.py:226:        FederatedConnector__DocumentSet.document_set_id == document_set_id,
+backend/onyx/db/federated.py:238:def get_federated_connector_document_set_mappings_by_document_set_names(
+backend/onyx/db/federated.py:240:    document_set_names: list[str],
+backend/onyx/db/federated.py:247:            FederatedConnector__DocumentSet.document_set_id == DocumentSet.id,
+backend/onyx/db/federated.py:250:        .where(DocumentSet.name.in_(document_set_names))
+backend/onyx/db/utils.py:94:    doc_metadata: dict[str, Any]
+backend/onyx/db/utils.py:95:    external_user_group_ids: list[str]
+backend/onyx/db/discord_bot.py:128:        user_id=None,  # Service account, no owner
+backend/onyx/db/tag.py:127:    metadata: dict[str, str | list[str]],
+backend/onyx/db/tag.py:138:    for k, v in metadata.items():
+backend/onyx/db/tag.py:201:    """Essentially returns the document metadata from postgres."""
+backend/onyx/db/tag.py:206:    document_metadata: dict[str, Any] = {}
+backend/onyx/db/tag.py:209:            document_metadata.setdefault(tag.tag_key, [])
+backend/onyx/db/tag.py:211:            if not isinstance(document_metadata[tag.tag_key], list):
+backend/onyx/db/tag.py:217:                document_metadata[tag.tag_key] = [document_metadata[tag.tag_key]]
+backend/onyx/db/tag.py:218:            document_metadata[tag.tag_key].append(tag.tag_value)
+backend/onyx/db/tag.py:222:        document_metadata.setdefault(tag.tag_key, tag.tag_value)
+backend/onyx/db/tag.py:225:        if isinstance(document_metadata[tag.tag_key], list):
+backend/onyx/db/tag.py:231:            document_metadata[tag.tag_key] = [document_metadata[tag.tag_key]]
+backend/onyx/db/tag.py:232:    return document_metadata
+backend/onyx/db/enums.py:102:    DOCUMENT_SET = "document_set"
+backend/onyx/db/enums.py:508:    READ_DOCUMENT_SETS = "read:document_sets"
+backend/onyx/db/enums.py:521:    MANAGE_DOCUMENT_SETS = "manage:document_sets"
+backend/onyx/db/enums.py:546:        Permission.READ_DOCUMENT_SETS,
+backend/onyx/db/document_access.py:7:- User email matching external_user_emails
+backend/onyx/db/document_access.py:8:- User group overlap with external_user_group_ids
+backend/onyx/db/document_access.py:41:    2. Check document-level permissions (is_public, external_user_emails, external_user_group_ids)
+backend/onyx/db/document_access.py:75:        # Document is marked as public (e.g., "Anyone with link" in source)
+backend/onyx/db/document_access.py:79:        access_filters.append(any_(Document.external_user_emails) == user_email)
+backend/onyx/db/document_access.py:82:            Document.external_user_group_ids.overlap(
+backend/onyx/db/document_access.py:102:    - Documents marked as public (e.g., "Anyone with link")
+backend/onyx/db/document_access.py:103:    - Documents where user email matches external_user_emails
+backend/onyx/db/document_access.py:104:    - Documents where user's groups overlap with external_user_group_ids
+backend/onyx/db/credentials.py:438:    """Delete a credential regardless of ownership (admin function)"""

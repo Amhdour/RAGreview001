@@ -1,0 +1,1241 @@
+backend/onyx/background/celery/tasks/vespa/tasks.py:16:from onyx.access.access import get_access_for_document
+backend/onyx/background/celery/tasks/vespa/tasks.py:498:                doc_access = get_access_for_document(
+backend/onyx/background/celery/tasks/vespa/tasks.py:509:                    access=doc_access,
+backend/onyx/background/celery/tasks/monitoring/tasks.py:158:        "external_group_sync_queue_length": OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC,
+backend/onyx/background/celery/tasks/monitoring/tasks.py:929:    n_external_group_sync = celery_get_queue_length(
+backend/onyx/background/celery/tasks/monitoring/tasks.py:930:        OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC, r_celery
+backend/onyx/background/celery/tasks/monitoring/tasks.py:976:        f"external_group_sync={n_external_group_sync} "
+backend/onyx/background/celery/tasks/monitoring/tasks.py:995:    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+backend/onyx/background/celery/tasks/pruning/tasks.py:49:from onyx.db.enums import AccessType
+backend/onyx/background/celery/tasks/pruning/tasks.py:581:            is_connector_public = cc_pair.access_type == AccessType.PUBLIC
+backend/onyx/background/celery/tasks/pruning/tasks.py:824:    PERMISSION_SYNC_VALIDATION_MAX_QUEUE_LEN = 1024
+backend/onyx/background/celery/tasks/pruning/tasks.py:827:    if queue_len > PERMISSION_SYNC_VALIDATION_MAX_QUEUE_LEN:
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:1:# ACL Filter Construction
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:3:| ACL filter | File/path | Line reference if available | Inputs used | Filter target | Confirmed behavior | Unverified behavior | Evidence label |
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:5:| User ACL tokens | `backend/onyx/access/access.py` | `114-127` | User email and anonymous/public token. | Retrieval ACL list. | Returns `prefix_user_email(user.email)` plus `PUBLIC_DOC_PAT` for ordinary users. | Does not prove every backend consumes the list correctly. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:6:| Final index filters | `backend/onyx/context/search/pipeline.py` | `126-147` | User ACLs, source filters, document sets, time cutoff, tags, tenant ID, project/persona/attached-doc/hierarchy IDs. | `IndexFilters`. | Centralizes retrieval filter construction before backend dispatch. | Runtime application of the filters remains unverified. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:7:| Vespa weightedSet ACL filter | `backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py` | `176-252` | ACL list, source types, tags, document sets, persona/project IDs, time cutoff, tenant ID. | Vespa YQL filter string. | Builds `weightedSet(access_control_list, ...)` and combines with other filters. | Does not prove query execution results were runtime-validated. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:8:| OpenSearch ACL and scope filters | `backend/onyx/document_index/opensearch/search.py` | `1197-1296`, `454-582` | ACL list, sources, tags, document sets, persona/project IDs, time cutoff, tenant ID. | OpenSearch bool filter clauses. | Applies ACL and scope filters to keyword, semantic, and hybrid queries. | Does not prove all retrieval paths use the same builder. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:9:| Document access predicate | `backend/onyx/db/document_access.py` | `31-88` | User email, external group IDs, connector status. | Document access query. | Allows only public connectors, public docs, email matches, or group overlap, while excluding deleting connector pairs. | Runtime search usage of this helper is not proven end-to-end. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:10:| Document-set visibility filter | `backend/onyx/db/document_set.py` | `40-87`, `164-179` | User role, group membership, public flag, ownership. | Document-set access. | Restricts document-set visibility by user/group/public ownership. | Does not prove the retrieval stack always calls it. | OBSERVATION |
+rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md:11:| EE group-aware ACL widening | `backend/ee/onyx/access/access.py` | `43-117` | Group names, external group IDs, public external group IDs, document source, cc_pair state. | EE document ACL construction. | Adds group-aware and external-public semantics to base document ACLs. | Runtime enforcement is still unverified. | OBSERVATION |
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:15:from onyx.access.access import build_access_for_user_files
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:16:from onyx.access.models import DocumentAccess
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:48:from onyx.db.user_file import fetch_user_files_with_access_relationships
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:895:        access: DocumentAccess | None = None
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:907:            user_files = fetch_user_files_with_access_relationships(
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:935:                access_map = build_access_for_user_files([user_file])
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:936:                access = access_map.get(file_id_str)
+backend/onyx/background/celery/tasks/user_file_processing/tasks.py:946:                access=access if access is not None else None,
+backend/onyx/background/celery/tasks/hierarchyfetching/tasks.py:42:from onyx.db.enums import AccessType
+backend/onyx/background/celery/tasks/hierarchyfetching/tasks.py:296:    # should be accessible to all users
+backend/onyx/background/celery/tasks/hierarchyfetching/tasks.py:297:    is_connector_public = cc_pair.access_type == AccessType.PUBLIC
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_inputs_search_raw.txt:1:backend/onyx/access/access.py:114-127 -> user email and public-doc token
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_inputs_search_raw.txt:2:backend/ee/onyx/access/access.py:43-117 -> user groups, external groups, public external groups, document source, cc_pair state
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_inputs_search_raw.txt:3:backend/onyx/context/search/pipeline.py:69-147 -> user-selected document sets, source/time filters, ACL filters, tenant_id, project/persona/attached docs, hierarchy ids
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_inputs_search_raw.txt:4:backend/onyx/server/features/search/api.py:66-124 -> persona document sets, attached documents, hierarchy node ids, LLM provider access via user group ids and role
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_inputs_search_raw.txt:6:backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:176-232 -> ACL list, source_type, tags, document_set, persona_id, project_id, time_cutoff, tenant_id
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_inputs_search_raw.txt:7:backend/onyx/db/connector.py:330-356 -> last_time_perm_sync and last_time_external_group_sync
+backend/onyx/background/celery/tasks/beat_schedule.py:34:CLOUD_DOC_PERMISSION_SYNC_MULTIPLIER_DEFAULT = 1.0
+backend/onyx/background/celery/tasks/beat_schedule.py:228:                "task": OnyxCeleryTask.CHECK_FOR_EXTERNAL_GROUP_SYNC,
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_tests_search_raw.txt:6:backend/tests/integration/tests/permissions/test_admin_access.py
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_tests_search_raw.txt:8:backend/tests/integration/tests/indexing/test_initial_permission_sync.py
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/retrieval_acl_tests_search_raw.txt:9:backend/tests/unit/onyx/access/test_user_file_access.py
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/acl_filter_construction_search_raw.txt:1:backend/onyx/access/access.py:114-127 -> user ACL = prefix(email) + PUBLIC_DOC_PAT
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/acl_filter_construction_search_raw.txt:2:backend/onyx/context/search/pipeline.py:126-147 -> IndexFilters(access_control_list=user_acl_filters, tenant_id=...) and document_set/source/time/tag filters
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/acl_filter_construction_search_raw.txt:3:backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:30-252 -> ACL weightedSet, source, tags, document_set/persona/project, tenant, time, hidden filters
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/acl_filter_construction_search_raw.txt:4:backend/onyx/document_index/opensearch/search.py:1197-1296 -> access_control_list, source, tags, knowledge-scope, time, tenant, chunk, document_id filters
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/acl_filter_construction_search_raw.txt:5:backend/onyx/db/document_access.py:31-88 -> PUBLIC connector, public doc, user email, external group, and DELETING connector exclusion
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/acl_filter_construction_search_raw.txt:6:backend/onyx/db/document_set.py:40-87 -> document-set access by user/group/public ownership
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/vector_keyword_filtering_search_raw.txt:2:backend/onyx/document_index/vespa/vespa_document_index.py:892-980 -> hybrid_retrieval and keyword_retrieval with ACL filters in Vespa YQL
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/vector_keyword_filtering_search_raw.txt:3:backend/onyx/document_index/vespa/chunk_retrieval.py:203-289 -> ACL post-filter on retrieved docs and tenant check
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/cross_user_group_connector_search_raw.txt:1:backend/onyx/access/access.py:114-127 -> user email + public ACLs only for generic user ACL
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/cross_user_group_connector_search_raw.txt:2:backend/ee/onyx/access/access.py:43-117 -> document ACL is widened with group names and external-public semantics
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/cross_user_group_connector_search_raw.txt:5:backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py:112-220 -> group sync due/skip logic and deletion guard
+backend/onyx/background/celery/tasks/docfetching/tasks.py:385:    NOTE: we try/except all db access in this function because as a watchdog, this function
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/phase_9_retrieval_acl_sources_reviewed.txt:3:- rag-security-readiness-review/02_evidence/phase_9/retrieval_acl_test_evidence.md
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/phase_8_retrieval_acl_sources_reviewed.txt:3:- rag-security-readiness-review/02_evidence/phase_8/retrieval_acl_risk_to_code.md
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/deleted_stale_document_search_raw.txt:1:backend/onyx/db/document_access.py:66-88 -> exclude ConnectorCredentialPairStatus.DELETING and gate by public/doc-public/email/group ACLs
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/deleted_stale_document_search_raw.txt:3:backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py:112-154 -> sync skipped for DELETING cc_pairs and uses last_time_external_group_sync
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/deleted_stale_document_search_raw.txt:5:backend/onyx/access/access.py:202-210 and 293-299 -> deleted personas skipped in user-file access; persona lookups require Persona.deleted is false
+rag-security-readiness-review/02_evidence/phase_11/raw_outputs/search_preprocessing_search_raw.txt:4:backend/onyx/context/search/pipeline.py:59-147 -> document-set access validation, auto-detected time/source filters, tenant ACL filters
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:1:# Retrieval ACL Findings
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:6:- **Finding title:** Source-level retrieval ACL filters are constructed before retrieval dispatch.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:9:- **What is confirmed:** Search and chat-adjacent retrieval paths build `IndexFilters` with ACL, tenant, source, document-set, tag, and time inputs, then pass them into retrieval functions.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:11:- **Security relevance:** This is the main source-level retrieval ACL construction path.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:12:- **Client-ready wording:** The code constructs retrieval ACL filters before search execution, but runtime enforcement was not validated in this phase.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:15:- **Finding title:** Document access predicates exclude deleting connector pairs and require explicit public or overlap-based access.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:17:- **Evidence:** `backend/onyx/db/document_access.py:31-88`.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:18:- **What is confirmed:** Search-time document access logic admits only public connectors, public documents, email matches, or group overlap, while excluding `DELETING` connector pairs.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:20:- **Security relevance:** This is the core source-level document access rule.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:21:- **Client-ready wording:** Document access logic is explicitly permission-aware in source, but the live effect of that logic was not verified here.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:24:- **Finding title:** OpenSearch retrieval queries carry ACL and scope filters into keyword, semantic, and hybrid search.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:27:- **What is confirmed:** OpenSearch search builders include ACL, source, tag, knowledge-scope, time, and tenant filters in the query body.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:30:- **Client-ready wording:** The OpenSearch query builders are ACL-aware in source, but runtime proof is still missing.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:33:- **Finding title:** Vespa retrieval builds ACL filters and performs post-query ACL checks in at least one retrieval path.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:36:- **What is confirmed:** Vespa query construction includes ACL filter materialization, and the document-by-ID retrieval path applies ACL checks after retrieval because Vespa selection cannot directly use ACL `contains` logic.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:37:- **What is not confirmed:** That the full runtime search path always evaluates ACLs before user-visible ranking or selection.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:38:- **Security relevance:** This is the main Vespa retrieval ACL construction path.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:39:- **Client-ready wording:** Vespa retrieval is ACL-aware in source, but the runtime ordering and enforcement were not tested here.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:59:- **Limitation:** This is not an ACL enforcement point.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:65:- **Limitation:** Search history is not a retrieval ACL control.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:71:- **Why unverified:** No runtime, test, or CI evidence proves that all retrieval backends honor the constructed ACL filters exactly as intended.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:72:- **Missing evidence:** Live search traces, ACL regression tests, and executed CI.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:74:- **Client-ready wording:** Source-level ACL filters exist, but runtime enforcement has not been proven in this phase.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:78:- **Why unverified:** `inference_sections_from_ids()` assumes the IDs were already validated and disables ACL filtering locally.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:99:- No executed retrieval ACL tests were identified for this phase.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md:100:- No live runtime evidence was collected for ACL enforcement, result redaction, or citation privacy.
+backend/onyx/background/celery/tasks/docprocessing/tasks.py:6:from dataclasses import dataclass
+backend/onyx/background/celery/tasks/docprocessing/tasks.py:720:@dataclass
+backend/onyx/background/celery/tasks/docprocessing/tasks.py:871:    # we need to use celery's redis client to access its redis data
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:1:# PHASE 11 Retrieval ACL Security Review
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:4:This phase reviews retrieval ACL security as a source-only evidence exercise. It traces how document-access information flows through retrieval entry points, preprocessing, ACL filter construction, vector and keyword search backends, reranking assumptions, deleted/stale document handling, cross-user/group/connector risk paths, and cited/source rendering.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:20:- `backend/onyx/db/document_access.py`
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:21:- `backend/onyx/access/access.py`
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:22:- `backend/ee/onyx/access/access.py`
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:24:- `backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py`
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:29:## Retrieval ACL review method
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:33:4. Trace ACL filter construction into Vespa and OpenSearch query builders.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:41:## Retrieval ACL areas reviewed
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:44:- ACL filter construction and propagation.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:45:- ACL input sources.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:51:- Search ACL test evidence discovered in the repository.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:54:- Source-level retrieval ACL filters are built from user, group, document-set, source, tag, tenant, time, persona, project, and attached-document inputs before search requests are dispatched.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:55:- Document access filtering explicitly excludes connector pairs in `DELETING` status and only allows access through public, document-public, email, or group overlap predicates.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:56:- Both Vespa and OpenSearch query builders carry ACL-related filters into retrieval requests rather than relying only on post-processing.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:62:- Citation rendering uses source type and semantic title for display and opens the document from the search result object; this is not itself an ACL check.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:66:- Runtime ACL enforcement was not validated, so source-level filter construction does not prove effective enforcement.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:74:- No runtime search-trace or ACL-enforcement trace was collected.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:87:- Runtime ACL enforcement not validated.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:92:- This phase does not claim retrieval ACL enforcement is effective.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md:99:The reviewed source shows retrieval ACL construction and propagation through the search stack, but the phase remains source-only. The package is useful for understanding how ACL inputs are intended to flow through retrieval, yet it does not validate runtime enforcement or prove that unauthorized retrieval is blocked in practice.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_limitations.md:1:# Retrieval ACL Limitations
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_limitations.md:10:- Runtime ACL enforcement not validated.
+rag-security-readiness-review/02_evidence/phase_11/search_preprocessing.md:3:| Preprocessing step | File/path | Line reference if available | Input | Output | ACL relevance | Evidence label | Limitation |
+rag-security-readiness-review/02_evidence/phase_11/search_preprocessing.md:5:| Query validation | `backend/onyx/server/features/search/models.py` | `12-37` | Search query, source filters, document sets, tags, persona, provider/model, message history. | Validated `SearchRequest`. | Guards malformed input before retrieval. | CONFIRMED-FINDING | Validation is syntactic, not an ACL guarantee. |
+rag-security-readiness-review/02_evidence/phase_11/search_preprocessing.md:7:| Search UI keyword fallback | `backend/ee/onyx/server/query_and_chat/search_backend.py` | `106-140` | Search request and `hybrid_alpha`. | Keyword-only mode when the UI uses OpenSearch keyword search. | Affects which retrieval backend runs. | OBSERVATION | Backend choice is separate from ACL proof. |
+rag-security-readiness-review/02_evidence/phase_11/search_preprocessing.md:10:| Search tool query expansion | `backend/onyx/tools/tool_implementations/search/search_tool.py` | `647-850` | Message history, memories, user info, original query, LLM expansions. | Ranked search queries and search packets. | Query shaping affects retrieval but is not itself ACL logic. | OBSERVATION | Query expansion does not prove authorization. |
+rag-security-readiness-review/02_evidence/phase_11/search_preprocessing.md:11:| Document-set access precheck | `backend/onyx/context/search/pipeline.py` | `69-87` | User-selected document sets. | Permission error or allowed list. | Prevents one user-supplied bypass path at the source level. | CONFIRMED-FINDING | No runtime enforcement evidence collected. |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:3:| Retrieval backend/path | Vector/keyword/hybrid | File/path | Line reference if available | Filter evidence | ACL relevance | Missing evidence | Evidence label |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:6:| Vespa hybrid retrieval | Hybrid/vector+keyword | `backend/onyx/document_index/vespa/vespa_document_index.py` | `892-948` | YQL combines nearest-neighbor vector clauses with keyword clauses and Vespa filters from `build_vespa_filters`. | ACL is encoded into the query string before retrieval. | No runtime result trace was collected. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:7:| Vespa keyword retrieval | Keyword | `backend/onyx/document_index/vespa/vespa_document_index.py` | `950-980` | Uses `weakAnd(userInput)` plus `build_vespa_filters(include_hidden=...)`. | ACL and hidden-state controls are part of the query construction. | No runtime result trace was collected. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:8:| Vespa document-id retrieval | Retrieval-by-id | `backend/onyx/document_index/vespa/chunk_retrieval.py` | `203-289` | ACL is post-filtered on retrieved docs and tenant ID is checked. | Shows a post-query ACL check because selection language cannot `contains` ACL values. | Runtime correctness is not validated. | OBSERVATION |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:9:| OpenSearch hybrid search | Hybrid/vector+keyword | `backend/onyx/document_index/opensearch/search.py` | `315-421` | Hybrid query includes common filters for ACL, scope, and tenant. | Retrieval backend receives ACL filters directly. | Runtime validation is absent. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:10:| OpenSearch keyword search | Keyword | `backend/onyx/document_index/opensearch/search.py` | `424-503` | Keyword query includes the same ACL/scope filter set. | Retrieval backend receives ACL filters directly. | Runtime validation is absent. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:11:| OpenSearch semantic search | Vector | `backend/onyx/document_index/opensearch/search.py` | `506-582` | Content-vector knn query includes the same filter set. | Retrieval backend receives ACL filters directly. | Runtime validation is absent. | CONFIRMED-FINDING |
+rag-security-readiness-review/02_evidence/phase_11/vector_keyword_filtering.md:12:| Disabled vector backend | Not applicable | `backend/onyx/document_index/disabled.py` | `61-97` | Raises on all retrieval operations when vector DB is disabled. | Not a retrieval ACL control; only a fail-fast disabled mode. | Not applicable to live retrieval ACL behavior. | NOT-APPLICABLE |
+rag-security-readiness-review/02_evidence/phase_11/deleted_stale_document_handling.md:4:`backend/onyx/db/document_access.py` explicitly excludes `ConnectorCredentialPairStatus.DELETING` before applying public, document-public, email, or group-based access predicates. That is source-level deletion-aware filtering, but it does not validate live index behavior.
+rag-security-readiness-review/02_evidence/phase_11/deleted_stale_document_handling.md:7:`backend/onyx/access/models.py` and `backend/ee/onyx/access/access.py` encode private-vs-public behavior by building `DocumentAccess` objects with public and group/email grants. This shows how private access is represented in source, not runtime enforcement.
+rag-security-readiness-review/02_evidence/phase_11/deleted_stale_document_handling.md:10:`backend/ee/onyx/external_permissions/post_query_censoring.py` can censor post-query results by source, and `backend/onyx/document_index/opensearch/search.py` / `backend/onyx/document_index/vespa/chunk_retrieval.py` apply hidden/ACL filters during retrieval construction. No live evidence shows whether stale index entries are fully removed in time.
+rag-security-readiness-review/02_evidence/phase_11/deleted_stale_document_handling.md:13:`backend/onyx/db/connector.py` records `last_time_perm_sync` and `last_time_external_group_sync`, while `backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py` skips DELETING pairs and uses those timestamps to decide whether another sync is due. This is a freshness model, not proof of perfect freshness.
+rag-security-readiness-review/02_evidence/phase_11/deleted_stale_document_handling.md:16:`backend/ee/onyx/db/external_perm.py` marks stale external-group mappings and removes them. `backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py` performs stale cleanup and resync scheduling. Runtime deletion and reindex timing were not validated here.
+rag-security-readiness-review/02_evidence/phase_11/deleted_stale_document_handling.md:25:- No search ACL regression test execution.
+backend/onyx/background/celery/tasks/shared/tasks.py:11:from onyx.access.access import get_access_for_document
+backend/onyx/background/celery/tasks/shared/tasks.py:93:    (5) update document store entries to remove access associated with the
+backend/onyx/background/celery/tasks/shared/tasks.py:94:    connector / credential pair from the access list
+backend/onyx/background/celery/tasks/shared/tasks.py:130:                # i.e. they will correctly omit access for the current cc_pair
+backend/onyx/background/celery/tasks/shared/tasks.py:131:                doc_access = get_access_for_document(
+backend/onyx/background/celery/tasks/shared/tasks.py:144:                    access=doc_access,
+rag-security-readiness-review/02_evidence/phase_11/bypass_prone_paths.md:5:| Direct document-id lookup | `backend/onyx/context/search/retrieval/search_runner.py` | `inference_sections_from_ids()` sets `IndexFilters(access_control_list=None)` after noting the IDs were already validated. | Commented assumption that IDs were validated beforehand. | No runtime proof that only validated IDs reach this path. | UNVERIFIED-RISK | Validate the caller chain that supplies document IDs. |
+rag-security-readiness-review/02_evidence/phase_11/bypass_prone_paths.md:7:| Citation/source lookup | `backend/onyx/chat/citation_utils.py`, `web/src/components/search/results/Citation.tsx` | Citation rendering and click-through rely on returned search documents and metadata. | Source and title are displayed from returned document objects. | No ACL check is visible in the rendering layer. | UNVERIFIED-RISK | Validate citation click-through on forbidden documents. |
+rag-security-readiness-review/02_evidence/phase_11/bypass_prone_paths.md:9:| Cache paths | No relevant source found in this pass | Cached retrieval results could bypass live ACL evaluation if present. | No direct cache-backed retrieval path was identified in reviewed search code. | No cache-retrieval evidence was found. | NO-EVIDENCE-FOUND | Search for any retrieval caches before relying on them. |
+rag-security-readiness-review/02_evidence/phase_11/bypass_prone_paths.md:10:| Connector sync paths | `backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py`, `backend/ee/onyx/external_permissions/post_query_censoring.py` | Permission sync and post-query censoring can lag behind source changes. | Sync jobs mark stale rows and skip DELETING cc_pairs. | Runtime lag window was not validated. | UNVERIFIED-RISK | Validate sync timing versus search visibility. |
+rag-security-readiness-review/02_evidence/phase_11/bypass_prone_paths.md:11:| Public/shared document paths | `backend/onyx/access/access.py`, `backend/ee/onyx/access/access.py`, `backend/onyx/db/document_access.py` | Public flags and shared access widen retrieval scope intentionally. | Public-doc, public-persona, and public-external-group behavior is explicit. | No runtime proof of exact boundary handling was collected. | OBSERVATION | Confirm public/shared semantics in a live search session. |
+rag-security-readiness-review/02_evidence/phase_11/bypass_prone_paths.md:13:| Debug/test routes | `backend/ee/onyx/server/query_and_chat/search_backend.py`, `backend/onyx/server/query_and_chat/query_backend.py` | Search-flow classification and tags endpoints are auxiliary surfaces around retrieval. | Basic auth dependencies are present. | No dedicated debug-route ACL audit was collected. | NO-EVIDENCE-FOUND | Audit any auxiliary routes that expose search-adjacent state. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_entry_points.md:5:| Search API | Backend route | `backend/onyx/server/features/search/api.py` | `58-147` | `SearchRequest` query, sources, document sets, tags, persona, provider/model, and time cutoff. | CONFIRMED-FINDING | Main programmatic retrieval entry point; passes ACL-derived filters into `SearchTool`. | Source-only; runtime effect not validated. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_entry_points.md:7:| Chat message endpoint | Backend route | `backend/onyx/server/query_and_chat/chat_backend.py` | `528-620` | Chat message input; retrieval occurs indirectly through the chat/search tool chain. | OBSERVATION | Chat is a retrieval-adjacent entry point because the search tool is invoked from the chat loop. | The code reviewed here does not itself prove ACL enforcement on every chat path. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_entry_points.md:9:| Search frontend helper | Frontend call path | `web/src/ee/lib/search/svc.ts` | `17-95` | Search classification, search submission, and search history fetch requests. | OBSERVATION | Shows how frontend search input reaches backend search endpoints. | Does not itself validate access control. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_entry_points.md:10:| Search controller | Frontend call path | `web/src/ee/providers/QueryControllerProvider.tsx` | `92-238` | Routes search vs chat and sends search requests with filters. | OBSERVATION | Important for user-facing routing into search vs chat. | Client-side routing is not an ACL boundary. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_entry_points.md:11:| Citation rendering | Frontend display path | `web/src/components/search/results/Citation.tsx` | `37-121` | Search-result citation metadata and click-through handling. | OBSERVATION | Citation display can expose source labels and titles if search results are returned. | Rendering behavior is not an ACL check. |
+rag-security-readiness-review/02_evidence/phase_11/reranking_assumptions.md:16:## Whether ACL filtering appears before reranking
+rag-security-readiness-review/02_evidence/phase_11/reranking_assumptions.md:17:Source indicates that ACL filters are built before retrieval is dispatched and passed into each backend query. That is a source-level ordering fact, but it does not validate runtime enforcement.
+rag-security-readiness-review/02_evidence/phase_11/reranking_assumptions.md:23:- Source-level ordering suggests ACL filters are applied during query construction.
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:9:from onyx.document_index.vespa_constants import ACCESS_CONTROL_LIST
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:65:    ACCESS_CONTROL_LIST,
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:171:def _transform_vespa_acl_to_opensearch_acl(
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:172:    vespa_acl: dict[str, int] | None,
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:174:    if not vespa_acl:
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:176:    acl_list = list(vespa_acl.keys())
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:177:    is_public = PUBLIC_DOC_PAT in acl_list
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:179:        acl_list.remove(PUBLIC_DOC_PAT)
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:180:    return is_public, acl_list
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:285:            is_public, acl_list = _transform_vespa_acl_to_opensearch_acl(
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:286:                vespa_chunk.get(ACCESS_CONTROL_LIST)
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:288:            if not is_public and not acl_list:
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:290:                    "Migration warning: Vespa chunk with document ID %s and chunk index %s has no public ACL and no access control list. This does not make sense as it implies the document is never searchable. Continuing with the migration...",
+backend/onyx/background/celery/tasks/opensearch_migration/transformer.py:319:                access_control_list=acl_list,
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:4:- Reviewed retrieval ACL source paths across backend and frontend entry points.
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:5:- Traced ACL input flow into retrieval filter construction.
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:8:- Discovered retrieval ACL-related tests and evidence files without executing them.
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:16:- Did not validate runtime ACL enforcement.
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:22:- Commands log at `rag-security-readiness-review/02_evidence/commands/phase_11_retrieval_acl_review_commands_executed.md`.
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:25:- Report at `rag-security-readiness-review/03_reports/phase_11_retrieval_acl_review_report.md`.
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:33:- `rag-security-readiness-review/02_evidence/phase_9/retrieval_acl_test_evidence.md`
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:39:- `backend/tests/unit/onyx/access/test_user_file_access.py`
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:46:- No retrieval ACL negative-test result was collected.
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:48:## Highest-priority retrieval ACL concern
+rag-security-readiness-review/02_evidence/phase_11/phase_11_summary.md:49:Runtime ACL enforcement remains unverified even though source-level ACL filter construction is clearly present.
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md:1:# Retrieval ACL Tests Review
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md:5:| Search ACL synchronization | `rag-security-readiness-review/02_evidence/phase_9/retrieval_acl_test_evidence.md` | Evidence mapping | Search-permission synchronization across tenants appears relevant to retrieval ACL checks. | NO | None collected in this phase. | No execution record. | Source-only review. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md:7:| Search API integration | `backend/tests/integration/tests/search/test_search_api.py` | Integration test file found | Search API behavior and response shaping. | NO | None collected in this phase. | No ACL-specific pass/fail proof. | Not executed. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md:8:| Document-set permissions | `backend/tests/integration/tests/permissions/test_doc_set_permissions.py` | Integration test file found | Document-set access controls. | NO | None collected in this phase. | No retrieval-specific assertion proof. | Not executed. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md:10:| File-connector permissions | `backend/tests/integration/tests/permissions/test_file_connector_permissions.py` | Integration test file found | File connector permission behavior. | NO | None collected in this phase. | No retrieval ACL execution proof. | Not executed. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md:11:| User-file access unit tests | `backend/tests/unit/onyx/access/test_user_file_access.py` | Unit test file found | User-file access logic and helper behavior. | NO | None collected in this phase. | No search-time ACL assertion proof. | Not executed. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md:12:| Federated Slack search test | `backend/tests/external_dependency_unit/slack_bot/test_slack_bot_federated_search.py` | External dependency unit test file found | Federated Slack search behavior. | NO | None collected in this phase. | No ACL execution proof. | Not executed. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:1:# Retrieval ACL Inputs
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:3:| ACL input | Source | File/path | Line reference if available | Used by | What is confirmed | What is unverified | Security relevance |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:5:| User email / identity | Backend auth context | `backend/onyx/access/access.py` | `114-127` | User ACL generation. | Ordinary users receive an ACL token derived from their email; anonymous users receive only public access. | Whether every retrieval backend uses the ACL token is unverified. | Core retrieval identity input. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:6:| User role | Backend auth context | `backend/onyx/server/features/search/api.py` | `99-106` | LLM-provider authorization for search. | Admin status affects provider access checks. | Role-to-retrieval access outside provider checks is unverified. | Controls elevated search-adjacent capabilities. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:7:| Group IDs / names | Backend DB | `backend/ee/onyx/access/access.py` | `43-117` | EE ACL widening and document access. | Group names and external groups are added to document ACLs when present. | Runtime group-sync completeness is unverified. | Important for cross-group exposure analysis. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:9:| Document set names | Persona/request context | `backend/onyx/context/search/pipeline.py` | `69-93` | Scope restriction and access precheck. | User-supplied document sets are access-checked before retrieval. | End-to-end runtime proof is missing. | Scope control input. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:12:| Connector access type / status | Connector sync and access logic | `backend/onyx/db/document_access.py`, `backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py` | `66-88`, `112-154` | Document access and stale-group sync. | DELETING connectors are excluded from doc access and sync tasks. | Deletion timing versus search behavior is unverified. | Connector-state input. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:13:| Permission-sync timestamps | Connector DB | `backend/onyx/db/connector.py` | `330-356` | Sync freshness tracking. | `last_time_perm_sync` and `last_time_external_group_sync` are persisted on the cc_pair. | Whether stale timestamps can still leak through search is unverified. | Staleness/freshness input. |
+rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_inputs.md:14:| Document metadata | Search result / index metadata | `backend/onyx/context/search/models.py`, `backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py` | `141-151`, `194-200` | Search filters and returned results. | Metadata tags and source metadata participate in filtering and returned search objects. | Runtime filtering completeness is unverified. | Metadata-driven access relevance. |
+rag-security-readiness-review/02_evidence/phase_11/cross_user_group_connector_risks.md:5:| Cross-user retrieval | User email, public ACLs | `backend/onyx/access/access.py`, `backend/onyx/db/document_access.py` | User ACLs are built from the current user email plus public access. | Whether another user's private content can never surface at runtime is unverified. | Unauthorized document exposure between users. | Negative search test for a known forbidden document ID. |
+rag-security-readiness-review/02_evidence/phase_11/cross_user_group_connector_risks.md:6:| Cross-group retrieval | User groups, external user groups | `backend/ee/onyx/access/access.py`, `backend/onyx/access/models.py` | EE ACLs can include group names and external group IDs. | Group-sync completeness and timing are unverified. | Exposure across group boundaries. | Validate search results against a user missing the granting group. |
+rag-security-readiness-review/02_evidence/phase_11/cross_user_group_connector_risks.md:8:| Cross-connector retrieval | Connector credential pairs, source types | `backend/onyx/db/document_access.py`, `backend/ee/onyx/external_permissions/post_query_censoring.py` | Document access and censoring are connector/source aware. | Whether all connector/source combinations enforce identical behavior is unverified. | Exposure between sources with different ACL models. | Validate per-source result sets for a user lacking one connector. |
+rag-security-readiness-review/02_evidence/phase_11/cross_user_group_connector_risks.md:9:| Connector permission drift | Sync timestamps, stale external groups | `backend/onyx/db/connector.py`, `backend/ee/onyx/db/external_perm.py`, `backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py` | The source tracks sync timestamps and stale rows. | Drift window and recovery timing are unverified. | Temporary exposure after source permission changes. | Compare live source permissions to live search results after a permission change. |
+rag-security-readiness-review/02_evidence/phase_11/cross_user_group_connector_risks.md:10:| Inaccessible source / citation exposure | Search results, citations | `backend/onyx/chat/citation_utils.py`, `web/src/components/search/results/Citation.tsx` | Returned search documents feed citation rendering. | Whether inaccessible source metadata can still surface in the UI is unverified. | Leakage of source names, titles, or links. | Validate citation rendering for a forbidden source. |
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:46:from onyx.db.permission_sync_attempt import (
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:47:    delete_doc_permission_sync_attempts__no_commit,
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:49:from onyx.db.permission_sync_attempt import (
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:50:    delete_external_group_permission_sync_attempts__no_commit,
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:123:        external_group_sync_payload = redis_connector.external_group_sync.payload
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:124:        if external_group_sync_payload and external_group_sync_payload.celery_task_id:
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:125:            app.control.revoke(external_group_sync_payload.celery_task_id)
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:127:                f"Revoked external group sync task {external_group_sync_payload.celery_task_id}."
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:220:                            redis_connector.external_group_sync.reset()
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:470:            delete_doc_permission_sync_attempts__no_commit(
+backend/onyx/background/celery/tasks/connector_deletion/tasks.py:474:            delete_external_group_permission_sync_attempts__no_commit(
+backend/onyx/db/permissions.py:32:    narrows access, so it fails safe.
+backend/onyx/db/kg_temp_view.py:84:#         AND ccp.access_type != 'SYNC'
+backend/onyx/db/kg_temp_view.py:85:#         AND (u.email = :user_email or ccp.access_type::text = 'PUBLIC')
+backend/onyx/db/kg_temp_view.py:87:#     user_group_accessible_docs AS (
+backend/onyx/db/kg_temp_view.py:101:#         AND ccp.access_type != 'SYNC'
+backend/onyx/db/kg_temp_view.py:104:#     external_user_docs AS (
+backend/onyx/db/kg_temp_view.py:109:#         AND :user_email = ANY(external_user_emails)
+backend/onyx/db/kg_temp_view.py:111:#     external_group_docs AS (
+backend/onyx/db/kg_temp_view.py:115:#         JOIN "{tenant_id}".user__external_user_group_id ueg ON ueg.external_user_group_id = ANY(d.external_user_group_ids)
+backend/onyx/db/kg_temp_view.py:125:#         SELECT allowed_doc_id FROM user_group_accessible_docs
+backend/onyx/db/kg_temp_view.py:127:#         SELECT allowed_doc_id FROM external_user_docs
+backend/onyx/db/kg_temp_view.py:129:#         SELECT allowed_doc_id FROM external_group_docs
+backend/onyx/db/notification.py:101:            f"User {user_id} is not authorized to access notification {notification_id}"
+backend/onyx/connectors/highspot/connector.py:378:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/highspot/connector.py:451:        Validate that the provided credentials can access the Highspot API.
+backend/onyx/connectors/highspot/client.py:282:        Check if the API is accessible and credentials are valid.
+backend/onyx/connectors/highspot/client.py:285:            True if API is accessible, False otherwise
+backend/onyx/db/llm.py:102:def can_user_access_llm_provider(
+backend/onyx/db/llm.py:111:        provider: The LLM provider to check access for
+backend/onyx/db/llm.py:116:    Access logic:
+backend/onyx/db/llm.py:117:    - is_public controls USER access (group bypass): when True, all users can access
+backend/onyx/db/llm.py:125:    1. is_public=True, no personas set → everyone has access
+backend/onyx/connectors/google_utils/google_auth.py:71:            logger.exception("Failed to refresh google drive access token")
+backend/onyx/connectors/google_utils/google_auth.py:164:                f"Unable to access {source} - service account credentials are invalid."
+backend/onyx/connectors/google_utils/google_auth.py:172:            f"Unable to access {source} - unknown credential structure."
+backend/onyx/db/users.py:40:    access by ``current_user`` and should not receive default-group
+backend/onyx/db/users.py:185:    # Access table columns directly via __table__.c to get proper SQLAlchemy column types
+backend/onyx/connectors/google_utils/google_kv.py:108:def update_credential_access_tokens(
+backend/onyx/db/mcp.py:83:def get_mcp_servers_accessible_to_user(
+backend/onyx/db/mcp.py:86:    """Get all MCP servers accessible to a user (directly or through groups)"""
+backend/onyx/db/mcp.py:93:    # Get servers accessible directly to user
+backend/onyx/db/mcp.py:94:    user_servers = list(user.accessible_mcp_servers)
+backend/onyx/db/mcp.py:96:    # TODO: Add group-based access once relationships are fully implemented
+backend/onyx/db/mcp.py:97:    # For now, just return direct user access
+backend/onyx/db/mcp.py:216:    """Grant a user access to an MCP server"""
+backend/onyx/db/mcp.py:232:    """Remove a user's access to an MCP server"""
+backend/onyx/db/skill.py:3:Access model:
+backend/onyx/db/skill.py:7:  group that has been granted access.
+backend/onyx/db/skill.py:19:from dataclasses import dataclass
+backend/onyx/db/skill.py:52:@dataclass(frozen=True, kw_only=True)
+backend/onyx/connectors/google_utils/google_utils.py:251:                  will be accessed at the specified key and yielded from.
+backend/onyx/db/auth.py:11:from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
+backend/onyx/db/auth.py:24:from onyx.db.models import AccessToken
+backend/onyx/db/auth.py:124:async def get_access_token_db(
+backend/onyx/db/auth.py:126:) -> AsyncGenerator[SQLAlchemyAccessTokenDatabase, None]:
+backend/onyx/db/auth.py:127:    yield SQLAlchemyAccessTokenDatabase(session, AccessToken)
+backend/onyx/db/document_set.py:19:from onyx.db.enums import AccessType
+backend/onyx/db/document_set.py:164:def filter_document_set_names_by_user_access(
+backend/onyx/db/document_set.py:169:    """Return the subset of ``document_set_names`` the user has view access to.
+backend/onyx/db/document_set.py:235:            if cc_pair.access_type == AccessType.PRIVATE:
+backend/onyx/db/document_set.py:817:            ConnectorCredentialPair.access_type != AccessType.PUBLIC,
+backend/onyx/connectors/slab/connector.py:95:                linkAccess
+backend/onyx/connectors/slab/connector.py:243:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/teams/connector.py:37:from onyx.connectors.teams.utils import fetch_external_access
+backend/onyx/connectors/teams/connector.py:130:        # Minimal validation: just check if we can access the teams endpoint
+backend/onyx/connectors/teams/connector.py:148:                "Teams validation successful - Access to teams endpoint confirmed"
+backend/onyx/connectors/teams/connector.py:153:                f"Timeout while validating Teams access (waited {timeout}s). "
+backend/onyx/connectors/teams/connector.py:267:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/teams/connector.py:273:        # Teams already fetches external_access (permissions) for each document
+backend/onyx/connectors/teams/connector.py:279:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/teams/connector.py:311:                external_access = fetch_external_access(
+backend/onyx/connectors/teams/connector.py:329:                            external_access=external_access,
+backend/onyx/connectors/teams/connector.py:337:                                    "retrieve_all_slim_docs_perm_sync: Stop signal detected"
+backend/onyx/connectors/teams/connector.py:339:                            callback.progress("retrieve_all_slim_docs_perm_sync", 1)
+backend/onyx/connectors/teams/connector.py:481:    external_access = fetch_external_access(
+backend/onyx/connectors/teams/connector.py:494:        external_access=external_access,
+backend/onyx/connectors/teams/connector.py:862:    for slim_doc in teams_connector.retrieve_all_slim_docs_perm_sync():
+backend/onyx/connectors/teams/utils.py:14:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/teams/utils.py:282:def fetch_external_access(
+backend/onyx/connectors/teams/utils.py:286:) -> ExternalAccess:
+backend/onyx/connectors/teams/utils.py:290:        return ExternalAccess.public()
+backend/onyx/connectors/teams/utils.py:299:    return ExternalAccess(
+backend/onyx/connectors/teams/utils.py:300:        external_user_emails=emails,
+backend/onyx/connectors/teams/utils.py:301:        external_user_group_ids=set(),
+backend/onyx/connectors/salesforce/sqlite_functions.py:153:                # Enable WAL mode for better concurrent access and write performance
+backend/onyx/db/models.py:11:from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyBaseAccessTokenTableUUID
+backend/onyx/db/models.py:61:from onyx.db.enums import AccessType
+backend/onyx/db/models.py:302:Auth/Authz (users, permissions, access) Tables
+backend/onyx/db/models.py:308:    access_token: Mapped[str] = mapped_column(Text, nullable=False)
+backend/onyx/db/models.py:431:    # MCP servers accessible to this user
+backend/onyx/db/models.py:432:    accessible_mcp_servers: Mapped[list["MCPServer"]] = relationship(
+backend/onyx/db/models.py:464:class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):
+backend/onyx/db/models.py:500:    # the ID of the "user" who represents the access credentials for the API key
+backend/onyx/db/models.py:508:    # Add this relationship to access the User object via user_id
+backend/onyx/db/models.py:512:class PersonalAccessToken(Base):
+backend/onyx/db/models.py:513:    __tablename__ = "personal_access_token"
+backend/onyx/db/models.py:548:    # user access). An empty list grants nothing (fail-closed).
+backend/onyx/db/models.py:779:    # or if they are only visible to those with that are given explicit access
+backend/onyx/db/models.py:780:    # (e.g. via owning the credential or being a part of a group that is given access)
+backend/onyx/db/models.py:781:    access_type: Mapped[AccessType] = mapped_column(
+backend/onyx/db/models.py:782:        Enum(AccessType, native_enum=False), nullable=False
+backend/onyx/db/models.py:793:    last_time_perm_sync: Mapped[datetime.datetime | None] = mapped_column(
+backend/onyx/db/models.py:796:    last_time_external_group_sync: Mapped[datetime.datetime | None] = mapped_column(
+backend/onyx/db/models.py:869:    permission model as Documents (external_user_emails, external_user_group_ids,
+backend/onyx/db/models.py:904:    # Email addresses of external users with access to this node in the source system
+backend/onyx/db/models.py:905:    external_user_emails: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:908:    # External group IDs with access (prefixed by source type)
+backend/onyx/db/models.py:909:    external_user_group_ids: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:912:    # Whether this node is publicly accessible (org-wide or world-public)
+backend/onyx/db/models.py:1023:    external_user_emails: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:1027:    external_user_group_ids: Mapped[list[str] | None] = mapped_column(
+backend/onyx/db/models.py:1459:    # Access control
+backend/onyx/db/models.py:1460:    acl: Mapped[list[str]] = mapped_column(
+backend/onyx/db/models.py:1531:    # Access control
+backend/onyx/db/models.py:1532:    acl: Mapped[list[str]] = mapped_column(
+backend/onyx/db/models.py:1913:    # if `true`, then all Admins will have access to the credential
+backend/onyx/db/models.py:3132:    # (e.g. `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, etc. for bedrock)
+backend/onyx/db/models.py:3420:    # given access to it either via the `users` or `groups` relationships
+backend/onyx/db/models.py:3447:    # Other users with access
+backend/onyx/db/models.py:3582:    #   "access_token": "...",
+backend/onyx/db/models.py:3703:    # Other users with access
+backend/onyx/db/models.py:4407:    If no such rows exist for a given LLM provider, then it is accessible by all personas.
+backend/onyx/db/models.py:4510:    # MCP servers accessible to this user group
+backend/onyx/db/models.py:4511:    accessible_mcp_servers: Mapped[list["MCPServer"]] = relationship(
+backend/onyx/db/models.py:4630:    attached to the ACL list matching during query time. User level permissions can be handled by
+backend/onyx/db/models.py:4631:    directly adding the Onyx user to the doc ACL list"""
+backend/onyx/db/models.py:4633:    __tablename__ = "user__external_user_group_id"
+backend/onyx/db/models.py:4637:    external_user_group_id: Mapped[str] = mapped_column(String, primary_key=True)
+backend/onyx/db/models.py:4648:            "ix_user_external_group_cc_pair_stale",
+backend/onyx/db/models.py:4653:            "ix_user_external_group_stale",
+backend/onyx/db/models.py:4666:    __tablename__ = "public_external_user_group"
+backend/onyx/db/models.py:4668:    external_user_group_id: Mapped[str] = mapped_column(String, primary_key=True)
+backend/onyx/db/models.py:4679:            "ix_public_external_group_cc_pair_stale",
+backend/onyx/db/models.py:4684:            "ix_public_external_group_stale",
+backend/onyx/db/models.py:4840:    last_accessed_at: Mapped[datetime.datetime | None] = mapped_column(
+backend/onyx/db/models.py:4997:    # Many-to-many relationships for access control
+backend/onyx/db/models.py:4999:        "User", secondary="mcp_server__user", back_populates="accessible_mcp_servers"
+backend/onyx/db/models.py:5004:        back_populates="accessible_mcp_servers",
+backend/onyx/db/models.py:5043:    #   "access_token": "<token>",   # OAuth only
+backend/onyx/db/models.py:5049:    #   "registration_access_token": "<token>",  # For managing registration
+backend/onyx/db/models.py:5086:class DocPermissionSyncAttempt(Base):
+backend/onyx/db/models.py:5092:    __tablename__ = "doc_permission_sync_attempt"
+backend/onyx/db/models.py:5134:            "ix_permission_sync_attempt_latest_for_cc_pair",
+backend/onyx/db/models.py:5139:            "ix_permission_sync_attempt_status_time",
+backend/onyx/db/models.py:5146:        return f"<DocPermissionSyncAttempt(id={self.id!r}, status={self.status!r})>"
+backend/onyx/db/models.py:5158:    __tablename__ = "external_group_permission_sync_attempt"
+backend/onyx/db/models.py:5264:    # Number of API calls using API keys or Personal Access Tokens
+backend/onyx/db/projects.py:97:            last_accessed_at=datetime.datetime.now(datetime.timezone.utc),
+backend/onyx/db/projects.py:184:    # In no-auth mode, all projects are accessible
+backend/onyx/db/scheduled_task.py:549:    or when the owning task is not accessible to ``user_id``.
+backend/onyx/connectors/salesforce/connector.py:1152:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/salesforce/connector.py:1168:                    external_access=None,
+backend/onyx/db/index_attempt.py:618:    # caller actually accesses those relationships — otherwise it loads data for nothing
+backend/onyx/connectors/salesforce/blacklist.py:271:        "setupentityaccess",
+backend/onyx/connectors/salesforce/blacklist.py:305:        "userentityaccess",
+backend/onyx/connectors/salesforce/blacklist.py:306:        "userfieldaccess",
+backend/onyx/connectors/salesforce/blacklist.py:312:        "userpermissionaccess",
+backend/onyx/connectors/salesforce/blacklist.py:321:        "userrecordaccess",
+backend/onyx/connectors/salesforce/blacklist.py:325:        "visualforceaccessmetrics",
+backend/onyx/connectors/salesforce/utils.py:3:from dataclasses import dataclass
+backend/onyx/connectors/salesforce/utils.py:36:@dataclass
+backend/onyx/db/connector_credential_pair.py:22:from onyx.db.enums import AccessType
+backend/onyx/db/connector_credential_pair.py:57:        where_clause = ConnectorCredentialPair.access_type == AccessType.PUBLIC
+backend/onyx/db/connector_credential_pair.py:101:        where_clause |= ConnectorCredentialPair.access_type == AccessType.PUBLIC
+backend/onyx/db/connector_credential_pair.py:102:        where_clause |= ConnectorCredentialPair.access_type == AccessType.SYNC
+backend/onyx/db/connector_credential_pair.py:285:def verify_user_has_access_to_cc_pair(
+backend/onyx/db/connector_credential_pair.py:491:        access_type=AccessType.PUBLIC,
+backend/onyx/db/connector_credential_pair.py:521:    access_type: AccessType,
+backend/onyx/db/connector_credential_pair.py:548:    if access_type == AccessType.SYNC:
+backend/onyx/db/connector_credential_pair.py:551:            "require_business_tier_for_sync_access",
+backend/onyx/db/connector_credential_pair.py:553:        )(access_type)
+backend/onyx/db/connector_credential_pair.py:561:                detail=f"Connector of type {connector.source} does not support SYNC access type",
+backend/onyx/db/connector_credential_pair.py:595:        access_type=access_type,
+backend/onyx/db/pat.py:1:"""Database operations for Personal Access Tokens."""
+backend/onyx/db/pat.py:22:from onyx.db.models import PersonalAccessToken
+backend/onyx/db/pat.py:55:                select(PersonalAccessToken)
+backend/onyx/db/pat.py:56:                .join(PersonalAccessToken.user)
+backend/onyx/db/pat.py:57:                .options(contains_eager(PersonalAccessToken.user))
+backend/onyx/db/pat.py:58:                .where(PersonalAccessToken.hashed_token == hashed_token)
+backend/onyx/db/pat.py:61:                    (PersonalAccessToken.expires_at.is_(None))
+backend/onyx/db/pat.py:62:                    | (PersonalAccessToken.expires_at > now)
+backend/onyx/db/pat.py:87:                    select(PersonalAccessToken).where(
+backend/onyx/db/pat.py:88:                        PersonalAccessToken.hashed_token == hashed_token
+backend/onyx/db/pat.py:99:                    update(PersonalAccessToken)
+backend/onyx/db/pat.py:100:                    .where(PersonalAccessToken.hashed_token == hashed_token)
+backend/onyx/db/pat.py:117:) -> tuple[PersonalAccessToken, str]:
+backend/onyx/db/pat.py:120:    scopes defaults to None (no restriction — full user access); pass a list to
+backend/onyx/db/pat.py:134:    pat = PersonalAccessToken(
+backend/onyx/db/pat.py:153:) -> list[PersonalAccessToken]:
+backend/onyx/db/pat.py:156:        select(PersonalAccessToken)
+backend/onyx/db/pat.py:157:        .where(PersonalAccessToken.user_id == user_id)
+backend/onyx/db/pat.py:159:            (PersonalAccessToken.expires_at.is_(None))
+backend/onyx/db/pat.py:160:            | (PersonalAccessToken.expires_at > datetime.now(timezone.utc))
+backend/onyx/db/pat.py:164:        stmt = stmt.where(PersonalAccessToken.pat_type == pat_type)
+backend/onyx/db/pat.py:166:        db_session.scalars(stmt.order_by(PersonalAccessToken.created_at.desc())).all()
+backend/onyx/db/pat.py:183:        select(PersonalAccessToken)
+backend/onyx/db/pat.py:184:        .where(PersonalAccessToken.id == pat_id)
+backend/onyx/db/pat.py:185:        .where(PersonalAccessToken.user_id == user_id)
+backend/onyx/db/pat.py:187:            (PersonalAccessToken.expires_at.is_(None))
+backend/onyx/db/pat.py:188:            | (PersonalAccessToken.expires_at > now)
+backend/onyx/db/pat.py:192:        stmt = stmt.where(PersonalAccessToken.pat_type == pat_type)
+backend/onyx/connectors/egnyte/connector.py:146:        self.access_token: str | None = None
+backend/onyx/connectors/egnyte/connector.py:217:            "access_token": token_data["access_token"],
+backend/onyx/connectors/egnyte/connector.py:222:        self.access_token = credentials["access_token"]
+backend/onyx/connectors/egnyte/connector.py:229:        if not self.access_token or not self.domain:
+backend/onyx/connectors/egnyte/connector.py:233:            "Authorization": f"Bearer {self.access_token}",
+backend/onyx/connectors/egnyte/connector.py:292:                    "Authorization": f"Bearer {self.access_token}",
+backend/onyx/connectors/egnyte/connector.py:359:            "access_token": os.environ["EGNYTE_ACCESS_TOKEN"],
+backend/onyx/db/hierarchy.py:245:        is_connector_public: If True, the connector is public (organization-wide access)
+backend/onyx/db/hierarchy.py:247:            external_access settings. This ensures nodes from public connectors are
+backend/onyx/db/hierarchy.py:248:            accessible to all users.
+backend/onyx/db/hierarchy.py:258:    # Otherwise, extract permission fields from external_access if present
+backend/onyx/db/hierarchy.py:261:        external_user_emails: list[str] | None = None
+backend/onyx/db/hierarchy.py:262:        external_user_group_ids: list[str] | None = None
+backend/onyx/db/hierarchy.py:263:    elif node.external_access:
+backend/onyx/db/hierarchy.py:264:        is_public = node.external_access.is_public
+backend/onyx/db/hierarchy.py:265:        external_user_emails = (
+backend/onyx/db/hierarchy.py:266:            list(node.external_access.external_user_emails)
+backend/onyx/db/hierarchy.py:267:            if node.external_access.external_user_emails
+backend/onyx/db/hierarchy.py:270:        external_user_group_ids = (
+backend/onyx/db/hierarchy.py:271:            list(node.external_access.external_user_group_ids)
+backend/onyx/db/hierarchy.py:272:            if node.external_access.external_user_group_ids
+backend/onyx/db/hierarchy.py:277:        external_user_emails = None
+backend/onyx/db/hierarchy.py:278:        external_user_group_ids = None
+backend/onyx/db/hierarchy.py:291:        existing_node.external_user_emails = external_user_emails
+backend/onyx/db/hierarchy.py:292:        existing_node.external_user_group_ids = external_user_group_ids
+backend/onyx/db/hierarchy.py:304:            external_user_emails=external_user_emails,
+backend/onyx/db/hierarchy.py:305:            external_user_group_ids=external_user_group_ids,
+backend/onyx/db/hierarchy.py:337:        is_connector_public: If True, the connector is public (organization-wide access)
+backend/onyx/db/hierarchy.py:339:            external_access settings.
+backend/onyx/db/hierarchy.py:489:def _get_accessible_hierarchy_nodes_for_source(
+backend/onyx/db/hierarchy.py:493:    external_group_ids: list[str],  # noqa: ARG001
+backend/onyx/db/hierarchy.py:506:        external_group_ids: User's external group IDs (unused in MIT version)
+backend/onyx/db/hierarchy.py:516:def get_accessible_hierarchy_nodes_for_source(
+backend/onyx/db/hierarchy.py:520:    external_group_ids: list[str],
+backend/onyx/db/hierarchy.py:523:    Get hierarchy nodes for a source that are accessible to the user.
+backend/onyx/db/hierarchy.py:530:        "onyx.db.hierarchy", "_get_accessible_hierarchy_nodes_for_source"
+backend/onyx/db/hierarchy.py:532:    return versioned_fn(db_session, source, user_email, external_group_ids)
+backend/onyx/db/hierarchy.py:613:    external_user_emails: list[str] | None,
+backend/onyx/db/hierarchy.py:614:    external_user_group_ids: list[str] | None,
+backend/onyx/db/hierarchy.py:628:        external_user_emails: List of user emails with access
+backend/onyx/db/hierarchy.py:629:        external_user_group_ids: List of group IDs with access
+backend/onyx/db/hierarchy.py:646:    existing_node.external_user_emails = external_user_emails
+backend/onyx/db/hierarchy.py:647:    existing_node.external_user_group_ids = external_user_group_ids
+backend/onyx/db/user_file.py:95:def update_last_accessed_at_for_user_files(
+backend/onyx/db/user_file.py:99:    """Update `last_accessed_at` to now (UTC) for the given user files."""
+backend/onyx/db/user_file.py:106:        .update({UserFile.last_accessed_at: now}, synchronize_session=False)
+backend/onyx/db/user_file.py:131:def fetch_user_files_with_access_relationships(
+backend/onyx/db/user_file.py:137:    eagerly loaded (needed for computing access control).
+backend/onyx/db/federated.py:81:            # Get connector instance to access validate_config method
+backend/onyx/db/federated.py:297:            # Get connector instance to access validate_config method
+backend/onyx/connectors/confluence/onyx_confluence.py:296:            oauth2_dict["token"]["access_token"] = credentials[
+backend/onyx/connectors/confluence/onyx_confluence.py:297:                "confluence_access_token"
+backend/onyx/connectors/confluence/onyx_confluence.py:411:                token = credentials["confluence_access_token"]
+backend/onyx/connectors/confluence/onyx_confluence.py:479:            logger.info("Connecting to Confluence Cloud with OAuth Access Token.")
+backend/onyx/connectors/confluence/onyx_confluence.py:486:                "Connecting to Confluence with Personal Access Token as user: %s",
+backend/onyx/connectors/confluence/onyx_confluence.py:493:                    password=credentials["confluence_access_token"],
+backend/onyx/connectors/confluence/onyx_confluence.py:499:                    token=credentials["confluence_access_token"],
+backend/onyx/connectors/confluence/onyx_confluence.py:574:        """Dynamically intercept attribute/method access."""
+backend/onyx/connectors/confluence/onyx_confluence.py:1244:        404 is treated as "no anonymous access" rather than fatal; some
+backend/onyx/connectors/confluence/onyx_confluence.py:1247:        "no anonymous access" for our use case.
+backend/onyx/connectors/confluence/access.py:5:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/confluence/access.py:17:) -> ExternalAccess | None:
+backend/onyx/connectors/confluence/access.py:19:    Get page access restrictions for a Confluence page.
+backend/onyx/connectors/confluence/access.py:22:    add_prefix: True for the indexing path (Document.external_access) so group
+backend/onyx/connectors/confluence/access.py:26:    Returns ExternalAccess for the page, or None if EE is not enabled or no
+backend/onyx/connectors/confluence/access.py:35:            ExternalAccess | None,
+backend/onyx/connectors/confluence/access.py:38:            "onyx.external_permissions.confluence.page_access", "get_page_restrictions"
+backend/onyx/connectors/confluence/access.py:54:) -> ExternalAccess | None:
+backend/onyx/connectors/confluence/access.py:71:            ExternalAccess | None,
+backend/onyx/connectors/confluence/access.py:74:            "onyx.external_permissions.confluence.page_access",
+backend/onyx/connectors/confluence/access.py:93:) -> dict[str, ExternalAccess]:
+backend/onyx/connectors/confluence/access.py:95:    Get access permissions for all spaces in Confluence.
+backend/onyx/connectors/confluence/access.py:98:    add_prefix: True for the indexing path (Document.external_access) so group
+backend/onyx/connectors/confluence/access.py:102:    Returns a mapping of space key to ExternalAccess. Empty dict if EE is not
+backend/onyx/connectors/confluence/access.py:111:            dict[str, ExternalAccess],
+backend/onyx/connectors/confluence/access.py:114:            "onyx.external_permissions.confluence.space_access",
+backend/onyx/db/document_access.py:2:Document access filtering utilities.
+backend/onyx/db/document_access.py:4:This module provides reusable access filtering logic for documents based on:
+backend/onyx/db/document_access.py:5:- Connector access type (PUBLIC vs SYNC)
+backend/onyx/db/document_access.py:7:- User email matching external_user_emails
+backend/onyx/db/document_access.py:8:- User group overlap with external_user_group_ids
+backend/onyx/db/document_access.py:24:from onyx.db.enums import AccessType
+backend/onyx/db/document_access.py:31:def apply_document_access_filter(
+backend/onyx/db/document_access.py:34:    external_group_ids: list[str],
+backend/onyx/db/document_access.py:37:    Apply document access filtering to a query.
+backend/onyx/db/document_access.py:40:    1. Check if the document is from a PUBLIC connector (access_type = PUBLIC)
+backend/onyx/db/document_access.py:41:    2. Check document-level permissions (is_public, external_user_emails, external_user_group_ids)
+backend/onyx/db/document_access.py:47:        external_group_ids: List of external group IDs the user belongs to
+backend/onyx/db/document_access.py:50:        Modified SELECT statement with access filtering applied
+backend/onyx/db/document_access.py:71:    # Build access filters
+backend/onyx/db/document_access.py:72:    access_filters: list[ColumnElement[bool]] = [
+backend/onyx/db/document_access.py:74:        ConnectorCredentialPair.access_type == AccessType.PUBLIC,
+backend/onyx/db/document_access.py:79:        access_filters.append(any_(Document.external_user_emails) == user_email)
+backend/onyx/db/document_access.py:80:    if external_group_ids:
+backend/onyx/db/document_access.py:81:        access_filters.append(
+backend/onyx/db/document_access.py:82:            Document.external_user_group_ids.overlap(
+backend/onyx/db/document_access.py:83:                cast(postgresql.array(external_group_ids), postgresql.ARRAY(String))
+backend/onyx/db/document_access.py:87:    stmt = stmt.where(or_(*access_filters))
+backend/onyx/db/document_access.py:91:def get_accessible_documents_by_ids(
+backend/onyx/db/document_access.py:95:    external_group_ids: list[str],
+backend/onyx/db/document_access.py:98:    Fetch documents by IDs, filtering to only those the user has access to.
+backend/onyx/db/document_access.py:100:    Uses the same access filtering logic as other document queries:
+backend/onyx/db/document_access.py:103:    - Documents where user email matches external_user_emails
+backend/onyx/db/document_access.py:104:    - Documents where user's groups overlap with external_user_group_ids
+backend/onyx/db/document_access.py:110:        external_group_ids: List of external group IDs the user belongs to
+backend/onyx/db/document_access.py:113:        List of Document objects from the input that the user has access to
+backend/onyx/db/document_access.py:119:    stmt = apply_document_access_filter(stmt, user_email, external_group_ids)
+backend/onyx/db/dal.py:1:"""Base Data Access Layer (DAL) for database operations.
+backend/onyx/db/dal.py:42:    """Base Data Access Layer.
+backend/onyx/db/dal.py:53:        """Direct access to the underlying session for advanced use cases."""
+backend/onyx/db/user_preferences.py:15:from onyx.db.models import AccessToken
+backend/onyx/db/user_preferences.py:115:def get_latest_access_token_for_user(
+backend/onyx/db/user_preferences.py:118:) -> AccessToken | None:
+backend/onyx/db/user_preferences.py:119:    """Get the most recent access token for a user."""
+backend/onyx/db/user_preferences.py:122:            select(AccessToken)
+backend/onyx/db/user_preferences.py:123:            .where(AccessToken.user_id == user_id)  # ty: ignore[invalid-argument-type]
+backend/onyx/db/user_preferences.py:129:        logger.error("Error fetching AccessToken: %s", e)
+backend/onyx/connectors/confluence/connector.py:14:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/confluence/connector.py:20:from onyx.connectors.confluence.access import get_all_space_permissions
+backend/onyx/connectors/confluence/connector.py:21:from onyx.connectors.confluence.access import get_page_restrictions
+backend/onyx/connectors/confluence/connector.py:22:from onyx.connectors.confluence.access import (
+backend/onyx/connectors/confluence/connector.py:756:            # to access attachments on this page. Log and skip rather than failing the whole job.
+backend/onyx/connectors/confluence/connector.py:907:        include_permissions: bool = False,
+backend/onyx/connectors/confluence/connector.py:934:        space_level_access: dict[str, ExternalAccess] = (
+backend/onyx/connectors/confluence/connector.py:938:            if include_permissions
+backend/onyx/connectors/confluence/connector.py:943:        if include_permissions:
+backend/onyx/connectors/confluence/connector.py:983:            if include_permissions:
+backend/onyx/connectors/confluence/connector.py:985:                doc_or_failure.external_access = get_page_restrictions(
+backend/onyx/connectors/confluence/connector.py:991:                ) or space_level_access.get(space_key)
+backend/onyx/connectors/confluence/connector.py:1003:                        "reindex (deleted, moved, or no longer accessible)." % page_id
+backend/onyx/connectors/confluence/connector.py:1018:            include_permissions=False,
+backend/onyx/connectors/confluence/connector.py:1022:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/confluence/connector.py:1038:                include_permissions=True,
+backend/onyx/connectors/confluence/connector.py:1055:            include_permissions=True,
+backend/onyx/connectors/confluence/connector.py:1064:        include_permissions: bool = True,
+backend/onyx/connectors/confluence/connector.py:1071:        if not include_permissions:
+backend/onyx/connectors/confluence/connector.py:1078:        space_level_access_info: dict[str, ExternalAccess] = {}
+backend/onyx/connectors/confluence/connector.py:1079:        if include_permissions:
+backend/onyx/connectors/confluence/connector.py:1080:            space_level_access_info = get_all_space_permissions(
+backend/onyx/connectors/confluence/connector.py:1091:        def get_external_access(
+backend/onyx/connectors/confluence/connector.py:1096:        ) -> ExternalAccess | None:
+backend/onyx/connectors/confluence/connector.py:1110:                space_level_access_info.get(space_key) if space_key else None
+backend/onyx/connectors/confluence/connector.py:1134:                    external_access=(
+backend/onyx/connectors/confluence/connector.py:1135:                        get_external_access(
+backend/onyx/connectors/confluence/connector.py:1141:                        if include_permissions
+backend/onyx/connectors/confluence/connector.py:1197:                        external_access=(
+backend/onyx/connectors/confluence/connector.py:1198:                            get_external_access(
+backend/onyx/connectors/confluence/connector.py:1204:                            if include_permissions
+backend/onyx/connectors/confluence/connector.py:1217:                        "retrieve_all_slim_docs_perm_sync: Stop signal detected"
+backend/onyx/connectors/confluence/connector.py:1220:                    callback.progress("retrieve_all_slim_docs_perm_sync", 1)
+backend/onyx/connectors/confluence/connector.py:1238:                    "Insufficient permissions to access Confluence resources (HTTP 403)."
+backend/onyx/connectors/confluence/connector.py:1262:    def probe_rest_space_permissions_admin_access(self) -> None:
+backend/onyx/connectors/confluence/connector.py:1271:        validate_perm_sync (not validate_connector_settings) so that
+backend/onyx/connectors/confluence/connector.py:1337:    access_token = os.environ["CONFLUENCE_ACCESS_TOKEN"]
+backend/onyx/connectors/confluence/connector.py:1356:            "confluence_access_token": access_token,
+backend/onyx/connectors/confluence/connector.py:1365:    for slim_doc in confluence_connector.retrieve_all_slim_docs_perm_sync():
+backend/onyx/db/persona.py:18:from onyx.access.hierarchy_access import get_user_external_group_ids
+backend/onyx/db/persona.py:24:from onyx.db.document_access import get_accessible_documents_by_ids
+backend/onyx/db/persona.py:117:    # If curator ownership restriction is enabled, curators can only access their own assistants
+backend/onyx/db/persona.py:165:            detail=f"Persona with ID {persona_id} does not exist or user is not authorized to access it",
+backend/onyx/db/persona.py:188:    # This is the persona with the highest display priority that the user has access to
+backend/onyx/db/persona.py:198:    """Fetch a persona by name with access control.
+backend/onyx/db/persona.py:200:    Access rules:
+backend/onyx/db/persona.py:212:def update_persona_access(
+backend/onyx/db/persona.py:220:    """Updates the access settings for a persona including public status and user shares.
+backend/onyx/db/persona.py:263:    # When sharing changes, user file ACLs need to be updated in the vector DB
+backend/onyx/db/persona.py:325:        versioned_update_persona_access = fetch_versioned_implementation(
+backend/onyx/db/persona.py:326:            "onyx.db.persona", "update_persona_access"
+backend/onyx/db/persona.py:329:        versioned_update_persona_access(
+backend/onyx/db/persona.py:355:    accessibility rather than any of the logic (e.g. prompt, connected data sources,
+backend/onyx/db/persona.py:364:    versioned_update_persona_access = fetch_versioned_implementation(
+backend/onyx/db/persona.py:365:        "onyx.db.persona", "update_persona_access"
+backend/onyx/db/persona.py:367:    versioned_update_persona_access(
+backend/onyx/db/persona.py:514:    """Counts the total number of personas accessible to the user.
+backend/onyx/db/persona.py:846:            not have access.
+backend/onyx/db/persona.py:881:    so that their ACLs get updated in the vector DB."""
+backend/onyx/db/persona.py:1015:    # Fetch and attach documents by IDs, filtering for access permissions
+backend/onyx/db/persona.py:1019:        external_group_ids = (
+backend/onyx/db/persona.py:1020:            get_user_external_group_ids(db_session, user) if user else []
+backend/onyx/db/persona.py:1022:        attached_documents = get_accessible_documents_by_ids(
+backend/onyx/db/persona.py:1026:            external_group_ids=external_group_ids,
+backend/onyx/db/persona.py:1029:            raise ValueError("documents not found or not accessible")
+backend/onyx/db/persona.py:1211:# a direct mapping indicating whether a user has access to a specific persona?
+backend/onyx/db/persona.py:1240:    # allow access if persona user id is None
+backend/onyx/db/persona.py:1402:def user_can_access_persona(
+backend/onyx/db/persona.py:1405:    """Check if a user has access to a specific persona.
+backend/onyx/db/persona.py:1410:        user: User to check access for
+backend/onyx/db/persona.py:1411:        get_editable: If True, check for edit access; if False, check for view access
+backend/onyx/db/persona.py:1414:        True if user can access the persona, False otherwise
+backend/onyx/connectors/confluence/utils.py:46:    access_token: str
+backend/onyx/connectors/confluence/utils.py:323:    # rotate the refresh and access token
+backend/onyx/connectors/confluence/utils.py:324:    # Note that access tokens are only good for an hour in confluence cloud,
+backend/onyx/connectors/confluence/utils.py:326:    # https://developer.atlassian.com/cloud/confluence/oauth-2-3lo-apps/#use-a-refresh-token-to-get-another-access-token-and-refresh-token-pair
+backend/onyx/connectors/confluence/utils.py:348:    new_credentials["confluence_access_token"] = token_response.access_token
+backend/onyx/db/connector.py:340:    cc_pair.last_time_perm_sync = start_time
+backend/onyx/db/connector.py:344:def mark_cc_pair_as_external_group_synced(db_session: Session, cc_pair_id: int) -> None:
+backend/onyx/db/connector.py:355:    cc_pair.last_time_external_group_sync = datetime.now(timezone.utc)
+backend/onyx/db/feedback.py:19:from onyx.db.enums import AccessType
+backend/onyx/db/feedback.py:86:        where_clause = CCPair.access_type == AccessType.PUBLIC
+backend/onyx/db/feedback.py:98:        where_clause |= CCPair.access_type == AccessType.PUBLIC
+backend/onyx/connectors/blob/connector.py:124:        (1) R2: Access Key ID, Secret Access Key, Account ID
+backend/onyx/connectors/blob/connector.py:125:        (2) S3: AWS Access Key ID, AWS Secret Access Key or IAM role or Assume Role
+backend/onyx/connectors/blob/connector.py:126:        (3) GOOGLE_CLOUD_STORAGE: Access Key ID, Secret Access Key, Project ID
+backend/onyx/connectors/blob/connector.py:127:        (4) OCI_STORAGE: Namespace, Region, Access Key ID, Secret Access Key
+backend/onyx/connectors/blob/connector.py:133:        - OCI_STORAGE: Uses Oracle Cloud Infrastructure Object Storage endpoint
+backend/onyx/connectors/blob/connector.py:146:                for key in ["r2_access_key_id", "r2_secret_access_key", "account_id"]
+backend/onyx/connectors/blob/connector.py:157:                aws_access_key_id=credentials["r2_access_key_id"],
+backend/onyx/connectors/blob/connector.py:158:                aws_secret_access_key=credentials["r2_secret_access_key"],
+backend/onyx/connectors/blob/connector.py:164:            # For S3, we can use either access keys or IAM roles.
+backend/onyx/connectors/blob/connector.py:166:                "authentication_method", "access_key"
+backend/onyx/connectors/blob/connector.py:171:            if authentication_method == "access_key":
+backend/onyx/connectors/blob/connector.py:172:                logger.debug("Using access key authentication for S3 bucket.")
+backend/onyx/connectors/blob/connector.py:175:                    for key in ["aws_access_key_id", "aws_secret_access_key"]
+backend/onyx/connectors/blob/connector.py:180:                    aws_access_key_id=credentials["aws_access_key_id"],
+backend/onyx/connectors/blob/connector.py:181:                    aws_secret_access_key=credentials["aws_secret_access_key"],
+backend/onyx/connectors/blob/connector.py:204:                        "access_key": creds["AccessKeyId"],
+backend/onyx/connectors/blob/connector.py:205:                        "secret_key": creds["SecretAccessKey"],
+backend/onyx/connectors/blob/connector.py:222:                # We will assume the instance role to access S3.
+backend/onyx/connectors/blob/connector.py:229:            # NOTE: the client region actually doesn't matter for accessing the bucket
+backend/onyx/connectors/blob/connector.py:234:                credentials.get(key) for key in ["access_key_id", "secret_access_key"]
+backend/onyx/connectors/blob/connector.py:241:                aws_access_key_id=credentials["access_key_id"],
+backend/onyx/connectors/blob/connector.py:242:                aws_secret_access_key=credentials["secret_access_key"],
+backend/onyx/connectors/blob/connector.py:249:                for key in ["namespace", "region", "access_key_id", "secret_access_key"]
+backend/onyx/connectors/blob/connector.py:251:                raise ConnectorMissingCredentialError("Oracle Cloud Infrastructure")
+backend/onyx/connectors/blob/connector.py:255:                endpoint_url=f"https://{credentials['namespace']}.compat.objectstorage.{credentials['region']}.oraclecloud.com",
+backend/onyx/connectors/blob/connector.py:256:                aws_access_key_id=credentials["access_key_id"],
+backend/onyx/connectors/blob/connector.py:257:                aws_secret_access_key=credentials["secret_access_key"],
+backend/onyx/connectors/blob/connector.py:306:    # NOTE: Left in as may be useful for one-off access to documents and sharing across orgs.
+backend/onyx/connectors/blob/connector.py:321:        # Accessing through the browser will always return an unauthorized error
+backend/onyx/connectors/blob/connector.py:349:            return f"https://objectstorage.{region}.oraclecloud.com/n/{namespace}/b/{self.bucket_name}/o/{encoded_key}"
+backend/onyx/connectors/blob/connector.py:459:                        # TODO: Refactor to avoid direct DB access in connector
+backend/onyx/connectors/blob/connector.py:648:            # a bucket-policy problem, so don't lump them in with AccessDenied.
+backend/onyx/connectors/blob/connector.py:649:            if error_code in ["InvalidAccessKeyId", "InvalidToken"]:
+backend/onyx/connectors/blob/connector.py:658:                "AccessDenied",
+backend/onyx/connectors/blob/connector.py:661:                if status_code == 403 or error_code == "AccessDenied":
+backend/onyx/connectors/blob/connector.py:695:        "aws_access_key_id": os.environ.get("AWS_ACCESS_KEY_ID"),
+backend/onyx/connectors/blob/connector.py:696:        "aws_secret_access_key": os.environ.get("AWS_SECRET_ACCESS_KEY"),
+backend/onyx/connectors/sharepoint/connector_utils.py:7:from onyx.connectors.models import ExternalAccess
+backend/onyx/connectors/sharepoint/connector_utils.py:13:def get_sharepoint_external_access(
+backend/onyx/connectors/sharepoint/connector_utils.py:21:) -> ExternalAccess:
+backend/onyx/connectors/sharepoint/connector_utils.py:25:    # Get external access using the EE implementation
+backend/onyx/connectors/sharepoint/connector_utils.py:29:    ) -> ExternalAccess:
+backend/onyx/connectors/sharepoint/connector_utils.py:30:        return ExternalAccess.empty()
+backend/onyx/connectors/sharepoint/connector_utils.py:32:    get_external_access_func = fetch_versioned_implementation_with_fallback(
+backend/onyx/connectors/sharepoint/connector_utils.py:34:        "get_external_access_from_sharepoint",
+backend/onyx/connectors/sharepoint/connector_utils.py:38:    external_access = get_external_access_func(
+backend/onyx/connectors/sharepoint/connector_utils.py:48:    return external_access
+backend/onyx/db/document.py:32:from onyx.db.document_access import apply_document_access_filter
+backend/onyx/db/document.py:35:from onyx.db.enums import AccessType
+backend/onyx/db/document.py:184:        DbDocument.id, DbDocument.doc_metadata, DbDocument.external_user_group_ids
+backend/onyx/db/document.py:201:            external_user_group_ids=row.external_user_group_ids or [],
+backend/onyx/db/document.py:383:def get_accessible_documents_for_hierarchy_node_paginated(
+backend/onyx/db/document.py:387:    external_group_ids: list[str],
+backend/onyx/db/document.py:403:    stmt = apply_document_access_filter(stmt, user_email, external_group_ids)
+backend/onyx/db/document.py:578:def get_access_info_for_document(
+backend/onyx/db/document.py:582:    """Gets access info for a single document by calling the get_access_info_for_documents function
+backend/onyx/db/document.py:586:        document_id (str): The document ID to fetch access info for.
+backend/onyx/db/document.py:591:    results = get_access_info_for_documents(db_session, [document_id])
+backend/onyx/db/document.py:598:def get_access_info_for_documents(
+backend/onyx/db/document.py:602:    """Gets back all relevant access info for the given documents. This includes
+backend/onyx/db/document.py:607:    - List of emails of Onyx users with direct access to the doc (includes a "None" element if
+backend/onyx/db/document.py:615:        func.bool_or(ConnectorCredentialPair.access_type == AccessType.PUBLIC).label(
+backend/onyx/db/document.py:638:                ConnectorCredentialPair.access_type != AccessType.SYNC,
+backend/onyx/db/document.py:667:    includes_permissions = any(doc.external_access for doc in seen_documents.values())
+backend/onyx/db/document.py:687:                            "external_user_emails": list(
+backend/onyx/db/document.py:688:                                doc.external_access.external_user_emails
+backend/onyx/db/document.py:690:                            "external_user_group_ids": list(
+backend/onyx/db/document.py:691:                                doc.external_access.external_user_group_ids
+backend/onyx/db/document.py:693:                            "is_public": doc.external_access.is_public,
+backend/onyx/db/document.py:695:                        if doc.external_access
+backend/onyx/db/document.py:724:                "external_user_emails": func.coalesce(
+backend/onyx/db/document.py:725:                    insert_stmt.excluded.external_user_emails,
+backend/onyx/db/document.py:726:                    DbDocument.external_user_emails,
+backend/onyx/db/document.py:728:                "external_user_group_ids": func.coalesce(
+backend/onyx/db/document.py:729:                    insert_stmt.excluded.external_user_group_ids,
+backend/onyx/db/document.py:730:                    DbDocument.external_user_group_ids,
+backend/onyx/db/utils.py:95:    external_user_group_ids: list[str]
+backend/onyx/db/permission_sync_attempt.py:3:This module contains all CRUD operations for both DocPermissionSyncAttempt
+backend/onyx/db/permission_sync_attempt.py:21:from onyx.db.models import DocPermissionSyncAttempt
+backend/onyx/db/permission_sync_attempt.py:36:def create_doc_permission_sync_attempt(
+backend/onyx/db/permission_sync_attempt.py:49:    attempt = DocPermissionSyncAttempt(
+backend/onyx/db/permission_sync_attempt.py:59:def get_doc_permission_sync_attempt(
+backend/onyx/db/permission_sync_attempt.py:63:) -> DocPermissionSyncAttempt | None:
+backend/onyx/db/permission_sync_attempt.py:74:    stmt = select(DocPermissionSyncAttempt).where(
+backend/onyx/db/permission_sync_attempt.py:75:        DocPermissionSyncAttempt.id == attempt_id
+backend/onyx/db/permission_sync_attempt.py:80:            joinedload(DocPermissionSyncAttempt.connector_credential_pair).joinedload(
+backend/onyx/db/permission_sync_attempt.py:88:def get_latest_doc_permission_sync_attempt_for_cc_pair(
+backend/onyx/db/permission_sync_attempt.py:91:) -> DocPermissionSyncAttempt | None:
+backend/onyx/db/permission_sync_attempt.py:94:        select(DocPermissionSyncAttempt)
+backend/onyx/db/permission_sync_attempt.py:96:            DocPermissionSyncAttempt.connector_credential_pair_id
+backend/onyx/db/permission_sync_attempt.py:99:        .order_by(DocPermissionSyncAttempt.time_created.desc())
+backend/onyx/db/permission_sync_attempt.py:104:def get_recent_doc_permission_sync_attempts_for_cc_pair(
+backend/onyx/db/permission_sync_attempt.py:108:) -> list[DocPermissionSyncAttempt]:
+backend/onyx/db/permission_sync_attempt.py:112:            select(DocPermissionSyncAttempt)
+backend/onyx/db/permission_sync_attempt.py:113:            .where(DocPermissionSyncAttempt.connector_credential_pair_id == cc_pair_id)
+backend/onyx/db/permission_sync_attempt.py:114:            .order_by(DocPermissionSyncAttempt.time_created.desc())
+backend/onyx/db/permission_sync_attempt.py:120:def mark_doc_permission_sync_attempt_in_progress(
+backend/onyx/db/permission_sync_attempt.py:123:) -> DocPermissionSyncAttempt:
+backend/onyx/db/permission_sync_attempt.py:128:            select(DocPermissionSyncAttempt)
+backend/onyx/db/permission_sync_attempt.py:129:            .where(DocPermissionSyncAttempt.id == attempt_id)
+backend/onyx/db/permission_sync_attempt.py:145:        logger.exception("mark_doc_permission_sync_attempt_in_progress exceptioned.")
+backend/onyx/db/permission_sync_attempt.py:149:def mark_doc_permission_sync_attempt_failed(
+backend/onyx/db/permission_sync_attempt.py:166:            select(DocPermissionSyncAttempt)
+backend/onyx/db/permission_sync_attempt.py:167:            .where(DocPermissionSyncAttempt.id == attempt_id)
+backend/onyx/db/permission_sync_attempt.py:181:            record_type=RecordType.PERMISSION_SYNC_COMPLETE,
+backend/onyx/db/permission_sync_attempt.py:183:                "doc_permission_sync_attempt_id": attempt_id,
+backend/onyx/db/permission_sync_attempt.py:193:def complete_doc_permission_sync_attempt(
+backend/onyx/db/permission_sync_attempt.py:198:) -> DocPermissionSyncAttempt:
+backend/onyx/db/permission_sync_attempt.py:216:            select(DocPermissionSyncAttempt)
+backend/onyx/db/permission_sync_attempt.py:217:            .where(DocPermissionSyncAttempt.id == attempt_id)
+backend/onyx/db/permission_sync_attempt.py:238:            record_type=RecordType.PERMISSION_SYNC_COMPLETE,
+backend/onyx/db/permission_sync_attempt.py:240:                "doc_permission_sync_attempt_id": attempt_id,
+backend/onyx/db/permission_sync_attempt.py:248:        logger.exception("complete_doc_permission_sync_attempt exceptioned.")
+backend/onyx/db/permission_sync_attempt.py:257:def create_external_group_sync_attempt(
+backend/onyx/db/permission_sync_attempt.py:280:def get_external_group_sync_attempt(
+backend/onyx/db/permission_sync_attempt.py:309:def get_recent_external_group_sync_attempts_for_cc_pair(
+backend/onyx/db/permission_sync_attempt.py:337:def get_relevant_external_group_sync_attempts_for_cc_pair(
+backend/onyx/db/permission_sync_attempt.py:396:def mark_external_group_sync_attempt_in_progress(
+backend/onyx/db/permission_sync_attempt.py:421:        logger.exception("mark_external_group_sync_attempt_in_progress exceptioned.")
+backend/onyx/db/permission_sync_attempt.py:425:def mark_external_group_sync_attempt_failed(
+backend/onyx/db/permission_sync_attempt.py:457:            record_type=RecordType.PERMISSION_SYNC_COMPLETE,
+backend/onyx/db/permission_sync_attempt.py:459:                "external_group_sync_attempt_id": attempt_id,
+backend/onyx/db/permission_sync_attempt.py:469:def complete_external_group_sync_attempt(
+backend/onyx/db/permission_sync_attempt.py:523:            record_type=RecordType.PERMISSION_SYNC_COMPLETE,
+backend/onyx/db/permission_sync_attempt.py:525:                "external_group_sync_attempt_id": attempt_id,
+backend/onyx/db/permission_sync_attempt.py:533:        logger.exception("complete_external_group_sync_attempt exceptioned.")
+backend/onyx/db/permission_sync_attempt.py:542:def delete_doc_permission_sync_attempts__no_commit(
+backend/onyx/db/permission_sync_attempt.py:557:    stmt = delete(DocPermissionSyncAttempt).where(
+backend/onyx/db/permission_sync_attempt.py:558:        DocPermissionSyncAttempt.connector_credential_pair_id == cc_pair_id
+backend/onyx/db/permission_sync_attempt.py:564:def delete_external_group_permission_sync_attempts__no_commit(
+backend/onyx/db/enums.py:107:    EXTERNAL_GROUP = "external_group"
+backend/onyx/db/enums.py:212:class AccessType(str, PyEnum):
+backend/onyx/db/enums.py:493:    full_admin_panel_access is an override — if present, any permission
+backend/onyx/db/enums.py:499:    granted directly to a group) and exist primarily to scope Personal Access
+backend/onyx/db/enums.py:504:    BASIC_ACCESS = "basic"
+backend/onyx/db/enums.py:536:    FULL_ADMIN_PANEL_ACCESS = "admin"
+backend/onyx/db/credentials.py:48:    access the appropriate credentials"""
+backend/onyx/db/credentials.py:50:        raise ValueError("Anonymous users are not allowed to access credentials")
+backend/onyx/db/credentials.py:53:        # Admins can access all credentials that are public or owned by them
+backend/onyx/db/credentials.py:64:        # Basic users can only access credentials that are owned by them
+backend/onyx/connectors/mock_connector/connector.py:7:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/mock_connector/connector.py:19:EXTERNAL_USER_EMAILS = {"test@example.com", "admin@example.com"}
+backend/onyx/connectors/mock_connector/connector.py:20:EXTERNAL_USER_GROUP_IDS = {"mock-group-1", "mock-group-2"}
+backend/onyx/connectors/mock_connector/connector.py:75:        include_permissions: bool = False,
+backend/onyx/connectors/mock_connector/connector.py:95:            if include_permissions and document.external_access is None:
+backend/onyx/connectors/mock_connector/connector.py:96:                # Add mock permissions - make documents accessible to specific users/groups
+backend/onyx/connectors/mock_connector/connector.py:97:                document.external_access = ExternalAccess(
+backend/onyx/connectors/mock_connector/connector.py:98:                    external_user_emails=EXTERNAL_USER_EMAILS,
+backend/onyx/connectors/mock_connector/connector.py:99:                    external_user_group_ids=EXTERNAL_USER_GROUP_IDS,
+backend/onyx/connectors/mock_connector/connector.py:116:            start, end, checkpoint, include_permissions=False
+backend/onyx/connectors/mock_connector/connector.py:120:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/mock_connector/connector.py:127:            start, end, checkpoint, include_permissions=True
+backend/onyx/connectors/productboard/connector.py:40:        self.access_token: str | None = None
+backend/onyx/connectors/productboard/connector.py:43:        self.access_token = credentials["productboard_access_token"]
+backend/onyx/connectors/productboard/connector.py:48:            "Authorization": f"Bearer {self.access_token}",
+backend/onyx/connectors/productboard/connector.py:228:        if self.access_token is None:
+backend/onyx/connectors/productboard/connector.py:230:                "Access token is not set up, was load_credentials called?"
+backend/onyx/connectors/productboard/connector.py:269:            "productboard_access_token": os.environ["PRODUCTBOARD_ACCESS_TOKEN"],
+backend/onyx/connectors/sharepoint/connector.py:70:from onyx.connectors.models import ExternalAccess
+backend/onyx/connectors/sharepoint/connector.py:76:from onyx.connectors.sharepoint.connector_utils import get_sharepoint_external_access
+backend/onyx/connectors/sharepoint/connector.py:217:# The office365 library's ClientContext caches the access token from its
+backend/onyx/connectors/sharepoint/connector.py:218:# first request and never re-invokes the token callback.  Microsoft access
+backend/onyx/connectors/sharepoint/connector.py:230:        drive_name: The name of the drive to access (e.g. "Shared Documents", "Other Library")
+backend/onyx/connectors/sharepoint/connector.py:231:                   If None, all drives will be accessed.
+backend/onyx/connectors/sharepoint/connector.py:232:        folder_path: The folder path within the drive to access (e.g. "test/nested with spaces")
+backend/onyx/connectors/sharepoint/connector.py:233:                    If None, all folders will be accessed.
+backend/onyx/connectors/sharepoint/connector.py:289:# access is gated separately, so some listed sites will always reject reads.
+backend/onyx/connectors/sharepoint/connector.py:733:    access_token: str,
+backend/onyx/connectors/sharepoint/connector.py:745:    headers = {"Authorization": f"Bearer {access_token}"}
+backend/onyx/connectors/sharepoint/connector.py:765:    include_permissions: bool = False,
+backend/onyx/connectors/sharepoint/connector.py:767:    access_token: str | None = None,
+backend/onyx/connectors/sharepoint/connector.py:774:    if include_permissions and ctx is None:
+backend/onyx/connectors/sharepoint/connector.py:824:    if content_bytes is None and access_token and driveitem.drive_id:
+backend/onyx/connectors/sharepoint/connector.py:827:                access_token,
+backend/onyx/connectors/sharepoint/connector.py:903:    if include_permissions and ctx is not None:
+backend/onyx/connectors/sharepoint/connector.py:904:        logger.info("Getting external access for %s", driveitem.name)
+backend/onyx/connectors/sharepoint/connector.py:906:        external_access = get_sharepoint_external_access(
+backend/onyx/connectors/sharepoint/connector.py:915:        external_access = ExternalAccess.empty()
+backend/onyx/connectors/sharepoint/connector.py:922:        external_access=external_access,
+backend/onyx/connectors/sharepoint/connector.py:946:    include_permissions: bool = False,
+backend/onyx/connectors/sharepoint/connector.py:1072:    if include_permissions:
+backend/onyx/connectors/sharepoint/connector.py:1073:        external_access = get_sharepoint_external_access(
+backend/onyx/connectors/sharepoint/connector.py:1081:        external_access = ExternalAccess.empty()
+backend/onyx/connectors/sharepoint/connector.py:1087:        external_access=external_access,
+backend/onyx/connectors/sharepoint/connector.py:1115:    external_access = get_sharepoint_external_access(
+backend/onyx/connectors/sharepoint/connector.py:1125:        external_access=external_access,
+backend/onyx/connectors/sharepoint/connector.py:1142:    external_access = get_sharepoint_external_access(
+backend/onyx/connectors/sharepoint/connector.py:1151:        external_access=external_access,
+backend/onyx/connectors/sharepoint/connector.py:1256:        headers = {"Authorization": f"Bearer {token_response.accessToken}"}
+backend/onyx/connectors/sharepoint/connector.py:1296:            access_token = self._get_graph_access_token()
+backend/onyx/connectors/sharepoint/connector.py:1300:                headers={"Authorization": f"Bearer {access_token}"},
+backend/onyx/connectors/sharepoint/connector.py:1378:        The office365 library's ClientContext caches the access token from its
+backend/onyx/connectors/sharepoint/connector.py:1406:        self._cached_rest_ctx = ClientContext(site_url).with_access_token(
+backend/onyx/connectors/sharepoint/connector.py:1848:    def _get_graph_access_token(self) -> str:
+backend/onyx/connectors/sharepoint/connector.py:1850:        access_token = token_data.get("access_token")
+backend/onyx/connectors/sharepoint/connector.py:1851:        if not access_token:
+backend/onyx/connectors/sharepoint/connector.py:1852:            raise RuntimeError("Failed to acquire Graph API access token")
+backend/onyx/connectors/sharepoint/connector.py:1853:        return access_token
+backend/onyx/connectors/sharepoint/connector.py:1861:        access_token = self._get_graph_access_token()
+backend/onyx/connectors/sharepoint/connector.py:1862:        headers = {"Authorization": f"Bearer {access_token}"}
+backend/onyx/connectors/sharepoint/connector.py:1892:                        access_token = self._get_graph_access_token()
+backend/onyx/connectors/sharepoint/connector.py:1893:                        headers = {"Authorization": f"Bearer {access_token}"}
+backend/onyx/connectors/sharepoint/connector.py:2146:        include_permissions: bool = True,
+backend/onyx/connectors/sharepoint/connector.py:2207:                        if include_permissions:
+backend/onyx/connectors/sharepoint/connector.py:2225:                                    external_access=ExternalAccess.empty(),
+backend/onyx/connectors/sharepoint/connector.py:2248:                            if include_permissions:
+backend/onyx/connectors/sharepoint/connector.py:2268:                                        external_access=ExternalAccess.empty(),
+backend/onyx/connectors/sharepoint/connector.py:2557:        include_permissions: bool = False,
+backend/onyx/connectors/sharepoint/connector.py:2578:                    "No SharePoint sites found or accessible - nothing to process"
+backend/onyx/connectors/sharepoint/connector.py:2631:                        "No accessible drives found for site: %s",
+backend/onyx/connectors/sharepoint/connector.py:2647:                # Yield a ConnectorFailure for site-level access failures
+backend/onyx/connectors/sharepoint/connector.py:2652:                    f"Failed to access site: {str(e)}",
+backend/onyx/connectors/sharepoint/connector.py:2721:                    f"Failed to access drive '{current_drive_name}' in site '{site_descriptor.url}': {str(e)}",
+backend/onyx/connectors/sharepoint/connector.py:2864:                        if include_permissions:
+backend/onyx/connectors/sharepoint/connector.py:2867:                        access_token = self._get_graph_access_token()
+backend/onyx/connectors/sharepoint/connector.py:2873:                            include_permissions=include_permissions,
+backend/onyx/connectors/sharepoint/connector.py:2876:                            access_token=access_token,
+backend/onyx/connectors/sharepoint/connector.py:2977:                        if include_permissions:
+backend/onyx/connectors/sharepoint/connector.py:2987:                                include_permissions=include_permissions,
+backend/onyx/connectors/sharepoint/connector.py:3105:            start, end, checkpoint, include_permissions=False
+backend/onyx/connectors/sharepoint/connector.py:3108:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/sharepoint/connector.py:3115:            start, end, checkpoint, include_permissions=True
+backend/onyx/connectors/sharepoint/connector.py:3144:            include_permissions=False,
+backend/onyx/connectors/sharepoint/connector.py:3148:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/sharepoint/connector.py:3165:            include_permissions=True,
+backend/onyx/connectors/sharepoint/connector.py:3189:        connector, batch_size=10, include_permissions=False, time_range=time_range
+backend/onyx/connectors/file/connector.py:195:    # `Document.file_id=NULL`, forcing `_user_can_access_connector_file`
+backend/onyx/connectors/gitbook/connector.py:27:    def __init__(self, access_token: str) -> None:
+backend/onyx/connectors/gitbook/connector.py:28:        self.access_token = access_token
+backend/onyx/connectors/gitbook/connector.py:32:            "Authorization": f"Bearer {self.access_token}",
+backend/onyx/connectors/gitbook/connector.py:215:        self.access_token: str | None = None
+backend/onyx/connectors/gitbook/connector.py:219:        access_token = credentials.get("gitbook_api_key")
+backend/onyx/connectors/gitbook/connector.py:220:        if not access_token:
+backend/onyx/connectors/gitbook/connector.py:221:            raise ConnectorMissingCredentialError("GitBook access token")
+backend/onyx/connectors/gitbook/connector.py:222:        self.access_token = access_token
+backend/onyx/connectors/gitbook/connector.py:223:        self.client = GitbookApiClient(access_token)
+backend/onyx/connectors/gmail/connector.py:12:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/gmail/connector.py:280:    # (external_access) as it doesn't cost much space
+backend/onyx/connectors/gmail/connector.py:292:        external_access=ExternalAccess(
+backend/onyx/connectors/gmail/connector.py:293:            external_user_emails={email_used_to_fetch_thread},
+backend/onyx/connectors/gmail/connector.py:294:            external_user_group_ids=set(),
+backend/onyx/connectors/gmail/connector.py:339:        external_access=ExternalAccess(
+backend/onyx/connectors/gmail/connector.py:340:            external_user_emails={user_email},
+backend/onyx/connectors/gmail/connector.py:341:            external_user_group_ids=set(),
+backend/onyx/connectors/gmail/connector.py:472:                            external_access=ExternalAccess(
+backend/onyx/connectors/gmail/connector.py:473:                                external_user_emails={user_email},
+backend/onyx/connectors/gmail/connector.py:474:                                external_user_group_ids=set(),
+backend/onyx/connectors/gmail/connector.py:490:                        "retrieve_all_slim_docs_perm_sync"
+backend/onyx/connectors/gmail/connector.py:601:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/gmail/connector.py:608:        # (external_access) as it doesn't cost much space
+backend/onyx/connectors/gmail/connector.py:615:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/models.py:16:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/models.py:225:    external_access: ExternalAccess | None = None
+backend/onyx/connectors/models.py:447:    external_access: ExternalAccess | None = None
+backend/onyx/connectors/models.py:482:    # External access information for the node
+backend/onyx/connectors/models.py:483:    external_access: ExternalAccess | None = None
+backend/onyx/connectors/google_drive/models.py:153:    # Thread-safe because multiple impersonation threads access this concurrently.
+backend/onyx/connectors/google_drive/models.py:163:    # fails to walk to the root, another user with better access can still complete the walk.
+backend/onyx/connectors/google_drive/models.py:164:    # Thread-safe because multiple impersonation threads access this concurrently.
+backend/onyx/connectors/google_drive/models.py:172:    #   1. Folders where that email confirmed no accessible parent (true orphans).
+backend/onyx/connectors/gitlab/connector.py:157:            credentials["gitlab_url"], private_token=credentials["gitlab_access_token"]
+backend/onyx/connectors/gitlab/connector.py:271:            "gitlab_access_token": os.environ["GITLAB_ACCESS_TOKEN"],
+backend/onyx/connectors/google_drive/file_retrieval.py:15:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/google_drive/file_retrieval.py:94:    Return True if any permission requires a direct link to access
+backend/onyx/connectors/google_drive/file_retrieval.py:149:            logger.debug("Cannot access folder %s: %s", folder_id, e)
+backend/onyx/connectors/google_drive/file_retrieval.py:153:        logger.debug("Cannot access folder %s: impersonation failed", folder_id)
+backend/onyx/connectors/google_drive/file_retrieval.py:182:            logger.debug("Cannot access drive %s: %s", drive_id, e)
+backend/onyx/connectors/google_drive/file_retrieval.py:186:        logger.debug("Cannot access drive %s: impersonation failed", drive_id)
+backend/onyx/connectors/google_drive/file_retrieval.py:190:def get_external_access_for_folder(
+backend/onyx/connectors/google_drive/file_retrieval.py:195:) -> ExternalAccess:
+backend/onyx/connectors/google_drive/file_retrieval.py:197:    Extract ExternalAccess from a folder's permissions.
+backend/onyx/connectors/google_drive/file_retrieval.py:200:    user emails, group emails, and public access status.
+backend/onyx/connectors/google_drive/file_retrieval.py:202:    Uses the EE implementation if available, otherwise returns public access
+backend/onyx/connectors/google_drive/file_retrieval.py:214:        ExternalAccess with extracted permission info
+backend/onyx/connectors/google_drive/file_retrieval.py:217:    get_folder_access_fn = cast(
+backend/onyx/connectors/google_drive/file_retrieval.py:218:        Callable[[GoogleDriveFileType, str, GoogleDriveService, bool], ExternalAccess],
+backend/onyx/connectors/google_drive/file_retrieval.py:221:            "get_external_access_for_folder",
+backend/onyx/connectors/google_drive/file_retrieval.py:226:    return get_folder_access_fn(folder, google_domain, drive_service, add_prefix)
+backend/onyx/connectors/google_drive/file_retrieval.py:329:                # when a user doesn't have access to a folder
+backend/onyx/connectors/google_drive/file_retrieval.py:412:        # If we found any files, mark this drive as traversed. When a user has access to a drive,
+backend/onyx/connectors/google_drive/file_retrieval.py:413:        # they have access to all the files in the drive. Also not a huge deal if we re-traverse
+backend/onyx/connectors/google_drive/doc_conversion.py:13:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/google_drive/doc_conversion.py:564:def _get_external_access_for_raw_gdrive_file(
+backend/onyx/connectors/google_drive/doc_conversion.py:571:) -> ExternalAccess:
+backend/onyx/connectors/google_drive/doc_conversion.py:573:    Get the external access for a raw Google Drive file.
+backend/onyx/connectors/google_drive/doc_conversion.py:579:               files), fall back to granting access to this user.
+backend/onyx/connectors/google_drive/doc_conversion.py:581:    external_access_fn = cast(
+backend/onyx/connectors/google_drive/doc_conversion.py:591:            ExternalAccess,
+backend/onyx/connectors/google_drive/doc_conversion.py:595:            "get_external_access_for_raw_gdrive_file",
+backend/onyx/connectors/google_drive/doc_conversion.py:599:    return external_access_fn(
+backend/onyx/connectors/google_drive/doc_conversion.py:615:    permission_sync_context: PermissionSyncContext | None,
+backend/onyx/connectors/google_drive/doc_conversion.py:644:            permission_sync_context,
+backend/onyx/connectors/google_drive/doc_conversion.py:692:    permission_sync_context: PermissionSyncContext | None,
+backend/onyx/connectors/google_drive/doc_conversion.py:784:        external_access = (
+backend/onyx/connectors/google_drive/doc_conversion.py:785:            _get_external_access_for_raw_gdrive_file(
+backend/onyx/connectors/google_drive/doc_conversion.py:787:                company_domain=permission_sync_context.google_domain,
+backend/onyx/connectors/google_drive/doc_conversion.py:791:                    creds, user_email=permission_sync_context.primary_admin_email
+backend/onyx/connectors/google_drive/doc_conversion.py:796:            if permission_sync_context
+backend/onyx/connectors/google_drive/doc_conversion.py:835:            external_access=external_access,
+backend/onyx/connectors/google_drive/doc_conversion.py:876:    permission_sync_context: PermissionSyncContext | None,
+backend/onyx/connectors/google_drive/doc_conversion.py:883:    external_access = (
+backend/onyx/connectors/google_drive/doc_conversion.py:884:        _get_external_access_for_raw_gdrive_file(
+backend/onyx/connectors/google_drive/doc_conversion.py:886:            company_domain=permission_sync_context.google_domain,
+backend/onyx/connectors/google_drive/doc_conversion.py:897:                user_email=permission_sync_context.primary_admin_email,
+backend/onyx/connectors/google_drive/doc_conversion.py:901:        if permission_sync_context
+backend/onyx/connectors/google_drive/doc_conversion.py:906:        external_access=external_access,
+backend/onyx/connectors/README.md:48:the documents to fetch. It may also include the base domain of the wiki. Alternatively, if all the access information
+backend/onyx/connectors/README.md:51:`load_credentials` should take a dictionary which provides all the access information that the connector might need.
+backend/onyx/connectors/README.md:52:For example this could be the user's username and access token.
+backend/onyx/connectors/README.md:68:        "access_token": "fake_token"
+backend/onyx/connectors/factory.py:23:from onyx.db.enums import AccessType
+backend/onyx/connectors/factory.py:144:    access_type: AccessType,
+backend/onyx/connectors/factory.py:187:    if access_type == AccessType.SYNC:
+backend/onyx/connectors/factory.py:188:        runnable_connector.validate_perm_sync()
+backend/onyx/connectors/gong/connector.py:413:            f"{credentials['gong_access_key']}:{credentials['gong_access_key_secret']}"
+backend/onyx/connectors/gong/connector.py:607:            "gong_access_key": os.environ["GONG_ACCESS_KEY"],
+backend/onyx/connectors/gong/connector.py:608:            "gong_access_key_secret": os.environ["GONG_ACCESS_KEY_SECRET"],
+backend/onyx/connectors/imap/connector.py:17:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/imap/connector.py:134:        include_perm_sync: bool,
+backend/onyx/connectors/imap/connector.py:201:                include_perm_sync=include_perm_sync,
+backend/onyx/connectors/imap/connector.py:230:            start=start, end=end, checkpoint=checkpoint, include_perm_sync=False
+backend/onyx/connectors/imap/connector.py:241:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/imap/connector.py:248:            start=start, end=end, checkpoint=checkpoint, include_perm_sync=True
+backend/onyx/connectors/imap/connector.py:339:    include_perm_sync: bool,
+backend/onyx/connectors/imap/connector.py:361:    external_access = (
+backend/onyx/connectors/imap/connector.py:362:        ExternalAccess(
+backend/onyx/connectors/imap/connector.py:363:            external_user_emails=set(expert_info_map.keys()),
+backend/onyx/connectors/imap/connector.py:364:            external_user_group_ids=set(),
+backend/onyx/connectors/imap/connector.py:367:        if include_perm_sync
+backend/onyx/connectors/imap/connector.py:379:        external_access=external_access,
+backend/onyx/connectors/asana/asana_api.py:54:        self.configuration.access_token = api_token
+backend/onyx/connectors/google_drive/connector.py:24:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/google_drive/connector.py:42:from onyx.connectors.google_drive.file_retrieval import get_external_access_for_folder
+backend/onyx/connectors/google_drive/connector.py:131:        logger.warning("Checking for folder access instead...")
+backend/onyx/connectors/google_drive/connector.py:168:def _public_access() -> ExternalAccess:
+backend/onyx/connectors/google_drive/connector.py:169:    return ExternalAccess(
+backend/onyx/connectors/google_drive/connector.py:170:        external_user_emails=set(),
+backend/onyx/connectors/google_drive/connector.py:171:        external_user_group_ids=set(),
+backend/onyx/connectors/google_drive/connector.py:306:        # Thread-safe because multiple impersonation threads access this concurrently
+backend/onyx/connectors/google_drive/connector.py:433:        # Get admins first since they're more likely to have access to most files
+backend/onyx/connectors/google_drive/connector.py:453:        doesn't have access to Drive APIs or the call fails.
+backend/onyx/connectors/google_drive/connector.py:464:            # User might not have access to Drive APIs
+backend/onyx/connectors/google_drive/connector.py:493:        # Also check with admin in case the retriever doesn't have access
+backend/onyx/connectors/google_drive/connector.py:508:        permission_sync_context: PermissionSyncContext | None = None,
+backend/onyx/connectors/google_drive/connector.py:524:        This separation ensures that if User A can access folder C but not its parent B,
+backend/onyx/connectors/google_drive/connector.py:525:        a later User B who has access to both can still complete the walk to the root.
+backend/onyx/connectors/google_drive/connector.py:541:                previously confirmed no accessible parent. Skips the API call if the same
+backend/onyx/connectors/google_drive/connector.py:543:            permission_sync_context: If provided, permissions will be fetched for hierarchy nodes.
+backend/onyx/connectors/google_drive/connector.py:554:            if permission_sync_context
+backend/onyx/connectors/google_drive/connector.py:566:            # to walk to the root, and this user might have better access.
+backend/onyx/connectors/google_drive/connector.py:594:                    # Can't access this folder - stop climbing.
+backend/onyx/connectors/google_drive/connector.py:612:                # 2. Thread A fails to create node (e.g., API error in get_external_access)
+backend/onyx/connectors/google_drive/connector.py:619:                if permission_sync_context:
+backend/onyx/connectors/google_drive/connector.py:620:                    external_access = get_external_access_for_folder(
+backend/onyx/connectors/google_drive/connector.py:622:                        permission_sync_context.google_domain,
+backend/onyx/connectors/google_drive/connector.py:627:                    external_access = _public_access()
+backend/onyx/connectors/google_drive/connector.py:635:                    external_access=external_access,
+backend/onyx/connectors/google_drive/connector.py:655:                    # not have access to private shared drives.
+backend/onyx/connectors/google_drive/connector.py:672:                # with better access might be able to continue)
+backend/onyx/connectors/google_drive/connector.py:706:        Important: When a user has access to a shared folder but NOT its parent,
+backend/onyx/connectors/google_drive/connector.py:709:        try with admin who may have better access and can see the parent chain.
+backend/onyx/connectors/google_drive/connector.py:741:            # Folder has no parents - could be a root OR user lacks access to parent
+backend/onyx/connectors/google_drive/connector.py:750:                    "Folder %s has no parents when fetched by %s, will try admin to check for parent access",
+backend/onyx/connectors/google_drive/connector.py:793:            useDomainAdminAccess=is_service_account,
+backend/onyx/connectors/google_drive/connector.py:853:                    # sometimes fail to retrieve restricted access folders/files)
+backend/onyx/connectors/google_drive/connector.py:1072:        # validate that the user has access to the drive APIs by performing a simple
+backend/onyx/connectors/google_drive/connector.py:1077:            # waste 17mins everytime we run into a user without access to drive APIs
+backend/onyx/connectors/google_drive/connector.py:1082:                # one user without access shouldn't block the entire connector
+backend/onyx/connectors/google_drive/connector.py:1084:                    "User '%s' does not have access to the drive APIs.", user_email
+backend/onyx/connectors/google_drive/connector.py:1206:        # to resolve the case where there are a ton of emails that don't have access
+backend/onyx/connectors/google_drive/connector.py:1664:        include_permissions: bool,
+backend/onyx/connectors/google_drive/connector.py:1670:        permission_sync_context = (
+backend/onyx/connectors/google_drive/connector.py:1675:            if include_permissions
+backend/onyx/connectors/google_drive/connector.py:1708:            permission_sync_context=permission_sync_context,
+backend/onyx/connectors/google_drive/connector.py:1718:                (retrieved_file, permission_sync_context),
+backend/onyx/connectors/google_drive/connector.py:1738:        permission_sync_context: PermissionSyncContext | None,
+backend/onyx/connectors/google_drive/connector.py:1748:                permission_sync_context,
+backend/onyx/connectors/google_drive/connector.py:1775:        include_permissions: bool,
+backend/onyx/connectors/google_drive/connector.py:1795:                if include_permissions or self.exclude_domain_link_only
+backend/onyx/connectors/google_drive/connector.py:1805:                drive_files_iter, checkpoint, include_permissions
+backend/onyx/connectors/google_drive/connector.py:1828:            start, end, checkpoint, include_permissions=False
+backend/onyx/connectors/google_drive/connector.py:1832:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/google_drive/connector.py:1839:            start, end, checkpoint, include_permissions=True
+backend/onyx/connectors/google_drive/connector.py:1846:        include_permissions: bool = False,
+backend/onyx/connectors/google_drive/connector.py:1862:            if include_permissions or self.exclude_domain_link_only
+backend/onyx/connectors/google_drive/connector.py:1877:        permission_sync_context = (
+backend/onyx/connectors/google_drive/connector.py:1882:            if include_permissions
+backend/onyx/connectors/google_drive/connector.py:1899:            permission_sync_context=permission_sync_context,
+backend/onyx/connectors/google_drive/connector.py:1906:                (rf, permission_sync_context),
+backend/onyx/connectors/google_drive/connector.py:1924:        include_permissions: bool = True,
+backend/onyx/connectors/google_drive/connector.py:1934:            permission_sync_context = (
+backend/onyx/connectors/google_drive/connector.py:1939:                if include_permissions
+backend/onyx/connectors/google_drive/connector.py:1947:                permission_sync_context=permission_sync_context,
+backend/onyx/connectors/google_drive/connector.py:1955:                    permission_sync_context,
+backend/onyx/connectors/google_drive/connector.py:2000:        include_permissions: bool = True,
+backend/onyx/connectors/google_drive/connector.py:2010:                    include_permissions=include_permissions,
+backend/onyx/connectors/google_drive/connector.py:2026:            start=start, end=end, callback=callback, include_permissions=False
+backend/onyx/connectors/google_drive/connector.py:2029:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/google_drive/connector.py:2036:            start=start, end=end, callback=callback, include_permissions=True
+backend/onyx/connectors/google_drive/connector.py:2111:                    "with an account that has admin directory access."
+backend/onyx/connectors/interfaces.py:79:    def validate_perm_sync(self) -> None:
+backend/onyx/connectors/interfaces.py:81:        Don't override this; add a function to perm_sync_valid.py in the ee package
+backend/onyx/connectors/interfaces.py:85:            "onyx.connectors.perm_sync_valid",
+backend/onyx/connectors/interfaces.py:86:            "validate_perm_sync",
+backend/onyx/connectors/interfaces.py:149:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/interfaces.py:276:        Final return can be access via either:
+backend/onyx/connectors/interfaces.py:307:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/interfaces.py:321:        include_permissions: bool = False,
+backend/onyx/connectors/interfaces.py:326:        If include_permissions is True, the documents will have permissions synced.
+backend/onyx/connectors/zendesk/connector.py:571:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/web/connector.py:752:                    f"Unauthorized access to '{test_url}': {e}"
+backend/onyx/connectors/web/connector.py:756:                    f"Forbidden access to '{test_url}': {e}"
+backend/onyx/connectors/bitbucket/connector.py:270:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/bitbucket/connector.py:305:        """Validate Bitbucket credentials and workspace access by probing a lightweight endpoint.
+backend/onyx/connectors/bitbucket/connector.py:326:                        "Insufficient permissions to access Bitbucket workspace (HTTP 403)."
+backend/onyx/connectors/connector_runner.py:111:        include_permissions: bool,
+backend/onyx/connectors/connector_runner.py:114:        if not isinstance(connector, CheckpointedConnector) and include_permissions:
+backend/onyx/connectors/connector_runner.py:116:                "include_permissions cannot be True for non-checkpointed connectors"
+backend/onyx/connectors/connector_runner.py:122:        self.include_permissions = include_permissions
+backend/onyx/connectors/connector_runner.py:154:                if self.include_permissions:
+backend/onyx/connectors/connector_runner.py:162:                        self.connector.load_from_checkpoint_with_perm_sync
+backend/onyx/connectors/microsoft_graph_env.py:50:        graph_host="https://microsoftgraph.chinacloudapi.cn",
+backend/onyx/connectors/microsoft_graph_env.py:51:        authority_host="https://login.chinacloudapi.cn",
+backend/onyx/connectors/loopio/connector.py:27:LOOPIO_AUTH_URL = LOOPIO_API_BASE + "oauth2/access_token"
+backend/onyx/connectors/drupal_wiki/models.py:12:class SpaceAccessStatus(str, Enum):
+backend/onyx/connectors/drupal_wiki/models.py:13:    """Enum for Drupal Wiki space access status"""
+backend/onyx/connectors/drupal_wiki/models.py:27:    accessStatus: Optional[SpaceAccessStatus] = None
+backend/onyx/connectors/discord/connector.py:256:            # aclose() raises (same pattern as cursor.close() before conn.close()).
+backend/onyx/connectors/discord/connector.py:258:                loop.run_until_complete(async_gen.aclose())
+backend/onyx/connectors/slack/access.py:6:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/slack/access.py:13:def get_channel_access(
+backend/onyx/connectors/slack/access.py:18:) -> ExternalAccess | None:
+backend/onyx/connectors/slack/access.py:19:    """Get channel access permissions for a Slack channel. EE only.
+backend/onyx/connectors/slack/access.py:28:    ee_get_channel_access = cast(
+backend/onyx/connectors/slack/access.py:36:            ExternalAccess,
+backend/onyx/connectors/slack/access.py:39:            "onyx.external_permissions.slack.channel_access", "get_channel_access"
+backend/onyx/connectors/slack/access.py:43:    return ee_get_channel_access(client, channel, user_cache, team_id_to_user_emails)
+backend/onyx/connectors/slack/onyx_retry_handler.py:41:        delay_lock: the redis key to use with RedisLock (to synchronize access to delay_key)
+backend/onyx/connectors/testrail/connector.py:169:                    "Insufficient permissions to access TestRail resources (HTTP 403)."
+backend/onyx/connectors/canvas/access.py:2:Permissioning / AccessControl logic for Canvas courses.
+backend/onyx/connectors/canvas/access.py:11:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/canvas/access.py:20:) -> ExternalAccess | None:
+backend/onyx/connectors/canvas/access.py:25:        Callable[[CanvasApiClient, int], ExternalAccess | None],
+backend/onyx/connectors/canvas/access.py:27:            "onyx.external_permissions.canvas.access",
+backend/onyx/connectors/slack/connector.py:30:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/slack/connector.py:57:from onyx.connectors.slack.access import get_channel_access
+backend/onyx/connectors/slack/connector.py:88:    current_channel_access: ExternalAccess | None
+backend/onyx/connectors/slack/connector.py:218:    # join so that the bot can access messages
+backend/onyx/connectors/slack/connector.py:281:    channel_access: ExternalAccess | None,
+backend/onyx/connectors/slack/connector.py:348:        external_access=channel_access,
+backend/onyx/connectors/slack/connector.py:361:    "ekm_access_denied",
+backend/onyx/connectors/slack/connector.py:447:    channel_access: ExternalAccess | None,
+backend/onyx/connectors/slack/connector.py:469:        external_access=channel_access,
+backend/onyx/connectors/slack/connector.py:541:    channel_access: ExternalAccess | None,
+backend/onyx/connectors/slack/connector.py:592:        channel_access=channel_access,
+backend/onyx/connectors/slack/connector.py:630:        # NOTE: external_access is a frozen object, so it's okay to safe to use a single
+backend/onyx/connectors/slack/connector.py:632:        external_access = get_channel_access(
+backend/onyx/connectors/slack/connector.py:643:                external_access,
+backend/onyx/connectors/slack/connector.py:673:                        external_access=external_access,
+backend/onyx/connectors/slack/connector.py:701:    channel_access: ExternalAccess | None,
+backend/onyx/connectors/slack/connector.py:722:            channel_access=channel_access,
+backend/onyx/connectors/slack/connector.py:1017:                    # Public-channel access on Grid stays org-wide instead of
+backend/onyx/connectors/slack/connector.py:1031:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/slack/connector.py:1059:        include_permissions: bool = False,
+backend/onyx/connectors/slack/connector.py:1104:            if include_permissions:
+backend/onyx/connectors/slack/connector.py:1107:                channel_access = get_channel_access(
+backend/onyx/connectors/slack/connector.py:1113:                checkpoint.current_channel_access = channel_access
+backend/onyx/connectors/slack/connector.py:1156:                    checkpoint.current_channel_access,
+backend/onyx/connectors/slack/connector.py:1205:                            channel_access=checkpoint.current_channel_access,
+backend/onyx/connectors/slack/connector.py:1305:                    if include_permissions:
+backend/onyx/connectors/slack/connector.py:1306:                        channel_access = get_channel_access(
+backend/onyx/connectors/slack/connector.py:1312:                        checkpoint.current_channel_access = channel_access
+backend/onyx/connectors/slack/connector.py:1352:            start, end, checkpoint, include_permissions=False
+backend/onyx/connectors/slack/connector.py:1355:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/slack/connector.py:1362:            start, end, checkpoint, include_permissions=True
+backend/onyx/connectors/slack/connector.py:1405:            # 4) If channels are specified and regex is not enabled, verify each is accessible
+backend/onyx/connectors/slack/connector.py:1410:            #     accessible_channels = get_channels(
+backend/onyx/connectors/slack/connector.py:1417:            #     accessible_channel_names = {ch["name"] for ch in accessible_channels}
+backend/onyx/connectors/slack/connector.py:1418:            #     accessible_channel_ids = {ch["id"] for ch in accessible_channels}
+backend/onyx/connectors/slack/connector.py:1422:            #             user_channel not in accessible_channel_names
+backend/onyx/connectors/slack/connector.py:1423:            #             and user_channel not in accessible_channel_ids
+backend/onyx/connectors/slack/connector.py:1426:            #                 f"Channel '{user_channel}' not found or inaccessible in this workspace."
+backend/onyx/connectors/slack/connector.py:1452:                    "Slack bot token lacks the necessary scope to list/access channels. "
+backend/onyx/connectors/slack/connector.py:1487:            current_channel_access=None,
+backend/onyx/connectors/slack/utils.py:25:# used to serialize access to the retry TTL
+backend/onyx/connectors/slack/utils.py:42:    """Per-workspace user email sets. Used to scope public-channel access on
+backend/onyx/connectors/canvas/connector.py:12:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/canvas/connector.py:15:from onyx.connectors.canvas.access import get_course_permissions
+backend/onyx/connectors/canvas/connector.py:254:        self._course_permissions_cache: dict[int, ExternalAccess | None] = {}
+backend/onyx/connectors/canvas/connector.py:262:    def _get_course_permissions(self, course_id: int) -> ExternalAccess | None:
+backend/onyx/connectors/canvas/connector.py:273:        """Fetch all courses accessible to the authenticated user."""
+backend/onyx/connectors/canvas/connector.py:433:        access_token = credentials.get("canvas_access_token")
+backend/onyx/connectors/canvas/connector.py:434:        if not access_token:
+backend/onyx/connectors/canvas/connector.py:439:                bearer_token=access_token,
+backend/onyx/connectors/canvas/connector.py:480:        include_permissions: bool,
+backend/onyx/connectors/canvas/connector.py:509:                            doc, course_id, include_permissions
+backend/onyx/connectors/canvas/connector.py:522:                            doc, course_id, include_permissions
+backend/onyx/connectors/canvas/connector.py:542:                            doc, course_id, include_permissions
+backend/onyx/connectors/canvas/connector.py:572:        include_permissions: bool,
+backend/onyx/connectors/canvas/connector.py:574:        if include_permissions:
+backend/onyx/connectors/canvas/connector.py:575:            document.external_access = self._get_course_permissions(course_id)
+backend/onyx/connectors/canvas/connector.py:583:        include_permissions: bool = False,
+backend/onyx/connectors/canvas/connector.py:585:        """Shared implementation for load_from_checkpoint and load_from_checkpoint_with_perm_sync."""
+backend/onyx/connectors/canvas/connector.py:647:            # 404 means the course itself is gone or inaccessible. The
+backend/onyx/connectors/canvas/connector.py:710:            response, stage, course_id, start, end, include_permissions
+backend/onyx/connectors/canvas/connector.py:740:            start, end, checkpoint, include_permissions=False
+backend/onyx/connectors/canvas/connector.py:744:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/canvas/connector.py:752:            start, end, checkpoint, include_permissions=True
+backend/onyx/connectors/canvas/connector.py:767:        """Validate Canvas connector settings by testing API access."""
+backend/onyx/connectors/canvas/connector.py:781:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/canvas/client.py:125:                # Shape 2: {"error": "Invalid access token"}
+backend/onyx/connectors/dropbox/connector.py:36:        self.dropbox_client = Dropbox(credentials["dropbox_access_token"])
+backend/onyx/connectors/dropbox/connector.py:180:            "dropbox_access_token": os.environ["DROPBOX_ACCESS_TOKEN"],
+backend/onyx/connectors/airtable/airtable_connector.py:125:        Otherwise, it discovers and indexes all accessible bases and tables.
+backend/onyx/connectors/airtable/airtable_connector.py:149:        self._airtable_client = AirtableApi(credentials["airtable_access_token"])
+backend/onyx/connectors/airtable/airtable_connector.py:164:                        "No bases found. Ensure your API token has access to at least one base."
+backend/onyx/connectors/airtable/airtable_connector.py:180:                    f"Failed to access table '{self.table_name_or_id}' in base '{self.base_id}': {e}"
+backend/onyx/connectors/hubspot/connector.py:90:        access_token: str | None = None,
+backend/onyx/connectors/hubspot/connector.py:94:        self._access_token = access_token
+backend/onyx/connectors/hubspot/connector.py:113:    def access_token(self) -> str:
+backend/onyx/connectors/hubspot/connector.py:114:        """Get the access token, raising an exception if not set."""
+backend/onyx/connectors/hubspot/connector.py:115:        if self._access_token is None:
+backend/onyx/connectors/hubspot/connector.py:116:            raise ConnectorMissingCredentialError("HubSpot access token not set")
+backend/onyx/connectors/hubspot/connector.py:117:        return self._access_token
+backend/onyx/connectors/hubspot/connector.py:119:    @access_token.setter
+backend/onyx/connectors/hubspot/connector.py:120:    def access_token(self, value: str | None) -> None:
+backend/onyx/connectors/hubspot/connector.py:121:        """Set the access token."""
+backend/onyx/connectors/hubspot/connector.py:122:        self._access_token = value
+backend/onyx/connectors/hubspot/connector.py:347:            "Authorization": f"Bearer {self.access_token}",
+backend/onyx/connectors/hubspot/connector.py:361:        self.access_token = cast(str, credentials["hubspot_access_token"])
+backend/onyx/connectors/hubspot/connector.py:630:        api_client = HubSpot(access_token=self.access_token)
+backend/onyx/connectors/hubspot/connector.py:763:        api_client = HubSpot(access_token=self.access_token)
+backend/onyx/connectors/hubspot/connector.py:918:        api_client = HubSpot(access_token=self.access_token)
+backend/onyx/connectors/hubspot/connector.py:1071:        api_client = HubSpot(access_token=self.access_token)
+backend/onyx/connectors/hubspot/connector.py:1280:        {"hubspot_access_token": os.environ["HUBSPOT_ACCESS_TOKEN"]}
+backend/onyx/connectors/coda/connector.py:37:class CodaClientRequestFailedError(ConnectionError):
+backend/onyx/connectors/coda/connector.py:116:            raise CodaClientRequestFailedError(error, response.status_code)
+backend/onyx/connectors/coda/connector.py:151:        except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:175:        except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:199:        except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:224:        except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:268:            except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:313:            except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:363:            except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:400:            except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:444:            except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:547:        except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:692:                logger.info("Validated access to workspace: %s", self.workspace_id)
+backend/onyx/connectors/coda/connector.py:694:        except CodaClientRequestFailedError as e:
+backend/onyx/connectors/coda/connector.py:701:                    "Coda workspace not found or not accessible (HTTP 404). "
+backend/onyx/connectors/github/connector.py:25:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/github/connector.py:37:from onyx.connectors.github.utils import get_external_access_permission
+backend/onyx/connectors/github/connector.py:337:    pull_request: PullRequest, repo_external_access: ExternalAccess | None
+backend/onyx/connectors/github/connector.py:359:        external_access=repo_external_access,
+backend/onyx/connectors/github/connector.py:426:    issue: Issue, repo_external_access: ExternalAccess | None
+backend/onyx/connectors/github/connector.py:447:        external_access=repo_external_access,
+backend/onyx/connectors/github/connector.py:499:    repo_external_access: ExternalAccess | None,
+backend/onyx/connectors/github/connector.py:529:        external_access=repo_external_access,
+backend/onyx/connectors/github/connector.py:615:                credentials["github_access_token"],
+backend/onyx/connectors/github/connector.py:620:            else Github(credentials["github_access_token"], per_page=ITEMS_PER_PAGE)
+backend/onyx/connectors/github/connector.py:789:        repo_external_access: ExternalAccess | None,
+backend/onyx/connectors/github/connector.py:838:                    external_access=repo_external_access,
+backend/onyx/connectors/github/connector.py:857:                    repo, path, content_text, repo_external_access
+backend/onyx/connectors/github/connector.py:880:        include_permissions: bool = False,
+backend/onyx/connectors/github/connector.py:914:        repo_external_access: ExternalAccess | None = None
+backend/onyx/connectors/github/connector.py:915:        if include_permissions:
+backend/onyx/connectors/github/connector.py:916:            repo_external_access = get_external_access_permission(
+backend/onyx/connectors/github/connector.py:941:                        external_access=repo_external_access,
+backend/onyx/connectors/github/connector.py:964:                            cast(PullRequest, pr), repo_external_access
+backend/onyx/connectors/github/connector.py:1033:                        external_access=repo_external_access,
+backend/onyx/connectors/github/connector.py:1053:                        yield _convert_issue_to_document(issue, repo_external_access)
+backend/onyx/connectors/github/connector.py:1089:                repo, checkpoint, start, is_slim, repo_external_access
+backend/onyx/connectors/github/connector.py:1125:        include_permissions: bool = False,
+backend/onyx/connectors/github/connector.py:1144:            include_permissions=include_permissions,
+backend/onyx/connectors/github/connector.py:1155:            start, end, checkpoint, include_permissions=False
+backend/onyx/connectors/github/connector.py:1159:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/github/connector.py:1166:            start, end, checkpoint, include_permissions=True
+backend/onyx/connectors/github/connector.py:1171:        include_permissions: bool,
+backend/onyx/connectors/github/connector.py:1186:                checkpoint, include_permissions=include_permissions, is_slim=True
+backend/onyx/connectors/github/connector.py:1195:                            id=document.id, external_access=document.external_access
+backend/onyx/connectors/github/connector.py:1212:        return self._retrieve_slim_docs(include_permissions=False, callback=callback)
+backend/onyx/connectors/github/connector.py:1215:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/github/connector.py:1221:        return self._retrieve_slim_docs(include_permissions=True, callback=callback)
+backend/onyx/connectors/github/connector.py:1248:                    # Validate at least one repository exists and is accessible
+backend/onyx/connectors/github/connector.py:1261:                                "Successfully accessed repository: %s/%s",
+backend/onyx/connectors/github/connector.py:1276:                            "None of the specified repositories could be accessed: "
+backend/onyx/connectors/github/connector.py:1297:                    MISSING_SSO_ERROR_MESSAGE = "You must grant your Personal Access token access to this organization".lower()
+backend/onyx/connectors/github/connector.py:1302:                            "authorizing-a-personal-access-token-for-use-with-saml-single-sign-on"
+backend/onyx/connectors/github/connector.py:1305:                            f"Your GitHub token is missing authorization to access the "
+backend/onyx/connectors/github/connector.py:1312:                    # Check if we can access any repos
+backend/onyx/connectors/github/connector.py:1377:        {"github_access_token": os.environ["ACCESS_TOKEN_GITHUB"]}
+backend/onyx/connectors/github/connector.py:1381:        get_external_access_permission(
+backend/onyx/connectors/github/connector.py:1393:        connector, batch_size=10, include_permissions=False, time_range=time_range
+backend/onyx/connectors/github/utils.py:7:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/github/utils.py:16:def get_external_access_permission(
+backend/onyx/connectors/github/utils.py:18:) -> ExternalAccess:
+backend/onyx/connectors/github/utils.py:20:    Get the external access permission for a repository.
+backend/onyx/connectors/github/utils.py:25:        # For the MIT version, return an empty ExternalAccess (private document)
+backend/onyx/connectors/github/utils.py:26:        return ExternalAccess.empty()
+backend/onyx/connectors/github/utils.py:29:    ee_get_external_access_permission = cast(
+backend/onyx/connectors/github/utils.py:30:        Callable[[Repository, Github, bool], ExternalAccess],
+backend/onyx/connectors/github/utils.py:33:            "get_external_access_permission",
+backend/onyx/connectors/github/utils.py:37:    return ee_get_external_access_permission(repo, github_client, True)
+backend/onyx/connectors/github/utils.py:46:    # Try to access the requester - different PyGithub versions may use different attribute names
+backend/onyx/connectors/notion/connector.py:99:    this integration has been granted access to.
+backend/onyx/connectors/notion/connector.py:205:                    "Unable to access block with ID '%s'. "
+backend/onyx/connectors/notion/connector.py:291:                    "Unable to access database with ID '%s'. "
+backend/onyx/connectors/notion/connector.py:328:                    "Unable to access data source with ID '%s'. "
+backend/onyx/connectors/notion/connector.py:1115:            # We'll do a minimal search call (page_size=1) to confirm accessibility
+backend/onyx/connectors/jira/access.py:2:Permissioning / AccessControl logic for JIRA Projects + Issues.
+backend/onyx/connectors/jira/access.py:10:from onyx.access.models import ExternalAccess
+backend/onyx/connectors/jira/access.py:19:) -> ExternalAccess | None:
+backend/onyx/connectors/jira/access.py:21:    Fetch the project + issue level permissions / access-control.
+backend/onyx/connectors/jira/access.py:32:        ExternalAccess object for the page. None if EE is not enabled or no restrictions found.
+backend/onyx/connectors/jira/access.py:42:            ExternalAccess | None,
+backend/onyx/connectors/jira/access.py:45:            "onyx.external_permissions.jira.page_access", "get_project_permissions"
+backend/onyx/connectors/linear/connector.py:40:_ACCESS_TOKEN = "access_token"
+backend/onyx/connectors/linear/connector.py:107:            f"&prompt=consent"  # prompts user for access; allows choosing workspace
+backend/onyx/connectors/linear/connector.py:144:            _ACCESS_TOKEN: token_data[_ACCESS_TOKEN],
+backend/onyx/connectors/linear/connector.py:154:        elif _ACCESS_TOKEN in credentials:
+backend/onyx/connectors/linear/connector.py:156:                self.linear_api_key = "Bearer " + cast(str, credentials[_ACCESS_TOKEN])
+backend/onyx/connectors/linear/connector.py:160:                    str, new_credentials[_ACCESS_TOKEN]
+backend/onyx/connectors/linear/connector.py:163:                self.linear_api_key = "Bearer " + cast(str, credentials[_ACCESS_TOKEN])
+backend/onyx/connectors/linear/connector.py:202:            _ACCESS_TOKEN: token_data[_ACCESS_TOKEN],
+backend/onyx/connectors/jira/utils.py:83:    Get the url used to access an issue in the UI.
+backend/onyx/connectors/jira/connector.py:38:from onyx.connectors.jira.access import get_project_permissions
+backend/onyx/connectors/jira/connector.py:198:                f"The specified Jira project does not exist or you don't have access to it. JQL query: {jql}. Error: {error_text}"
+backend/onyx/connectors/jira/connector.py:572:            The external access permissions for the project
+backend/onyx/connectors/jira/connector.py:746:                jql, checkpoint, include_permissions=False
+backend/onyx/connectors/jira/connector.py:752:                    jql, checkpoint, include_permissions=False
+backend/onyx/connectors/jira/connector.py:756:    def load_from_checkpoint_with_perm_sync(
+backend/onyx/connectors/jira/connector.py:765:            return self._load_from_checkpoint(jql, checkpoint, include_permissions=True)
+backend/onyx/connectors/jira/connector.py:770:                    jql, checkpoint, include_permissions=True
+backend/onyx/connectors/jira/connector.py:775:        self, jql: str, checkpoint: JiraConnectorCheckpoint, include_permissions: bool
+backend/onyx/connectors/jira/connector.py:839:                    if include_permissions:
+backend/onyx/connectors/jira/connector.py:840:                        document.external_access = self._get_project_permissions(
+backend/onyx/connectors/jira/connector.py:885:    def retrieve_all_slim_docs_perm_sync(
+backend/onyx/connectors/jira/connector.py:957:                        external_access=self._get_project_permissions(
+backend/onyx/connectors/jira/connector.py:1011:            # If neither JQL nor project specified, validate we can access the Jira API
+backend/onyx/connectors/jira/connector.py:1013:                # Try to list projects to validate access
+backend/onyx/connectors/jira/connector.py:1111:    for slim_doc in connector.retrieve_all_slim_docs_perm_sync(

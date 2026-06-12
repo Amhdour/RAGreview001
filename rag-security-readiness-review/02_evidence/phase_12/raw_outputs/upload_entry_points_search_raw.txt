@@ -1,0 +1,1149 @@
+web/tests/e2e/fixtures/images.ts:2:// PIL validation (which upload endpoints run to reject malformed images), so
+web/tests/e2e/fixtures/images.ts:3:// it works for any test that needs a real, small, valid image upload.
+web/src/sections/cards/FileCard.tsx:81:  const doneUploading = String(file.status) !== UserFileStatus.UPLOADING;
+web/src/sections/cards/FileCard.tsx:86:        removeFile && doneUploading ? () => removeFile(file.id) : undefined
+web/src/sections/cards/FileCard.tsx:102:        {!doneUploading || !imageUrl ? (
+web/src/sections/cards/FileCard.tsx:158:    String(file.status) === UserFileStatus.UPLOADING ||
+web/src/sections/cards/FileCard.tsx:164:  const doneUploading = String(file.status) !== UserFileStatus.UPLOADING;
+web/src/sections/cards/FileCard.tsx:183:        removeFile && doneUploading ? () => removeFile(file.id) : undefined
+web/src/sections/cards/FileCard.tsx:193:                ? file.status === UserFileStatus.UPLOADING
+web/src/sections/cards/FileCard.tsx:194:                  ? "Uploading..."
+web/src/sections/modals/UserFilesModal.tsx:44:  if (s === UserFileStatus.UPLOADING) return "Uploading...";
+web/src/sections/modals/UserFilesModal.tsx:67:    String(file.status) === UserFileStatus.UPLOADING ||
+web/src/sections/modals/UserFilesModal.tsx:98:  handleUploadChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+web/src/sections/modals/UserFilesModal.tsx:112:  handleUploadChange,
+web/src/sections/modals/UserFilesModal.tsx:127:  const triggerUploadPicker = () => fileInputRef.current?.click();
+web/src/sections/modals/UserFilesModal.tsx:159:      {handleUploadChange && (
+web/src/sections/modals/UserFilesModal.tsx:165:          onChange={handleUploadChange}
+web/src/sections/modals/UserFilesModal.tsx:194:              {handleUploadChange && (
+web/src/sections/modals/UserFilesModal.tsx:198:                  onClick={triggerUploadPicker}
+web/src/sections/modals/languageModels/VertexAIModal.tsx:6:import { FileUploadFormField } from "@/components/Field";
+web/src/sections/modals/languageModels/VertexAIModal.tsx:95:                    description="Upload a GCP service account key JSON file"
+web/src/sections/modals/languageModels/VertexAIModal.tsx:130:            <FileUploadFormField name={FIELD_VERTEX_CREDENTIALS} label="" />
+web/src/sections/modals/AgentViewerModal.tsx:137:      handleFileUpload={() => {}}
+web/tests/e2e/connectors/inlineFileManagement.spec.ts:5:/** Upload a file through the inline manager, retrying on transient failures. */
+web/tests/e2e/connectors/inlineFileManagement.spec.ts:6:async function uploadTestFile(
+web/tests/e2e/connectors/inlineFileManagement.spec.ts:101:    await uploadTestFile(
+web/tests/e2e/connectors/inlineFileManagement.spec.ts:117:    await uploadTestFile(
+web/tests/e2e/connectors/inlineFileManagement.spec.ts:133:    await uploadTestFile(
+web/tests/e2e/connectors/inlineFileManagement.spec.ts:162:    await uploadTestFile(
+web/tests/e2e/global-setup.ts:255:  // Many tests depend on a default LLM being configured (file uploads,
+web/tests/e2e/chat/message_edit_regenerate.spec.ts:231:    const uploadResponsePromise = page.waitForResponse(
+web/tests/e2e/chat/message_edit_regenerate.spec.ts:233:        response.url().includes("/api/user/projects/file/upload") &&
+web/tests/e2e/chat/message_edit_regenerate.spec.ts:243:    const uploadResponse = await uploadResponsePromise;
+web/tests/e2e/chat/message_edit_regenerate.spec.ts:244:    expect(uploadResponse.ok()).toBeTruthy();
+web/tests/e2e/chat/message_edit_regenerate.spec.ts:246:    // Wait for upload processing to complete and file card to render
+web/src/sections/knowledge/AgentKnowledgePane.tsx:418:  onUploadChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+web/src/sections/knowledge/AgentKnowledgePane.tsx:426:  onUploadChange,
+web/src/sections/knowledge/AgentKnowledgePane.tsx:472:        onChange={onUploadChange}
+web/src/sections/knowledge/AgentKnowledgePane.tsx:494:        emptyMessage="No files available. Upload files to get started."
+web/src/sections/knowledge/AgentKnowledgePane.tsx:500:            Onyx is still processing your uploaded files. You can create the
+web/src/sections/knowledge/AgentKnowledgePane.tsx:538:  onUploadChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+web/src/sections/knowledge/AgentKnowledgePane.tsx:569:  onUploadChange,
+web/src/sections/knowledge/AgentKnowledgePane.tsx:619:            onUploadChange={onUploadChange}
+web/src/sections/knowledge/AgentKnowledgePane.tsx:689:          description="Recent or new uploads"
+web/src/sections/knowledge/AgentKnowledgePane.tsx:846:  onUploadChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+web/src/sections/knowledge/AgentKnowledgePane.tsx:873:  onUploadChange,
+web/src/sections/knowledge/AgentKnowledgePane.tsx:1090:            onUploadChange={onUploadChange}
+web/src/sections/knowledge/AgentKnowledgePane.tsx:1118:    onUploadChange,
+web/tests/e2e/chat/project_files_visual_regression.spec.ts:34:async function uploadFileToProject(
+web/tests/e2e/chat/project_files_visual_regression.spec.ts:40:  const response = await page.request.post("/api/user/projects/file/upload", {
+web/tests/e2e/chat/project_files_visual_regression.spec.ts:110:    await uploadFileToProject(page, projectId, LONG_FILE_NAME, FILE_CONTENT);
+web/tests/e2e/chat/project_files_visual_regression.spec.ts:162:    await expect(fileTitle).not.toContainText("Uploading...", {
+web/tests/e2e/chat/chat_file_uploads.spec.ts:14:const SHORT_AI_RESPONSE = "I've reviewed the file you uploaded.";
+web/tests/e2e/chat/chat_file_uploads.spec.ts:25:interface UploadFile {
+web/tests/e2e/chat/chat_file_uploads.spec.ts:32: * Uploads one or more files via the hidden chat-input file picker and
+web/tests/e2e/chat/chat_file_uploads.spec.ts:33: * waits for the upload request to return plus the file card(s) to render.
+web/tests/e2e/chat/chat_file_uploads.spec.ts:39:async function uploadFilesToChat(
+web/tests/e2e/chat/chat_file_uploads.spec.ts:41:  files: UploadFile[]
+web/tests/e2e/chat/chat_file_uploads.spec.ts:48:  const uploadResponsePromise = page.waitForResponse(
+web/tests/e2e/chat/chat_file_uploads.spec.ts:50:      response.url().includes("/api/user/projects/file/upload") &&
+web/tests/e2e/chat/chat_file_uploads.spec.ts:56:  const uploadResponse = await uploadResponsePromise;
+web/tests/e2e/chat/chat_file_uploads.spec.ts:57:  expect(uploadResponse.ok()).toBeTruthy();
+web/tests/e2e/chat/chat_file_uploads.spec.ts:69:test.describe("Chat File Uploads", () => {
+web/tests/e2e/chat/chat_file_uploads.spec.ts:79:  test.describe("User-Uploaded Files", () => {
+web/tests/e2e/chat/chat_file_uploads.spec.ts:80:    test("uploaded text file renders in user message", async ({ page }) => {
+web/tests/e2e/chat/chat_file_uploads.spec.ts:85:      await uploadFilesToChat(page, [
+web/tests/e2e/chat/chat_file_uploads.spec.ts:103:      await chat.screenshotContainer("chat-uploaded-text-file");
+web/tests/e2e/chat/chat_file_uploads.spec.ts:106:    test("uploaded image renders in user message", async ({ page }) => {
+web/tests/e2e/chat/chat_file_uploads.spec.ts:111:      await uploadFilesToChat(page, [
+web/tests/e2e/chat/chat_file_uploads.spec.ts:126:      await chat.screenshotContainer("chat-uploaded-image");
+web/tests/e2e/chat/chat_file_uploads.spec.ts:129:    test("multiple uploaded files render together", async ({ page }) => {
+web/tests/e2e/chat/chat_file_uploads.spec.ts:135:      await uploadFilesToChat(page, [
+web/tests/e2e/chat/chat_file_uploads.spec.ts:139:          buffer: Buffer.from("Multi-file upload notes.", "utf-8"),
+web/tests/e2e/chat/chat_file_uploads.spec.ts:158:      await chat.screenshotContainer("chat-uploaded-multiple-files");
+web/tests/e2e/chat/chat_file_uploads.spec.ts:206:    test("clicking expand on uploaded code file opens preview modal", async ({
+web/tests/e2e/chat/chat_file_uploads.spec.ts:224:      await uploadFilesToChat(page, [
+web/src/sections/input/BaseInputBar.tsx:52:  /** Blocks submit without the disabled visual (e.g. files still uploading). */
+web/src/sections/input/InputChipStrip.tsx:19:  UploadFileStatus,
+web/src/sections/input/InputChipStrip.tsx:20:} from "@/app/craft/contexts/UploadFilesContext";
+web/src/sections/input/InputChipStrip.tsx:82:  const isUploading = file.status === UploadFileStatus.UPLOADING;
+web/src/sections/input/InputChipStrip.tsx:83:  const isPending = file.status === UploadFileStatus.PENDING;
+web/src/sections/input/InputChipStrip.tsx:84:  const isFailed = file.status === UploadFileStatus.FAILED;
+web/src/sections/input/InputChipStrip.tsx:86:  const icon = isUploading ? (
+web/src/sections/input/AppInputBar.tsx:91:  handleFileUpload: (files: File[]) => void;
+web/src/sections/input/AppInputBar.tsx:117:    handleFileUpload,
+web/src/sections/input/AppInputBar.tsx:281:    const hasUploadingFiles = useMemo(() => {
+web/src/sections/input/AppInputBar.tsx:283:        (file) => file.status === UserFileStatus.UPLOADING
+web/src/sections/input/AppInputBar.tsx:302:    const handleUploadChange = useCallback(
+web/src/sections/input/AppInputBar.tsx:306:        handleFileUpload(Array.from(files));
+web/src/sections/input/AppInputBar.tsx:309:      [handleFileUpload]
+web/src/sections/input/AppInputBar.tsx:376:        handleFileUpload(pastedFiles);
+web/src/sections/input/AppInputBar.tsx:574:            handleUploadChange={handleUploadChange}
+web/src/sections/input/AppInputBar.tsx:708:              hasUploadingFiles ||
+web/src/sections/input/AppInputBar.tsx:892:                              !hasUploadingFiles
+web/src/sections/input/AppInputBar.tsx:900:                            !hasUploadingFiles &&
+web/src/sections/input/AppInputBar.tsx:959:                    disabled={!message || isClassifying || hasUploadingFiles}
+web/src/sections/input/InputChipStrip.stories.tsx:3:import { UploadFileStatus } from "@/app/craft/contexts/UploadFilesContext";
+web/src/sections/input/InputChipStrip.stories.tsx:58:        status: UploadFileStatus.COMPLETED,
+web/src/sections/input/InputChipStrip.stories.tsx:66:        status: UploadFileStatus.UPLOADING,
+web/src/sections/input/InputChipStrip.stories.tsx:87:        status: UploadFileStatus.COMPLETED,
+web/src/sections/input/InputChipStrip.stories.tsx:107:        status: UploadFileStatus.FAILED,
+web/tests/e2e/agents/persona_chat.spec.ts:27:    const uploadResp = await page.request.post(
+web/tests/e2e/agents/persona_chat.spec.ts:28:      "/api/admin/persona/upload-image",
+web/tests/e2e/agents/persona_chat.spec.ts:39:    expect(uploadResp.ok()).toBeTruthy();
+web/tests/e2e/agents/persona_chat.spec.ts:40:    const { file_id: avatarFileId } = (await uploadResp.json()) as {
+web/tests/e2e/agents/persona_chat.spec.ts:51:        uploaded_image_id: avatarFileId,
+web/tests/e2e/agents/user_file_attachment.spec.ts:8: * when creating an assistant, causing uploaded files to not be associated
+web/tests/e2e/agents/user_file_attachment.spec.ts:117:// Helper to upload a file through the knowledge panel
+web/tests/e2e/agents/user_file_attachment.spec.ts:118:async function uploadTestFile(
+web/tests/e2e/agents/user_file_attachment.spec.ts:128:      console.log(`[test] Upload attempt ${attempt} for ${fileName}`);
+web/tests/e2e/agents/user_file_attachment.spec.ts:142:      // Wait for upload API completion to avoid racing the UI refresh.
+web/tests/e2e/agents/user_file_attachment.spec.ts:143:      const uploadResponsePromise = page.waitForResponse(
+web/tests/e2e/agents/user_file_attachment.spec.ts:145:          response.url().includes("/api/user/projects/file/upload") &&
+web/tests/e2e/agents/user_file_attachment.spec.ts:150:      // Upload the file
+web/tests/e2e/agents/user_file_attachment.spec.ts:156:      const uploadResponse = await uploadResponsePromise;
+web/tests/e2e/agents/user_file_attachment.spec.ts:157:      expect(uploadResponse.ok()).toBeTruthy();
+web/tests/e2e/agents/user_file_attachment.spec.ts:159:      // Wait for network to settle after upload
+web/tests/e2e/agents/user_file_attachment.spec.ts:165:      // Wait for the uploaded file row to appear.
+web/tests/e2e/agents/user_file_attachment.spec.ts:172:      console.log(`[test] Successfully uploaded ${fileName}`);
+web/tests/e2e/agents/user_file_attachment.spec.ts:178:        `[test] Upload attempt ${attempt} failed: ${
+web/tests/e2e/agents/user_file_attachment.spec.ts:190:    `Failed to upload file ${fileName} after ${maxRetries} attempts`
+web/tests/e2e/agents/user_file_attachment.spec.ts:250:    const assistantInstructions = "Help users with their uploaded files.";
+web/tests/e2e/agents/user_file_attachment.spec.ts:274:    // Upload a test file - this automatically adds it to user_file_ids
+web/tests/e2e/agents/user_file_attachment.spec.ts:275:    await uploadTestFile(page, testFileName, testFileContent);
+web/tests/e2e/agents/user_file_attachment.spec.ts:277:    // NOTE: We do NOT call selectFileByName here because uploadTestFile
+web/tests/e2e/agents/user_file_attachment.spec.ts:308:    // Verify the uploaded file still appears and is selected
+web/tests/e2e/agents/user_file_attachment.spec.ts:363:    // Upload first file - automatically adds to user_file_ids
+web/tests/e2e/agents/user_file_attachment.spec.ts:364:    await uploadTestFile(page, testFileName1, testFileContent);
+web/tests/e2e/agents/user_file_attachment.spec.ts:366:    // Upload second file - automatically adds to user_file_ids
+web/tests/e2e/agents/user_file_attachment.spec.ts:367:    await uploadTestFile(page, testFileName2, testFileContent);
+web/tests/e2e/agents/user_file_attachment.spec.ts:369:    // NOTE: We do NOT call selectFileByName because uploadTestFile
+web/tests/e2e/agents/persona_avatar.spec.ts:24:  test("uploads an avatar and serves the exact bytes back to the owner", async ({
+web/tests/e2e/agents/persona_avatar.spec.ts:27:    const uploadResp = await page.request.post(
+web/tests/e2e/agents/persona_avatar.spec.ts:28:      "/api/admin/persona/upload-image",
+web/tests/e2e/agents/persona_avatar.spec.ts:39:    expect(uploadResp.ok()).toBeTruthy();
+web/tests/e2e/agents/persona_avatar.spec.ts:40:    const uploadJson = (await uploadResp.json()) as { file_id: string };
+web/tests/e2e/agents/persona_avatar.spec.ts:41:    const avatarFileId = uploadJson.file_id;
+web/tests/e2e/agents/persona_avatar.spec.ts:51:        uploaded_image_id: avatarFileId,
+web/tests/e2e/agents/persona_avatar.spec.ts:78:    // The default assistant (id=0) ships without an uploaded_image_id.
+web/tests/e2e/agents/create_and_edit_agent.spec.ts:147:      const agentDescription = "Testing user file uploads without connectors";
+web/src/components/admin/connectors/FileUpload.tsx:6:interface FileUploadProps {
+web/src/components/admin/connectors/FileUpload.tsx:15:export const FileUpload: FC<FileUploadProps> = ({
+web/src/components/Field.tsx:12:import { FileUpload } from "@/components/admin/connectors/FileUpload";
+web/src/components/Field.tsx:395:export function FileUploadFormField({
+web/src/components/Field.tsx:428:export function TypedFileUploadFormField({
+web/src/components/Field.tsx:519:      <FileUpload
+web/src/components/credentials/actions/EditCredential.tsx:5:import { TextFormField, TypedFileUploadFormField } from "@/components/Field";
+web/src/components/credentials/actions/EditCredential.tsx:73:                <TypedFileUploadFormField
+web/src/components/credentials/actions/CredentialFieldsRenderer.tsx:8:  TypedFileUploadFormField,
+web/src/components/credentials/actions/CredentialFieldsRenderer.tsx:89:                    <TypedFileUploadFormField
+web/src/components/credentials/actions/CredentialFieldsRenderer.tsx:139:            <TypedFileUploadFormField
+web/src/components/credentials/lib.ts:98:        // TypedFile fields - use mixed schema for optional file uploads during editing
+web/tests/README.md:211:// Upload file
+web/tests/README.md:213:const input = screen.getByLabelText(/upload/i);
+web/tests/README.md:214:await user.upload(input, file);
+web/src/refresh-pages/admin/SkillsPage/CustomSkillsTable.tsx:138:            description="Upload a zip bundle to add a custom skill."
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:5:import { SvgUploadCloud } from "@opal/icons";
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:13:interface UploadSkillModalProps {
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:16:  /** Invoked after a successful upload so callers can refresh their list. */
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:17:  onUploaded: () => void;
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:20:export default function UploadSkillModal({
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:23:  onUploaded,
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:24:}: UploadSkillModalProps) {
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:59:      toast.success(`Uploaded "${created.name}"`);
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:61:      onUploaded();
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:64:      console.error("Failed to upload skill bundle", err);
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:65:      toast.error(err instanceof Error ? err.message : "Upload failed", {
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:79:          icon={SvgUploadCloud}
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:80:          title="Upload skill"
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:81:          description="Upload a zip bundle. The zip filename becomes the slug, and SKILL.md frontmatter provides the name + description."
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:99:                  icon={SvgUploadCloud}
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:131:            icon={SvgUploadCloud}
+web/src/refresh-pages/admin/SkillsPage/UploadSkillModal.tsx:133:            {submitting ? "Uploading…" : "Upload"}
+web/src/refresh-pages/admin/SkillsPage/CustomSkillRowActions.tsx:11:  SvgUploadCloud,
+web/src/refresh-pages/admin/SkillsPage/CustomSkillRowActions.tsx:70:                icon={SvgUploadCloud}
+web/src/refresh-pages/admin/ExternalAppsPage.tsx:329:            Bring your own integration: upload a skill bundle and configure its
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:203:  | "user_file_max_upload_size_mb"
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:320:  initialUploadSizeMb: string;
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:321:  defaultUploadSizeMb: string;
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:324:  maxAllowedUploadSizeMb?: number;
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:329:  initialUploadSizeMb,
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:330:  defaultUploadSizeMb,
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:333:  maxAllowedUploadSizeMb,
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:342:            maxAllowedUploadSizeMb
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:343:              ? `Max: ${maxAllowedUploadSizeMb} MB`
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:349:            name="user_file_max_upload_size_mb"
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:350:            initialValue={initialUploadSizeMb}
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:351:            defaultValue={defaultUploadSizeMb}
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:353:            maxValue={maxAllowedUploadSizeMb}
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:1070:                      initialUploadSizeMb={
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:1071:                        (s.user_file_max_upload_size_mb ?? 0) <= 0
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:1072:                          ? (s.default_user_file_max_upload_size_mb?.toString() ??
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:1074:                          : s.user_file_max_upload_size_mb!.toString()
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:1076:                      defaultUploadSizeMb={
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:1077:                        s.default_user_file_max_upload_size_mb?.toString() ??
+web/src/refresh-pages/admin/ChatPreferencesPage.tsx:1092:                      maxAllowedUploadSizeMb={s.max_allowed_upload_size_mb}
+web/src/refresh-pages/admin/SkillsPage.tsx:15:import UploadSkillModal from "@/refresh-pages/admin/SkillsPage/UploadSkillModal";
+web/src/refresh-pages/admin/SkillsPage.tsx:35:  const [uploadOpen, setUploadOpen] = useState(false);
+web/src/refresh-pages/admin/SkillsPage.tsx:97:        description="Capability bundles the Craft agent can reach for. Built-in skills ship with Onyx; custom skills are uploaded zip bundles, gated by group grants."
+web/src/refresh-pages/admin/SkillsPage.tsx:147:                <Button icon={SvgPlus} onClick={() => setUploadOpen(true)}>
+web/src/refresh-pages/admin/SkillsPage.tsx:148:                  Upload skill
+web/src/refresh-pages/admin/SkillsPage.tsx:173:      <UploadSkillModal
+web/src/refresh-pages/admin/SkillsPage.tsx:174:        open={uploadOpen}
+web/src/refresh-pages/admin/SkillsPage.tsx:175:        onClose={() => setUploadOpen(false)}
+web/src/refresh-pages/admin/SkillsPage.tsx:176:        onUploaded={refresh}
+web/src/refresh-pages/admin/ImageGenerationPage/forms/VertexImageGenForm.tsx:96:                placeholder="Upload or paste your credentials"
+web/src/refresh-pages/admin/ImageGenerationPage/forms/VertexImageGenForm.tsx:113:                      {"Upload or paste your "}
+backend/onyx/db/skill.py:1:"""DB operations for custom (admin-uploaded) skills.
+web/src/refresh-pages/admin/IndexSettingsPage/index.tsx:1623:                            description="Extract embedded images from uploaded files (PDFs, DOCX, etc.) and summarize them with a vision-capable LLM so image-only documents become searchable and answerable. Requires a vision-capable default LLM."
+web/src/refresh-pages/admin/IndexSettingsPage/shared.tsx:70:  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+web/src/refresh-pages/admin/IndexSettingsPage/shared.tsx:89:    <InputVertical title="Upload JSON credentials file" withLabel="apiKey">
+web/src/refresh-pages/admin/IndexSettingsPage/shared.tsx:94:        onChange={handleFileUpload}
+web/src/refresh-pages/admin/GroupsPage/EditGroupPage.tsx:72:    isLoading: groupLoading,
+web/src/refresh-pages/admin/GroupsPage/EditGroupPage.tsx:123:  const isLoading = groupLoading || candidatesLoading || tokenLimitsLoading;
+backend/onyx/db/models.py:54:from onyx.configs.constants import FileOrigin
+backend/onyx/db/models.py:3687:    uploaded_image_id: Mapped[str | None] = mapped_column(String, nullable=True)
+backend/onyx/db/models.py:4162:    file_origin: Mapped[FileOrigin] = mapped_column(Enum(FileOrigin, native_enum=False))
+backend/onyx/db/models.py:4196:    """A custom (admin-uploaded) skill.
+backend/onyx/db/models.py:4216:    # row is a custom (admin-uploaded) skill and bundle_file_id is set.
+backend/onyx/db/projects.py:7:from fastapi import UploadFile
+backend/onyx/db/projects.py:17:from onyx.configs.constants import FileOrigin
+backend/onyx/db/projects.py:26:from onyx.server.documents.connector import upload_files
+backend/onyx/db/projects.py:27:from onyx.server.features.projects.projects_file_utils import categorize_uploaded_files
+backend/onyx/db/projects.py:53:def build_hashed_file_key(file: UploadFile) -> str:
+backend/onyx/db/projects.py:59:    files: List[UploadFile],
+backend/onyx/db/projects.py:67:    categorized_files = categorize_uploaded_files(files, db_session)
+backend/onyx/db/projects.py:70:    upload_response = upload_files(categorized_files.acceptable, FileOrigin.USER_FILE)
+backend/onyx/db/projects.py:74:    # Pair returned storage paths with the same set of acceptable files we uploaded
+backend/onyx/db/projects.py:76:        upload_response.file_paths, categorized_files.acceptable
+backend/onyx/db/projects.py:118:def upload_files_to_user_files_with_indexing(
+backend/onyx/db/projects.py:119:    files: List[UploadFile],
+web/src/refresh-pages/AppPage.tsx:469:    handleMessageSpecificFileUpload,
+web/src/refresh-pages/AppPage.tsx:692:  // total tokens for the project's files so upload UX can compare
+web/src/refresh-pages/AppPage.tsx:787:              handleMessageSpecificFileUpload(acceptedFiles)
+web/src/refresh-pages/AppPage.tsx:1023:                          handleFileUpload={handleMessageSpecificFileUpload}
+web/src/refresh-pages/AgentEditorPage.tsx:125:    uploaded_image_id: string | null;
+web/src/refresh-pages/AgentEditorPage.tsx:128:  const [uploadedImagePreview, setUploadedImagePreview] = useState<
+web/src/refresh-pages/AgentEditorPage.tsx:134:  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+web/src/refresh-pages/AgentEditorPage.tsx:139:    setUploadedImagePreview(null);
+web/src/refresh-pages/AgentEditorPage.tsx:141:    // Clear selected icon and remove_image flag when uploading an image
+web/src/refresh-pages/AgentEditorPage.tsx:148:      setUploadedImagePreview(reader.result as string);
+web/src/refresh-pages/AgentEditorPage.tsx:152:    // Upload the file
+web/src/refresh-pages/AgentEditorPage.tsx:156:      const response = await fetch("/api/admin/persona/upload-image", {
+web/src/refresh-pages/AgentEditorPage.tsx:162:        console.error("Failed to upload image");
+web/src/refresh-pages/AgentEditorPage.tsx:163:        setUploadedImagePreview(null);
+web/src/refresh-pages/AgentEditorPage.tsx:168:      setFieldValue("uploaded_image_id", file_id);
+web/src/refresh-pages/AgentEditorPage.tsx:171:      console.error("Upload error:", error);
+web/src/refresh-pages/AgentEditorPage.tsx:172:      setUploadedImagePreview(null);
+web/src/refresh-pages/AgentEditorPage.tsx:176:  const imageSrc = uploadedImagePreview
+web/src/refresh-pages/AgentEditorPage.tsx:177:    ? uploadedImagePreview
+web/src/refresh-pages/AgentEditorPage.tsx:178:    : values.uploaded_image_id && existingAgent?.id != null
+web/src/refresh-pages/AgentEditorPage.tsx:184:          : existingAgent?.uploaded_image_id
+web/src/refresh-pages/AgentEditorPage.tsx:190:    setFieldValue("uploaded_image_id", null);
+web/src/refresh-pages/AgentEditorPage.tsx:192:    setUploadedImagePreview(null);
+web/src/refresh-pages/AgentEditorPage.tsx:195:    // Reset the file input so the same file can be uploaded again later
+web/src/refresh-pages/AgentEditorPage.tsx:207:        onChange={handleImageUpload}
+web/src/refresh-pages/AgentEditorPage.tsx:237:                key="upload-image"
+web/src/refresh-pages/AgentEditorPage.tsx:242:                Upload Image
+web/src/refresh-pages/AgentEditorPage.tsx:498:  const { allRecentFiles, beginUpload } = useProjectsContext();
+web/src/refresh-pages/AgentEditorPage.tsx:604:    uploaded_image_id: existingAgent?.uploaded_image_id ?? null,
+web/src/refresh-pages/AgentEditorPage.tsx:727:    uploaded_image_id: Yup.string().nullable(),
+web/src/refresh-pages/AgentEditorPage.tsx:866:        // uploaded_image: null, // Already uploaded separately
+web/src/refresh-pages/AgentEditorPage.tsx:868:        uploaded_image_id: values.uploaded_image_id,
+web/src/refresh-pages/AgentEditorPage.tsx:977:  async function handleUploadChange(
+web/src/refresh-pages/AgentEditorPage.tsx:986:      const optimistic = await beginUpload(
+web/src/refresh-pages/AgentEditorPage.tsx:990:          const uploadedFiles = result.user_files || [];
+web/src/refresh-pages/AgentEditorPage.tsx:991:          if (uploadedFiles.length === 0) return;
+web/src/refresh-pages/AgentEditorPage.tsx:993:            uploadedFiles
+web/src/refresh-pages/AgentEditorPage.tsx:1010:      console.error("Upload error:", error);
+web/src/refresh-pages/AgentEditorPage.tsx:1051:            const hasUploadingFiles = values.user_file_ids.some(
+web/src/refresh-pages/AgentEditorPage.tsx:1057:                return status === UserFileStatus.UPLOADING;
+web/src/refresh-pages/AgentEditorPage.tsx:1283:                                    : hasUploadingFiles
+web/src/refresh-pages/AgentEditorPage.tsx:1284:                                      ? "Please wait for files to finish uploading."
+web/src/refresh-pages/AgentEditorPage.tsx:1294:                                hasUploadingFiles
+web/src/refresh-pages/AgentEditorPage.tsx:1405:                        onUploadChange={(e) =>
+web/src/refresh-pages/AgentEditorPage.tsx:1406:                          handleUploadChange(
+backend/onyx/db/file_record.py:9:from onyx.configs.constants import FileOrigin
+backend/onyx/db/file_record.py:25:                    FileRecord.file_origin == FileOrigin.QUERY_HISTORY_CSV,
+backend/onyx/db/file_record.py:82:    from_origin: FileOrigin,
+backend/onyx/db/file_record.py:83:    to_origin: FileOrigin,
+backend/onyx/db/file_record.py:103:            .where(FileRecord.file_origin == FileOrigin.INDEXING_STAGING)
+backend/onyx/db/file_record.py:137:            .where(FileRecord.file_origin == FileOrigin.INDEXING_STAGING)
+backend/onyx/db/file_record.py:158:    file_origin: FileOrigin,
+backend/onyx/db/persona.py:312:            uploaded_image_id=create_persona_request.uploaded_image_id,
+backend/onyx/db/persona.py:924:    uploaded_image_id: str | None = None,
+backend/onyx/db/persona.py:1050:        if remove_image or uploaded_image_id:
+backend/onyx/db/persona.py:1051:            existing_persona.uploaded_image_id = uploaded_image_id
+backend/onyx/db/persona.py:1121:            uploaded_image_id=uploaded_image_id,
+web/src/hooks/useChatController.ts:152:  const { fetchProjects, setCurrentMessageFiles, beginUpload } =
+web/src/hooks/useChatController.ts:464:        if (currentChatState == "uploading") {
+web/src/hooks/useChatController.ts:465:          toast.error("Please wait for the content to upload");
+web/src/hooks/useChatController.ts:1347:  const handleMessageSpecificFileUpload = useCallback(
+web/src/hooks/useChatController.ts:1369:      updateChatStateAction(getCurrentSessionId(), "uploading");
+web/src/hooks/useChatController.ts:1370:      const uploadedMessageFiles = await beginUpload(
+web/src/hooks/useChatController.ts:1374:      setCurrentMessageFiles((prev) => [...prev, ...uploadedMessageFiles]);
+web/src/hooks/useChatController.ts:1518:    handleMessageSpecificFileUpload,
+web/src/hooks/useChatSessionController.ts:135:    // Clear uploaded files on any session change (they're already in context)
+web/src/hooks/useChatSessionController.ts:147:      // Remove uploaded files
+web/src/providers/DynamicMetadata.tsx:16:  // Cache-buster so the favicon re-fetches after an admin uploads a new logo.
+web/src/layouts/table-layouts.tsx:119: * HiddenInput - A hidden input element (for file uploads, etc.)
+web/src/providers/__tests__/ProjectsContext.test.tsx:11:const mockUploadFiles = jest.fn();
+web/src/providers/__tests__/ProjectsContext.test.tsx:46:    uploadFiles: (...args: unknown[]) => mockUploadFiles(...args),
+web/src/providers/__tests__/ProjectsContext.test.tsx:64:    user_file_max_upload_size_mb: 1,
+web/src/providers/__tests__/ProjectsContext.test.tsx:80:describe("ProjectsContext beginUpload size precheck", () => {
+web/src/providers/__tests__/ProjectsContext.test.tsx:82:    mockUploadFiles.mockReset();
+web/src/providers/__tests__/ProjectsContext.test.tsx:86:    mockUploadFiles.mockResolvedValue({
+web/src/providers/__tests__/ProjectsContext.test.tsx:93:  it("only sends valid files to the upload API when oversized files are present", async () => {
+web/src/providers/__tests__/ProjectsContext.test.tsx:103:      optimisticFiles = await result.current.beginUpload(
+web/src/providers/__tests__/ProjectsContext.test.tsx:109:    expect(mockUploadFiles).toHaveBeenCalledTimes(1);
+web/src/providers/__tests__/ProjectsContext.test.tsx:110:    const [uploadedFiles] = mockUploadFiles.mock.calls[0];
+web/src/providers/__tests__/ProjectsContext.test.tsx:111:    expect((uploadedFiles as File[]).map((f) => f.name)).toEqual(["small.txt"]);
+web/src/providers/__tests__/ProjectsContext.test.tsx:116:  it("uploads all files when none are oversized", async () => {
+web/src/providers/__tests__/ProjectsContext.test.tsx:124:      optimisticFiles = await result.current.beginUpload([first, second], null);
+web/src/providers/__tests__/ProjectsContext.test.tsx:127:    expect(mockUploadFiles).toHaveBeenCalledTimes(1);
+web/src/providers/__tests__/ProjectsContext.test.tsx:128:    const [uploadedFiles] = mockUploadFiles.mock.calls[0];
+web/src/providers/__tests__/ProjectsContext.test.tsx:129:    expect((uploadedFiles as File[]).map((f) => f.name)).toEqual([
+web/src/providers/__tests__/ProjectsContext.test.tsx:140:  it("does not call upload API when all files are oversized", async () => {
+web/src/providers/__tests__/ProjectsContext.test.tsx:153:      optimisticFiles = await result.current.beginUpload(
+web/src/providers/__tests__/ProjectsContext.test.tsx:161:    expect(mockUploadFiles).not.toHaveBeenCalled();
+web/src/interfaces/settings.ts:50:  user_file_max_upload_size_mb?: number | null;
+web/src/interfaces/settings.ts:90:  // Hard ceiling for user_file_max_upload_size_mb, derived from env var.
+web/src/interfaces/settings.ts:91:  max_allowed_upload_size_mb?: number;
+web/src/interfaces/settings.ts:95:  default_user_file_max_upload_size_mb?: number;
+web/src/providers/ProjectsContext.tsx:26:  uploadFiles as svcUploadFiles,
+web/src/providers/ProjectsContext.tsx:75:    status: UserFileStatus.UPLOADING,
+web/src/providers/ProjectsContext.tsx:96:  beginUpload: (
+web/src/providers/ProjectsContext.tsx:99:    onSuccess?: (uploaded: CategorizedFiles) => void,
+web/src/providers/ProjectsContext.tsx:111:  uploadFiles: (
+web/src/providers/ProjectsContext.tsx:151:  const [trackedUploadIds, setTrackedUploadIds] = useState<Set<string>>(
+web/src/providers/ProjectsContext.tsx:159:  const projectToUploadFilesMapRef = useRef<Map<number, ProjectFile[]>>(
+web/src/providers/ProjectsContext.tsx:199:        if (projectToUploadFilesMapRef.current.has(currentProjectId)) {
+web/src/providers/ProjectsContext.tsx:202:            ...(projectToUploadFilesMapRef.current.get(currentProjectId) || []),
+web/src/providers/ProjectsContext.tsx:213:    projectToUploadFilesMapRef,
+web/src/providers/ProjectsContext.tsx:283:        projectToUploadFilesMapRef.current.delete(projectId);
+web/src/providers/ProjectsContext.tsx:287:    [fetchProjects, currentProjectId, projectToUploadFilesMapRef, route]
+web/src/providers/ProjectsContext.tsx:336:          projectToUploadFilesMapRef.current.get(projectId) || [];
+web/src/providers/ProjectsContext.tsx:340:        projectToUploadFilesMapRef.current.set(projectId, projectIdToFiles);
+web/src/providers/ProjectsContext.tsx:343:    [projectToUploadFilesMapRef]
+web/src/providers/ProjectsContext.tsx:346:  const beginUpload = useCallback(
+web/src/providers/ProjectsContext.tsx:350:      onSuccess?: (uploaded: CategorizedFiles) => void,
+web/src/providers/ProjectsContext.tsx:353:      const rawMax = settingsContext?.settings?.user_file_max_upload_size_mb;
+web/src/providers/ProjectsContext.tsx:383:        projectToUploadFilesMapRef.current.set(projectId, optimisticFiles);
+web/src/providers/ProjectsContext.tsx:385:      svcUploadFiles(validFiles, projectId, tempIdMap)
+web/src/providers/ProjectsContext.tsx:386:        .then((uploaded) => {
+web/src/providers/ProjectsContext.tsx:387:          const uploadedFiles = uploaded.user_files || [];
+web/src/providers/ProjectsContext.tsx:388:          const tempIdToUploadedFileMap = new Map(
+web/src/providers/ProjectsContext.tsx:389:            uploadedFiles.map((f) => [f.temp_id, f])
+web/src/providers/ProjectsContext.tsx:395:                const u = tempIdToUploadedFileMap.get(f.temp_id);
+web/src/providers/ProjectsContext.tsx:404:                const u = tempIdToUploadedFileMap.get(f.temp_id);
+web/src/providers/ProjectsContext.tsx:414:                  const u = tempIdToUploadedFileMap.get(f.temp_id);
+web/src/providers/ProjectsContext.tsx:420:            projectToUploadFilesMapRef.current.set(projectId, []);
+web/src/providers/ProjectsContext.tsx:422:          const rejected_files = uploaded.rejected_files || [];
+web/src/providers/ProjectsContext.tsx:431:              `Some files were not uploaded. ${detailsParts.join(" | ")}`
+web/src/providers/ProjectsContext.tsx:449:          if (uploadedFiles.length > 0) {
+web/src/providers/ProjectsContext.tsx:450:            setTrackedUploadIds((prev) => {
+web/src/providers/ProjectsContext.tsx:452:              for (const f of uploadedFiles) next.add(f.id);
+web/src/providers/ProjectsContext.tsx:456:          onSuccess?.(uploaded);
+web/src/providers/ProjectsContext.tsx:468:          toast.error("Failed to upload files");
+web/src/providers/ProjectsContext.tsx:489:  const uploadFiles = useCallback(
+web/src/providers/ProjectsContext.tsx:494:      const uploaded: CategorizedFiles = await svcUploadFiles(files, projectId);
+web/src/providers/ProjectsContext.tsx:495:      const uploadedFiles = uploaded.user_files || [];
+web/src/providers/ProjectsContext.tsx:496:      // Track these uploaded file IDs for targeted polling
+web/src/providers/ProjectsContext.tsx:497:      if (uploadedFiles.length > 0) {
+web/src/providers/ProjectsContext.tsx:498:        setTrackedUploadIds((prev) => {
+web/src/providers/ProjectsContext.tsx:500:          for (const f of uploadedFiles) next.add(f.id);
+web/src/providers/ProjectsContext.tsx:510:      return uploaded;
+web/src/providers/ProjectsContext.tsx:562:  // Targeted polling for tracked uploaded files only
+web/src/providers/ProjectsContext.tsx:564:    const ids = Array.from(trackedUploadIds);
+web/src/providers/ProjectsContext.tsx:657:        const remaining = new Set(trackedUploadIds);
+web/src/providers/ProjectsContext.tsx:671:        const trackingChanged = remaining.size !== trackedUploadIds.size;
+web/src/providers/ProjectsContext.tsx:673:          setTrackedUploadIds(remaining);
+web/src/providers/ProjectsContext.tsx:676:        // If all tracked uploads finished (completed or failed), do a single refresh
+web/src/providers/ProjectsContext.tsx:706:    trackedUploadIds,
+web/src/providers/ProjectsContext.tsx:722:      beginUpload,
+web/src/providers/ProjectsContext.tsx:729:      uploadFiles,
+web/src/providers/ProjectsContext.tsx:795:      beginUpload,
+web/src/providers/ProjectsContext.tsx:802:      uploadFiles,
+web/src/refresh-components/popovers/FilePickerPopover.tsx:26:  SvgUploadSquare,
+web/src/refresh-components/popovers/FilePickerPopover.tsx:50:      String(projectFile.status) === UserFileStatus.UPLOADING ||
+web/src/refresh-components/popovers/FilePickerPopover.tsx:57:      String(projectFile.status) === UserFileStatus.UPLOADING ||
+web/src/refresh-components/popovers/FilePickerPopover.tsx:106:  triggerUploadPicker: () => void;
+web/src/refresh-components/popovers/FilePickerPopover.tsx:114:  triggerUploadPicker,
+web/src/refresh-components/popovers/FilePickerPopover.tsx:126:        // Action button to upload more files
+web/src/refresh-components/popovers/FilePickerPopover.tsx:128:          key="upload-files"
+web/src/refresh-components/popovers/FilePickerPopover.tsx:129:          icon={SvgUploadSquare}
+web/src/refresh-components/popovers/FilePickerPopover.tsx:130:          description="Upload a file from your device"
+web/src/refresh-components/popovers/FilePickerPopover.tsx:131:          onClick={triggerUploadPicker}
+web/src/refresh-components/popovers/FilePickerPopover.tsx:133:          Upload Files
+web/src/refresh-components/popovers/FilePickerPopover.tsx:177:  handleUploadChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+web/src/refresh-components/popovers/FilePickerPopover.tsx:186:  handleUploadChange,
+web/src/refresh-components/popovers/FilePickerPopover.tsx:201:  const triggerUploadPicker = () => fileInputRef.current?.click();
+web/src/refresh-components/popovers/FilePickerPopover.tsx:265:        onChange={handleUploadChange}
+web/src/refresh-components/popovers/FilePickerPopover.tsx:272:          description="Upload files or pick from your recent files."
+web/src/refresh-components/popovers/FilePickerPopover.tsx:280:          handleUploadChange={handleUploadChange}
+web/src/refresh-components/popovers/FilePickerPopover.tsx:302:            triggerUploadPicker={() => {
+web/src/refresh-components/popovers/FilePickerPopover.tsx:303:              triggerUploadPicker();
+web/src/app/css/knowledge-table.css:111:   For file uploads and other hidden inputs
+web/src/refresh-components/inputs/InputImage.tsx:201:                : "Upload image"
+web/src/refresh-components/inputs/InputImage.tsx:225:          {/* Edit overlay - shows on hover/focus when image is uploaded */}
+web/src/refresh-components/inputs/InputImage.tsx:260:        {/* Remove button - top left corner (only when image is uploaded) */}
+web/src/refresh-components/inputs/InputFile.stories.tsx:64:    <InputFile placeholder="Cannot upload" setValue={() => {}} disabled />
+web/src/refresh-components/buttons/AttachmentButton.stories.tsx:47:    description: "Uploading...",
+web/src/refresh-components/buttons/AttachmentButton.stories.tsx:95:        description="Uploading..."
+web/src/app/admin/connectors/[connector]/pages/ConnectorInput/FileInput.tsx:2:import { FileUpload } from "@/components/admin/connectors/FileUpload";
+web/src/app/admin/connectors/[connector]/pages/ConnectorInput/FileInput.tsx:21:  isZip = false, // Default to false for multiple file uploads
+web/src/app/admin/connectors/[connector]/pages/ConnectorInput/FileInput.tsx:38:      <FileUpload
+web/src/app/admin/connectors/[connector]/pages/utils/google_site.ts:17:  const uploadCreateAndTriggerConnector = async () => {
+web/src/app/admin/connectors/[connector]/pages/utils/google_site.ts:25:      "/api/manage/admin/connector/file/upload?unzip=false",
+web/src/app/admin/connectors/[connector]/pages/utils/google_site.ts:33:      toast.error(`Unable to upload files - ${responseJson.detail}`);
+web/src/app/admin/connectors/[connector]/pages/utils/google_site.ts:40:        "File upload was successful, but no file path was returned. Cannot create connector."
+web/src/app/admin/connectors/[connector]/pages/utils/google_site.ts:48:        "File upload was successful, but file path is undefined. Cannot create connector."
+web/src/app/admin/connectors/[connector]/pages/utils/google_site.ts:97:    const response = await uploadCreateAndTriggerConnector();
+web/src/app/admin/connectors/[connector]/pages/utils/files.ts:19:  const response = await fetch("/api/manage/admin/connector/file/upload", {
+web/src/app/admin/connectors/[connector]/pages/utils/files.ts:25:    toast.error(`Unable to upload files - ${responseJson.detail}`);
+web/src/app/admin/connectors/[connector]/pages/utils/files.ts:93:  toast.success("Successfully uploaded files!");
+web/src/refresh-components/buttons/AttachmentButton.tsx:58: *   description="Uploading..."
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:32:const GmailCredentialUpload = ({ onSuccess }: { onSuccess?: () => void }) => {
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:34:  const [isUploading, setIsUploading] = useState(false);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:38:  const handleFileUpload = async (file: File) => {
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:39:    setIsUploading(true);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:45:        setIsUploading(false);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:66:        setIsUploading(false);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:82:          toast.success("Successfully uploaded app credentials");
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:89:          toast.error(`Failed to upload app credentials - ${errorMsg}`);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:105:          toast.success("Successfully uploaded service account key");
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:112:          toast.error(`Failed to upload service account key - ${errorMsg}`);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:115:      setIsUploading(false);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:124:    if (!isUploading) {
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:145:    if (isUploading) return;
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:154:        handleFileUpload(file);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:156:        toast.error("Please upload a JSON file");
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:168:              isUploading
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:180:              {isUploading ? (
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:186:                {isUploading
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:187:                  ? `Uploading ${truncateString(fileName || "file", 50)}...`
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:200:              disabled={isUploading}
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:209:                handleFileUpload(file);
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:219:interface GmailJsonUploadSectionProps {
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:227:export const GmailJsonUploadSection = ({
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:233:}: GmailJsonUploadSectionProps) => {
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:273:        Account), download the JSON file, and upload it below.
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:366:      ) && <GmailCredentialUpload onSuccess={handleSuccess} />}
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:460:                Your Gmail credentials have been successfully uploaded and
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:489:  // If no credentials are uploaded, show message to complete step 1 first
+web/src/app/admin/connectors/[connector]/pages/gmail/Credential.tsx:501:              Please complete Step 1 by uploading either OAuth credentials or a
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:13:import { GmailAuthSection, GmailJsonUploadSection } from "./Credential";
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:23:  filterUploadedCredentials,
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:76:  const { credential_id, uploadedCredentials } =
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:77:    filterUploadedCredentials(gmailCredentials);
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:146:  const gmailPublicUploadedCredential:
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:172:  const hasUploadedCredentials =
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:181:      <GmailJsonUploadSection
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:187:          gmailPublicUploadedCredential || gmailServiceAccountCredential
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:191:      {isAdmin && hasUploadedCredentials && (
+web/src/app/admin/connectors/[connector]/pages/gmail/GmailPage.tsx:198:            gmailPublicCredential={gmailPublicUploadedCredential}
+web/src/refresh-components/tiles/FileTile.stories.tsx:52:    title: "uploading.pdf",
+web/src/refresh-components/tiles/FileTile.stories.tsx:99:        title="uploading.doc"
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:9:import { DriveJsonUploadSection, DriveAuthSection } from "./Credential";
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:22:  filterUploadedCredentials,
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:58:  // Filter uploaded credentials and get credential ID
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:59:  const { credential_id, uploadedCredentials } = filterUploadedCredentials(
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:133:  // Get the uploaded OAuth credential
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:134:  const googleDrivePublicUploadedCredential:
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:156:      <DriveJsonUploadSection
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:162:          googleDrivePublicUploadedCredential ||
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:174:              googleDrivePublicUploadedCredential={
+web/src/app/admin/connectors/[connector]/pages/gdrive/GoogleDrivePage.tsx:175:                googleDrivePublicUploadedCredential
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:29:export const DriveJsonUpload = ({ onSuccess }: { onSuccess?: () => void }) => {
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:31:  const [isUploading, setIsUploading] = useState(false);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:35:  const handleFileUpload = async (file: File) => {
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:36:    setIsUploading(true);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:42:        setIsUploading(false);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:63:        setIsUploading(false);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:79:          toast.success("Successfully uploaded app credentials");
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:86:          toast.error(`Failed to upload app credentials - ${errorMsg}`);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:102:          toast.success("Successfully uploaded service account key");
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:109:          toast.error(`Failed to upload service account key - ${errorMsg}`);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:112:      setIsUploading(false);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:121:    if (!isUploading) {
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:142:    if (isUploading) return;
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:151:        handleFileUpload(file);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:153:        toast.error("Please upload a JSON file");
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:165:              isUploading
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:177:              {isUploading ? (
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:183:                {isUploading
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:184:                  ? `Uploading ${truncateString(fileName || "file", 50)}...`
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:197:              disabled={isUploading}
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:206:                handleFileUpload(file);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:216:interface DriveJsonUploadSectionProps {
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:224:export const DriveJsonUploadSection = ({
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:230:}: DriveJsonUploadSectionProps) => {
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:271:        Service Account), download the JSON file, and upload it below.
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:372:      ) && <DriveJsonUpload onSuccess={handleSuccess} />}
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:378:  googleDrivePublicUploadedCredential?: Credential<GoogleDriveCredentialJson>;
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:409:  googleDrivePublicUploadedCredential,
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:427:  ] = useState(googleDrivePublicUploadedCredential);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:437:    setLocalGoogleDrivePublicCredential(googleDrivePublicUploadedCredential);
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:444:    googleDrivePublicUploadedCredential,
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:460:                Your Google Drive credentials have been successfully uploaded
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:482:  // If no credentials are uploaded, show message to complete step 1 first
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:494:              Please complete Step 1 by uploading either OAuth credentials or a
+web/src/app/admin/connectors/[connector]/pages/gdrive/Credential.tsx:589:                name: "OAuth (uploaded)",
+web/src/app/admin/connectors/[connector]/AddConnectorPage.tsx:185:  const [uploading, setUploading] = useState(false);
+web/src/app/admin/connectors/[connector]/AddConnectorPage.tsx:369:          setUploading(true);
+web/src/app/admin/connectors/[connector]/AddConnectorPage.tsx:381:            toast.error("Error uploading files");
+web/src/app/admin/connectors/[connector]/AddConnectorPage.tsx:383:            setUploading(false);
+web/src/app/admin/connectors/[connector]/AddConnectorPage.tsx:491:          {uploading && <Spinner />}
+web/src/refresh-components/Logo.tsx:36:  // uploads a new one. Generating a fresh timestamp each time enterprise
+web/src/refresh-components/avatars/AgentAvatar.tsx:45:      src={agent.uploaded_image_id ? buildAgentAvatarUrl(agent.id) : undefined}
+web/src/lib/sources.ts:7:import { SvgFileText, SvgGlobe, SvgUploadCloud, SvgMail } from "@opal/icons";
+web/src/lib/sources.ts:68:  // e.g., User Library (CraftFile) where users just upload files
+web/src/lib/sources.ts:70:  // Custom description to show instead of status (e.g., "Manage your uploaded files")
+web/src/lib/sources.ts:412:    icon: SvgUploadCloud,
+web/src/lib/sources.ts:413:    displayName: "Uploaded Files",
+web/src/lib/sources.ts:432:    alwaysConnected: true, // No setup required, just upload files
+web/src/lib/sources.ts:433:    customDescription: "Manage your uploaded files",
+web/src/lib/connectors/fileTypes.ts:28:      "Please upload a .pfx file containing the private key for SharePoint. The file size must be under 10KB.",
+web/src/lib/connectors/connectors.tsx:1303:          "Upload a zip file containing the HTML of your Google Site",
+web/src/lib/credential.ts:10:  CREDENTIAL_UPLOADED_FILE,
+web/src/lib/credential.ts:44:    formData.append(CREDENTIAL_UPLOADED_FILE, credential.private_key.file);
+web/src/lib/credential.ts:147:  formData.append(CREDENTIAL_UPLOADED_FILE, privateKey.file);
+web/src/lib/googleConnector.ts:82:export const filterUploadedCredentials = <
+web/src/lib/googleConnector.ts:86:): { credential_id: number | null; uploadedCredentials: Credential<T>[] } => {
+web/src/lib/googleConnector.ts:88:  let uploadedCredentials: Credential<T>[] = [];
+web/src/lib/googleConnector.ts:91:    uploadedCredentials = credentials.filter(
+web/src/lib/googleConnector.ts:96:    if (uploadedCredentials.length > 0 && uploadedCredentials[0]) {
+web/src/lib/googleConnector.ts:97:      credential_id = uploadedCredentials[0].id;
+web/src/lib/googleConnector.ts:101:  return { credential_id, uploadedCredentials };
+web/src/app/admin/billing/page.tsx:121:  const hasManualLicense = licenseData?.source === "manual_upload";
+web/src/app/admin/billing/LicenseActivationCard.tsx:11:import { uploadLicense } from "@/lib/billing/svc";
+web/src/app/admin/billing/LicenseActivationCard.tsx:60:      await uploadLicense(licenseKey.trim());
+web/src/app/admin/connector/[ccPairId]/InlineFileManagement.tsx:224:                  <TableHead>Upload Date</TableHead>
+web/src/app/admin/connector/[ccPairId]/InlineFileManagement.tsx:279:                        {file.upload_date
+web/src/app/admin/connector/[ccPairId]/InlineFileManagement.tsx:280:                          ? timestampToReadableDate(file.upload_date)
+web/src/app/admin/connector/[ccPairId]/InlineFileManagement.tsx:333:            id={`file-upload-${connectorId}`}
+web/src/app/admin/connector/[ccPairId]/InlineFileManagement.tsx:390:                  New files will be uploaded, chunked, embedded, and indexed in
+web/src/app/nrf/NRFPage.tsx:261:  const { onSubmit, stopGenerating, handleMessageSpecificFileUpload } =
+web/src/app/nrf/NRFPage.tsx:292:  // Handle file upload
+web/src/app/nrf/NRFPage.tsx:293:  const handleFileUpload = useCallback(
+web/src/app/nrf/NRFPage.tsx:295:      handleMessageSpecificFileUpload(acceptedFiles);
+web/src/app/nrf/NRFPage.tsx:297:    [handleMessageSpecificFileUpload]
+web/src/app/nrf/NRFPage.tsx:455:      <Dropzone onDrop={handleFileUpload} noClick>
+web/src/app/nrf/NRFPage.tsx:550:                handleFileUpload={handleFileUpload}
+web/src/app/ee/admin/performance/custom-analytics/CustomAnalyticsUpdateForm.tsx:64:              "Do not include the `<script></script>` tags. If you upload a script below but you are not receiving any events in your analytics platform, try removing all extra whitespace before each line of JavaScript."
+web/src/app/ee/admin/theme/page.tsx:178:        let logoUploaded = false;
+web/src/app/ee/admin/theme/page.tsx:180:        // Handle logo upload if a new logo was selected
+web/src/app/ee/admin/theme/page.tsx:190:            alert(`Failed to upload logo. ${errorMsg}`);
+web/src/app/ee/admin/theme/page.tsx:194:          // Only clear the selected logo after a successful upload
+web/src/app/ee/admin/theme/page.tsx:196:          logoUploaded = true;
+web/src/app/ee/admin/theme/page.tsx:227:          if (logoUploaded) {
+web/src/app/ee/admin/theme/AppearanceThemeSettings.tsx:281:                        : "Upload a logo to enable this option."
+web/src/lib/admin-routes.ts:27:  SvgUploadCloud,
+web/src/lib/admin-routes.ts:58:    icon: SvgUploadCloud,
+web/src/app/craft/components/UserLibraryModal.stories.tsx:81:// Empty state — the click/drag upload dropzone.
+web/src/lib/agents/svc.ts:18:    uploaded_image_id: params.uploaded_image_id,
+web/src/lib/agents/svc.ts:94: * Uploads an agent avatar image. Returns the server-assigned file ID on
+web/src/lib/agents/svc.ts:95: * success, or null if the upload fails.
+web/src/lib/agents/svc.ts:97:export async function uploadFile(file: File): Promise<string | null> {
+web/src/lib/agents/svc.ts:100:  const res = await fetch("/api/admin/persona/upload-image", {
+web/src/lib/agents/types.ts:47:  uploaded_image_id?: string;
+web/src/lib/agents/types.ts:92:  uploaded_image_id: string | null;
+web/src/lib/agents/types.ts:115:  uploaded_image_id: string | null;
+web/src/lib/fileConnector.ts:5:  upload_date?: string;
+web/src/lib/fileConnector.ts:12:export interface FileUploadResponse {
+web/src/lib/fileConnector.ts:34:    `/api/manage/admin/connector/${connectorId}/files/update`,
+web/src/lib/constants.ts:117:export const CREDENTIAL_UPLOADED_FILE = "uploaded_file";
+web/src/lib/search/utils.test.ts:63:  it("opens the in-app preview for user-uploaded UserFile documents without a link", () => {
+web/src/lib/search/utils.test.ts:64:    // Regression test: prior to the fix, "Uploaded Files" citations
+web/src/lib/search/interfaces.ts:146:  // e.g., User Library (CraftFile) where users just upload files
+web/src/lib/search/interfaces.ts:148:  // Custom description to show instead of status (e.g., "Manage your uploaded files")
+web/src/lib/billing/svc.ts:14: * - /api/license/upload - Upload license key manually (air-gapped deployments)
+web/src/lib/billing/svc.ts:139: * Upload a license key string (self-hosted only).
+web/src/lib/billing/svc.ts:142:export async function uploadLicense(
+web/src/lib/billing/svc.ts:146:    throw new Error("License upload is only available for self-hosted");
+web/src/lib/billing/svc.ts:154:  const response = await fetch("/api/license/upload", {
+web/src/lib/billing/svc.ts:161:    throw new Error(error.detail || "License upload failed");
+web/src/app/craft/components/CraftInputBar.stories.tsx:4:import { UploadFilesProvider } from "@/app/craft/contexts/UploadFilesContext";
+web/src/app/craft/components/CraftInputBar.stories.tsx:6:import type { BuildFile } from "@/app/craft/contexts/UploadFilesContext";
+web/src/app/craft/components/CraftInputBar.stories.tsx:94:          <UploadFilesProvider>
+web/src/app/craft/components/CraftInputBar.stories.tsx:98:          </UploadFilesProvider>
+web/src/lib/billing/svc.test.ts:10:  uploadLicense,
+web/src/lib/billing/svc.test.ts:150:  describe("uploadLicense (self-hosted only)", () => {
+web/src/lib/billing/svc.test.ts:151:    test("calls license upload endpoint with FormData", async () => {
+web/src/lib/billing/svc.test.ts:152:      // Mock POST /api/license/upload
+web/src/lib/billing/svc.test.ts:158:            "License uploaded successfully. 10 seats, expires 2025-12-31",
+web/src/lib/billing/svc.test.ts:163:      const result = await uploadLicense(licenseKey);
+web/src/lib/billing/svc.test.ts:166:        "/api/license/upload",
+web/src/lib/billing/svc.test.ts:178:        message: "License uploaded successfully. 10 seats, expires 2025-12-31",
+web/src/lib/billing/svc.test.ts:182:    test("throws error on failed upload", async () => {
+web/src/lib/billing/svc.test.ts:183:      // Mock POST /api/license/upload (error)
+web/src/lib/billing/svc.test.ts:189:      await expect(uploadLicense("invalid-key")).rejects.toThrow(
+web/src/lib/billing/svc.test.ts:231:  test("uploadLicense throws error in cloud mode", async () => {
+web/src/lib/billing/svc.test.ts:233:    const { uploadLicense: cloudUploadLicense } = await import("./svc");
+web/src/lib/billing/svc.test.ts:235:    await expect(cloudUploadLicense("test-key")).rejects.toThrow(
+web/src/lib/billing/interfaces.ts:15:export type LicenseSource = "auto_fetch" | "manual_upload";
+web/src/app/craft/components/UserLibraryModal.tsx:8:  uploadLibraryFiles,
+web/src/app/craft/components/UserLibraryModal.tsx:9:  uploadLibraryZip,
+web/src/app/craft/components/UserLibraryModal.tsx:21:  SvgUploadCloud,
+web/src/app/craft/components/UserLibraryModal.tsx:76:  onChanges?: () => void; // Called when files are uploaded or deleted
+web/src/app/craft/components/UserLibraryModal.tsx:85:  const [isUploading, setIsUploading] = useState(false);
+web/src/app/craft/components/UserLibraryModal.tsx:86:  const [uploadError, setUploadError] = useState<string | null>(null);
+web/src/app/craft/components/UserLibraryModal.tsx:92:  const uploadTargetPathRef = useRef<string>("/");
+web/src/app/craft/components/UserLibraryModal.tsx:134:  const uploadFiles = useCallback(
+web/src/app/craft/components/UserLibraryModal.tsx:138:      setIsUploading(true);
+web/src/app/craft/components/UserLibraryModal.tsx:139:      setUploadError(null);
+web/src/app/craft/components/UserLibraryModal.tsx:142:        // A lone .zip is expanded server-side; everything else uploads as-is.
+web/src/app/craft/components/UserLibraryModal.tsx:149:          await uploadLibraryZip(targetPath, firstFile);
+web/src/app/craft/components/UserLibraryModal.tsx:151:          await uploadLibraryFiles(targetPath, fileArray);
+web/src/app/craft/components/UserLibraryModal.tsx:156:        setUploadError(err instanceof Error ? err.message : "Upload failed");
+web/src/app/craft/components/UserLibraryModal.tsx:158:        setIsUploading(false);
+web/src/app/craft/components/UserLibraryModal.tsx:168:      const targetPath = uploadTargetPathRef.current;
+web/src/app/craft/components/UserLibraryModal.tsx:169:      void uploadFiles(Array.from(files), targetPath).finally(() => {
+web/src/app/craft/components/UserLibraryModal.tsx:170:        uploadTargetPathRef.current = "/";
+web/src/app/craft/components/UserLibraryModal.tsx:174:    [uploadFiles]
+web/src/app/craft/components/UserLibraryModal.tsx:177:  const handleUploadToFolder = useCallback((folderPath: string) => {
+web/src/app/craft/components/UserLibraryModal.tsx:178:    uploadTargetPathRef.current = folderPath;
+web/src/app/craft/components/UserLibraryModal.tsx:207:      if (isUploading) return;
+web/src/app/craft/components/UserLibraryModal.tsx:209:      if (files.length > 0) void uploadFiles(files, "/");
+web/src/app/craft/components/UserLibraryModal.tsx:211:    [uploadFiles, isUploading]
+web/src/app/craft/components/UserLibraryModal.tsx:237:      setUploadError(
+web/src/app/craft/components/UserLibraryModal.tsx:255:            description="Upload files for your agent to read (Excel, Word, PowerPoint, etc.)"
+web/src/app/craft/components/UserLibraryModal.tsx:265:              disabled={isUploading}
+web/src/app/craft/components/UserLibraryModal.tsx:279:                  icon={SvgUploadCloud}
+web/src/app/craft/components/UserLibraryModal.tsx:280:                  disabled={isUploading}
+web/src/app/craft/components/UserLibraryModal.tsx:281:                  onClick={() => handleUploadToFolder("/")}
+web/src/app/craft/components/UserLibraryModal.tsx:283:                  {isUploading ? "Uploading…" : "Upload"}
+web/src/app/craft/components/UserLibraryModal.tsx:287:              {uploadError && (
+web/src/app/craft/components/UserLibraryModal.tsx:290:                    {uploadError}
+web/src/app/craft/components/UserLibraryModal.tsx:316:                  <UploadDropzone
+web/src/app/craft/components/UserLibraryModal.tsx:317:                    onClick={() => handleUploadToFolder("/")}
+web/src/app/craft/components/UserLibraryModal.tsx:328:                        onUploadToFolder={handleUploadToFolder}
+web/src/app/craft/components/UserLibraryModal.tsx:338:                      Drop files to upload
+web/src/app/craft/components/UserLibraryModal.tsx:430:interface UploadDropzoneProps {
+web/src/app/craft/components/UserLibraryModal.tsx:435:function UploadDropzone({ onClick, active }: UploadDropzoneProps) {
+web/src/app/craft/components/UserLibraryModal.tsx:454:      <SvgUploadCloud size={28} className="stroke-text-03" />
+web/src/app/craft/components/UserLibraryModal.tsx:456:        Drag files here or click to upload
+web/src/app/craft/components/UserLibraryModal.tsx:471:  onUploadToFolder: (folderPath: string) => void;
+web/src/app/craft/components/UserLibraryModal.tsx:480:  onUploadToFolder,
+web/src/app/craft/components/UserLibraryModal.tsx:554:                    icon={SvgUploadCloud}
+web/src/app/craft/components/UserLibraryModal.tsx:557:                      const uploadPath =
+web/src/app/craft/components/UserLibraryModal.tsx:559:                      onUploadToFolder(uploadPath);
+web/src/app/craft/components/UserLibraryModal.tsx:561:                    tooltip="Upload to this folder"
+web/src/app/craft/components/UserLibraryModal.tsx:582:                onUploadToFolder={onUploadToFolder}
+web/src/app/craft/components/ChatPanel.tsx:26:  UploadFileStatus,
+web/src/app/craft/components/ChatPanel.tsx:27:  useUploadFilesContext,
+web/src/app/craft/components/ChatPanel.tsx:28:} from "@/app/craft/contexts/UploadFilesContext";
+web/src/app/craft/components/ChatPanel.tsx:176:    hasUploadingFiles,
+web/src/app/craft/components/ChatPanel.tsx:178:    uploadFiles,
+web/src/app/craft/components/ChatPanel.tsx:179:  } = useUploadFilesContext();
+web/src/app/craft/components/ChatPanel.tsx:188:   * Keep the upload context in sync with the active session.
+web/src/app/craft/components/ChatPanel.tsx:190:   * clearing files, auto-uploading pending files).
+web/src/app/craft/components/ChatPanel.tsx:450:        // Files were already uploaded immediately when attached to the pre-provisioned session.
+web/src/app/craft/components/ChatPanel.tsx:466:        // Handle files that weren't successfully uploaded yet
+web/src/app/craft/components/ChatPanel.tsx:468:        // 1. File is still uploading when user sends message - wait for it
+web/src/app/craft/components/ChatPanel.tsx:469:        // 2. File upload failed and needs retry
+web/src/app/craft/components/ChatPanel.tsx:470:        // 3. File was attached but upload hasn't started yet
+web/src/app/craft/components/ChatPanel.tsx:472:        // Wait for any in-flight uploads to complete (max 5 seconds)
+web/src/app/craft/components/ChatPanel.tsx:474:        if (hasUploadingFiles) {
+web/src/app/craft/components/ChatPanel.tsx:480:            const checkUploads = () => {
+web/src/app/craft/components/ChatPanel.tsx:482:              const stillUploading = currentFilesRef.current.some(
+web/src/app/craft/components/ChatPanel.tsx:483:                (f) => f.status === UploadFileStatus.UPLOADING
+web/src/app/craft/components/ChatPanel.tsx:485:              if (!stillUploading || waited >= maxWaitMs) {
+web/src/app/craft/components/ChatPanel.tsx:489:                setTimeout(checkUploads, checkIntervalMs);
+web/src/app/craft/components/ChatPanel.tsx:492:            checkUploads();
+web/src/app/craft/components/ChatPanel.tsx:496:        // Note: PENDING files are auto-uploaded by the context when session becomes available
+web/src/app/craft/components/ChatPanel.tsx:524:      hasUploadingFiles,
+web/src/app/craft/components/ChatPanel.tsx:603:          if (accepted.length > 0) uploadFiles(accepted);
+web/src/app/craft/components/CraftInputBar.tsx:27:  useUploadFilesContext,
+web/src/app/craft/components/CraftInputBar.tsx:29:} from "@/app/craft/contexts/UploadFilesContext";
+web/src/app/craft/components/CraftInputBar.tsx:87:        uploadFiles,
+web/src/app/craft/components/CraftInputBar.tsx:90:        hasUploadingFiles,
+web/src/app/craft/components/CraftInputBar.tsx:91:      } = useUploadFilesContext();
+web/src/app/craft/components/CraftInputBar.tsx:237:              if (files && files.length > 0) uploadFiles(Array.from(files));
+web/src/app/craft/components/CraftInputBar.tsx:250:            submitBlocked={hasUploadingFiles}
+web/src/app/craft/components/CraftInputBar.tsx:259:            onPasteFiles={uploadFiles}
+web/src/app/craft/README.md:75:3. **Agent builds artifacts** — Uses company knowledge and uploaded files
+web/src/app/craft/README.md:126:        ├── attachments/       # User uploads
+web/src/app/craft/README.md:146:- **File uploads** — Size limits (50MB per file, 20 files per session, 200MB total)
+web/src/app/craft/components/BuildWelcome.tsx:4:import { BuildFile } from "@/app/craft/contexts/UploadFilesContext";
+web/src/app/craft/contexts/UploadFilesContext.tsx:14:  uploadFile as uploadFileApi,
+web/src/app/craft/contexts/UploadFilesContext.tsx:21: * Upload File Status - tracks the state of files being uploaded
+web/src/app/craft/contexts/UploadFilesContext.tsx:23:export enum UploadFileStatus {
+web/src/app/craft/contexts/UploadFilesContext.tsx:24:  /** File is currently being uploaded to the sandbox */
+web/src/app/craft/contexts/UploadFilesContext.tsx:25:  UPLOADING = "UPLOADING",
+web/src/app/craft/contexts/UploadFilesContext.tsx:26:  /** File is being processed after upload */
+web/src/app/craft/contexts/UploadFilesContext.tsx:28:  /** File has been successfully uploaded and has a path */
+web/src/app/craft/contexts/UploadFilesContext.tsx:30:  /** File upload failed */
+web/src/app/craft/contexts/UploadFilesContext.tsx:32:  /** File is waiting for a session to be created before uploading */
+web/src/app/craft/contexts/UploadFilesContext.tsx:42:  status: UploadFileStatus;
+web/src/app/craft/contexts/UploadFilesContext.tsx:46:  // Original File object for upload
+web/src/app/craft/contexts/UploadFilesContext.tsx:48:  // Path in sandbox after upload (e.g., "attachments/doc.pdf")
+web/src/app/craft/contexts/UploadFilesContext.tsx:50:  // Error message if upload failed
+web/src/app/craft/contexts/UploadFilesContext.tsx:67:/** Maximum individual file size - matches BUILD_MAX_UPLOAD_FILE_SIZE_MB (50MB) */
+web/src/app/craft/contexts/UploadFilesContext.tsx:70:/** Maximum total attachment size per session - matches BUILD_MAX_TOTAL_UPLOAD_SIZE_MB (200MB) */
+web/src/app/craft/contexts/UploadFilesContext.tsx:73:/** Maximum files per session - matches BUILD_MAX_UPLOAD_FILES_PER_SESSION */
+web/src/app/craft/contexts/UploadFilesContext.tsx:89:/** Validate a single file before upload */
+web/src/app/craft/contexts/UploadFilesContext.tsx:91:  // Check file size. Extension/type are intentionally not restricted - uploaded
+web/src/app/craft/contexts/UploadFilesContext.tsx:139:    status: UploadFileStatus.FAILED,
+web/src/app/craft/contexts/UploadFilesContext.tsx:153:    status: UploadFileStatus.UPLOADING,
+web/src/app/craft/contexts/UploadFilesContext.tsx:164:export enum UploadErrorType {
+web/src/app/craft/contexts/UploadFilesContext.tsx:173:  type: UploadErrorType;
+web/src/app/craft/contexts/UploadFilesContext.tsx:179:      return { type: UploadErrorType.AUTH, message: "Session expired" };
+web/src/app/craft/contexts/UploadFilesContext.tsx:182:      return { type: UploadErrorType.NOT_FOUND, message: "Resource not found" };
+web/src/app/craft/contexts/UploadFilesContext.tsx:185:      return { type: UploadErrorType.SERVER, message: "Server error" };
+web/src/app/craft/contexts/UploadFilesContext.tsx:188:      return { type: UploadErrorType.NETWORK, message: "Network error" };
+web/src/app/craft/contexts/UploadFilesContext.tsx:190:    return { type: UploadErrorType.UNKNOWN, message: error.message };
+web/src/app/craft/contexts/UploadFilesContext.tsx:192:  return { type: UploadErrorType.UNKNOWN, message: "Upload failed" };
+web/src/app/craft/contexts/UploadFilesContext.tsx:196: * UploadFilesContext - Centralized file upload state management
+web/src/app/craft/contexts/UploadFilesContext.tsx:201: * - Automatic upload of pending files when session becomes available
+web/src/app/craft/contexts/UploadFilesContext.tsx:203: * - File upload, removal, and clearing operations
+web/src/app/craft/contexts/UploadFilesContext.tsx:207: * - Call `uploadFiles(files)` to attach files (uses active session internally)
+web/src/app/craft/contexts/UploadFilesContext.tsx:211:interface UploadFilesContextValue {
+web/src/app/craft/contexts/UploadFilesContext.tsx:222:   * - Auto-uploading any pending files
+web/src/app/craft/contexts/UploadFilesContext.tsx:231:   * Upload files to the active session.
+web/src/app/craft/contexts/UploadFilesContext.tsx:232:   * - If session is available: uploads immediately
+web/src/app/craft/contexts/UploadFilesContext.tsx:233:   * - If no session: marks as PENDING (auto-uploads when session available)
+web/src/app/craft/contexts/UploadFilesContext.tsx:235:  uploadFiles: (files: File[]) => Promise<BuildFile[]>;
+web/src/app/craft/contexts/UploadFilesContext.tsx:239:   * If the file was uploaded, also deletes from the sandbox.
+web/src/app/craft/contexts/UploadFilesContext.tsx:252:  // Check if any files are uploading
+web/src/app/craft/contexts/UploadFilesContext.tsx:253:  hasUploadingFiles: boolean;
+web/src/app/craft/contexts/UploadFilesContext.tsx:255:  // Check if any files are pending upload
+web/src/app/craft/contexts/UploadFilesContext.tsx:259:const UploadFilesContext = createContext<UploadFilesContextValue | null>(null);
+web/src/app/craft/contexts/UploadFilesContext.tsx:261:export interface UploadFilesProviderProps {
+web/src/app/craft/contexts/UploadFilesContext.tsx:265:export function UploadFilesProvider({ children }: UploadFilesProviderProps) {
+web/src/app/craft/contexts/UploadFilesContext.tsx:284:  const isUploadingPendingRef = useRef(false);
+web/src/app/craft/contexts/UploadFilesContext.tsx:296:  const hasUploadingFiles = useMemo(() => {
+web/src/app/craft/contexts/UploadFilesContext.tsx:298:      (file) => file.status === UploadFileStatus.UPLOADING
+web/src/app/craft/contexts/UploadFilesContext.tsx:304:      (file) => file.status === UploadFileStatus.PENDING
+web/src/app/craft/contexts/UploadFilesContext.tsx:313:   * Upload pending files to the given session.
+web/src/app/craft/contexts/UploadFilesContext.tsx:317:  const uploadPendingFilesInternal = useCallback(
+web/src/app/craft/contexts/UploadFilesContext.tsx:319:      if (isUploadingPendingRef.current) return;
+web/src/app/craft/contexts/UploadFilesContext.tsx:325:          (f) => f.status === UploadFileStatus.PENDING && f.file
+web/src/app/craft/contexts/UploadFilesContext.tsx:327:        // Mark as uploading in the same state update to avoid race conditions
+web/src/app/craft/contexts/UploadFilesContext.tsx:331:              ? { ...f, status: UploadFileStatus.UPLOADING }
+web/src/app/craft/contexts/UploadFilesContext.tsx:340:      isUploadingPendingRef.current = true;
+web/src/app/craft/contexts/UploadFilesContext.tsx:343:        // Upload in parallel
+web/src/app/craft/contexts/UploadFilesContext.tsx:347:              const result = await uploadFileApi(sessionId, file.file!);
+web/src/app/craft/contexts/UploadFilesContext.tsx:368:                  status: UploadFileStatus.COMPLETED,
+web/src/app/craft/contexts/UploadFilesContext.tsx:375:                  status: UploadFileStatus.FAILED,
+web/src/app/craft/contexts/UploadFilesContext.tsx:381:        // Refresh file explorer if any uploads succeeded
+web/src/app/craft/contexts/UploadFilesContext.tsx:387:        isUploadingPendingRef.current = false;
+web/src/app/craft/contexts/UploadFilesContext.tsx:413:            status: UploadFileStatus.COMPLETED,
+web/src/app/craft/contexts/UploadFilesContext.tsx:422:          // (uploading, pending, or recently completed uploads that might not be in
+web/src/app/craft/contexts/UploadFilesContext.tsx:428:                f.status === UploadFileStatus.UPLOADING ||
+web/src/app/craft/contexts/UploadFilesContext.tsx:429:                f.status === UploadFileStatus.PENDING ||
+web/src/app/craft/contexts/UploadFilesContext.tsx:430:                f.status === UploadFileStatus.PROCESSING ||
+web/src/app/craft/contexts/UploadFilesContext.tsx:431:                // Keep recently uploaded files (have temp ID, not fetched from backend)
+web/src/app/craft/contexts/UploadFilesContext.tsx:454:        if (type !== UploadErrorType.NOT_FOUND) {
+web/src/app/craft/contexts/UploadFilesContext.tsx:456:            "[UploadFilesContext] fetchExistingAttachments error:",
+web/src/app/craft/contexts/UploadFilesContext.tsx:465:                f.status === UploadFileStatus.UPLOADING ||
+web/src/app/craft/contexts/UploadFilesContext.tsx:466:                f.status === UploadFileStatus.PENDING ||
+web/src/app/craft/contexts/UploadFilesContext.tsx:467:                f.status === UploadFileStatus.PROCESSING ||
+web/src/app/craft/contexts/UploadFilesContext.tsx:511:   * Effect: Auto-upload pending files when session becomes available
+web/src/app/craft/contexts/UploadFilesContext.tsx:517:      uploadPendingFilesInternal(activeSessionId);
+web/src/app/craft/contexts/UploadFilesContext.tsx:519:  }, [activeSessionId, hasPendingFiles, uploadPendingFilesInternal]);
+web/src/app/craft/contexts/UploadFilesContext.tsx:577:   * Upload files. Uses activeSessionId internally.
+web/src/app/craft/contexts/UploadFilesContext.tsx:578:   * Validates files before upload (size, batch limits).
+web/src/app/craft/contexts/UploadFilesContext.tsx:580:  const uploadFiles = useCallback(
+web/src/app/craft/contexts/UploadFilesContext.tsx:628:        // Session available - upload immediately
+web/src/app/craft/contexts/UploadFilesContext.tsx:629:        const uploadPromises = optimisticFiles.map(async (optimisticFile) => {
+web/src/app/craft/contexts/UploadFilesContext.tsx:631:            const result = await uploadFileApi(sessionId, optimisticFile.file!);
+web/src/app/craft/contexts/UploadFilesContext.tsx:647:        const results = await Promise.all(uploadPromises);
+web/src/app/craft/contexts/UploadFilesContext.tsx:652:            const uploadResult = results.find((r) => r.id === f.id);
+web/src/app/craft/contexts/UploadFilesContext.tsx:653:            if (!uploadResult) return f;
+web/src/app/craft/contexts/UploadFilesContext.tsx:655:            if (uploadResult.success) {
+web/src/app/craft/contexts/UploadFilesContext.tsx:658:                status: UploadFileStatus.COMPLETED,
+web/src/app/craft/contexts/UploadFilesContext.tsx:659:                path: uploadResult.result.path,
+web/src/app/craft/contexts/UploadFilesContext.tsx:660:                name: uploadResult.result.filename,
+web/src/app/craft/contexts/UploadFilesContext.tsx:666:                status: UploadFileStatus.FAILED,
+web/src/app/craft/contexts/UploadFilesContext.tsx:667:                error: uploadResult.errorMessage,
+web/src/app/craft/contexts/UploadFilesContext.tsx:673:        // Refresh file explorer if any uploads succeeded
+web/src/app/craft/contexts/UploadFilesContext.tsx:679:        // No session yet - mark as PENDING (effect will auto-upload when session available)
+web/src/app/craft/contexts/UploadFilesContext.tsx:683:              ? { ...f, status: UploadFileStatus.PENDING }
+web/src/app/craft/contexts/UploadFilesContext.tsx:737:                "[UploadFilesContext] Failed to delete file from sandbox:",
+web/src/app/craft/contexts/UploadFilesContext.tsx:776:  const value = useMemo<UploadFilesContextValue>(
+web/src/app/craft/contexts/UploadFilesContext.tsx:781:      uploadFiles,
+web/src/app/craft/contexts/UploadFilesContext.tsx:784:      hasUploadingFiles,
+web/src/app/craft/contexts/UploadFilesContext.tsx:791:      uploadFiles,
+web/src/app/craft/contexts/UploadFilesContext.tsx:794:      hasUploadingFiles,
+web/src/app/craft/contexts/UploadFilesContext.tsx:800:    <UploadFilesContext.Provider value={value}>
+web/src/app/craft/contexts/UploadFilesContext.tsx:802:    </UploadFilesContext.Provider>
+web/src/app/craft/contexts/UploadFilesContext.tsx:806:export function useUploadFilesContext() {
+web/src/app/craft/contexts/UploadFilesContext.tsx:807:  const context = useContext(UploadFilesContext);
+web/src/app/craft/contexts/UploadFilesContext.tsx:810:      "useUploadFilesContext must be used within an UploadFilesProvider"
+web/src/app/app/components/AppPopup.tsx:65:  // - Otherwise -> show uploaded custom logo (fallback to Onyx icon)
+web/src/app/craft/services/apiServices.ts:636:// File Upload API
+web/src/app/craft/services/apiServices.ts:639:export interface UploadFileResponse {
+web/src/app/craft/services/apiServices.ts:646: * Upload a file to the session's sandbox.
+web/src/app/craft/services/apiServices.ts:647: * The file will be placed in the sandbox's user_uploaded_files directory.
+web/src/app/craft/services/apiServices.ts:649:export async function uploadFile(
+web/src/app/craft/services/apiServices.ts:652:): Promise<UploadFileResponse> {
+web/src/app/craft/services/apiServices.ts:656:  const res = await fetch(`${BUILD_API_BASE}/sessions/${sessionId}/upload`, {
+web/src/app/craft/services/apiServices.ts:663:    throw new Error(errorData.detail || `Failed to upload file: ${res.status}`);
+web/src/app/craft/services/apiServices.ts:845:  UploadResponse,
+web/src/app/craft/services/apiServices.ts:851: * Fetch the user's library tree (uploaded files).
+web/src/app/craft/services/apiServices.ts:864: * Upload files to the user library.
+web/src/app/craft/services/apiServices.ts:866:export async function uploadLibraryFiles(
+web/src/app/craft/services/apiServices.ts:869:): Promise<UploadResponse> {
+web/src/app/craft/services/apiServices.ts:876:  const res = await fetch(`${USER_LIBRARY_BASE}/upload`, {
+web/src/app/craft/services/apiServices.ts:884:      errorData.detail || `Failed to upload files: ${res.status}`
+web/src/app/craft/services/apiServices.ts:892: * Upload and extract a zip file to the user library.
+web/src/app/craft/services/apiServices.ts:894:export async function uploadLibraryZip(
+web/src/app/craft/services/apiServices.ts:897:): Promise<UploadResponse> {
+web/src/app/craft/services/apiServices.ts:902:  const res = await fetch(`${USER_LIBRARY_BASE}/upload-zip`, {
+web/src/app/craft/services/apiServices.ts:909:    throw new Error(errorData.detail || `Failed to upload zip: ${res.status}`);
+web/src/app/craft/services/externalAppsService.ts:66: * bundle can be uploaded; structured fields are JSON-encoded form strings.
+web/src/app/app/components/files/images/FullImageModal.tsx:38:            alt="Uploaded image"
+web/src/app/app/components/files/InputBarPreview.tsx:11:  isUploading: boolean;
+web/src/app/app/components/files/InputBarPreview.tsx:17:  isUploading,
+web/src/app/app/components/files/InputBarPreview.tsx:35:      {isUploading && (
+web/src/app/app/components/files/InputBarPreview.tsx:59:  isUploading: boolean;
+web/src/app/app/components/files/InputBarPreview.tsx:65:  isUploading,
+web/src/app/app/components/files/InputBarPreview.tsx:71:      {isUploading && (
+web/src/app/app/components/projects/ProjectContextPanel.tsx:64:    beginUpload,
+web/src/app/app/components/projects/ProjectContextPanel.tsx:68:  const handleUploadFiles = useCallback(
+web/src/app/app/components/projects/ProjectContextPanel.tsx:71:      beginUpload(Array.from(files), currentProjectId);
+web/src/app/app/components/projects/ProjectContextPanel.tsx:73:    [currentProjectId, beginUpload]
+web/src/app/app/components/projects/ProjectContextPanel.tsx:79:  const handleUploadChange = useCallback(
+web/src/app/app/components/projects/ProjectContextPanel.tsx:83:      await handleUploadFiles(Array.from(files));
+web/src/app/app/components/projects/ProjectContextPanel.tsx:86:    [handleUploadFiles]
+web/src/app/app/components/projects/ProjectContextPanel.tsx:96:      void handleUploadFiles(acceptedFiles);
+web/src/app/app/components/projects/ProjectContextPanel.tsx:131:          handleUploadChange={handleUploadChange}
+web/src/app/app/components/projects/ProjectContextPanel.tsx:225:                if (file.status === UserFileStatus.UPLOADING) return;
+web/src/app/app/components/projects/ProjectContextPanel.tsx:235:              handleUploadChange={handleUploadChange}
+web/src/app/craft/types/user-library.ts:2: * Types for User Library - raw binary file uploads in Craft.
+web/src/app/craft/types/user-library.ts:22:export interface UploadResponse {
+web/src/app/craft/types/user-library.ts:24:  total_uploaded: number;
+web/src/app/craft/v1/layout.tsx:4:import { UploadFilesProvider } from "@/app/craft/contexts/UploadFilesContext";
+web/src/app/craft/v1/layout.tsx:16: * Wraps with BuildProvider and UploadFilesProvider (for file uploads).
+web/src/app/craft/v1/layout.tsx:23:    <UploadFilesProvider>
+web/src/app/craft/v1/layout.tsx:32:    </UploadFilesProvider>
+web/src/app/craft/v1/apps/admin/CreateCustomAppModal.tsx:12:import { SvgUploadCloud } from "@opal/icons";
+web/src/app/craft/v1/apps/admin/CreateCustomAppModal.tsx:108:      return "Upload a bundle .zip file before creating this custom app.";
+web/src/app/craft/v1/apps/admin/CreateCustomAppModal.tsx:133:        // unsent. Clear the file so a retry doesn't re-upload it.
+web/src/app/craft/v1/apps/admin/CreateCustomAppModal.tsx:182:              ? "Update this custom app's configuration, and optionally upload a new bundle to replace its files."
+web/src/app/craft/v1/apps/admin/CreateCustomAppModal.tsx:183:              : "Define a custom external app: upload its skill bundle and configure how the egress proxy authenticates outbound requests."
+web/src/app/craft/v1/apps/admin/CreateCustomAppModal.tsx:261:                  ? "Optional — upload a new zip to replace the current bundle. Leave empty to keep it. The slug stays the same."
+web/src/app/craft/v1/apps/admin/CreateCustomAppModal.tsx:273:                  icon={SvgUploadCloud}
+web/src/app/app/services/lib.tsx:478:export async function uploadFilesForChat(
+web/src/app/app/services/lib.tsx:491:    return [[], `Failed to upload files - ${(await response.json()).detail}`];
+web/src/app/app/interfaces.ts:30:  | "uploading";
+web/src/app/app/interfaces.ts:112:  isUploading?: boolean;
+web/src/app/app/projects/projectsService.ts:51:  UPLOADING = "UPLOADING", //UI only
+web/src/app/app/projects/projectsService.ts:85:export async function uploadFiles(
+web/src/app/app/projects/projectsService.ts:102:  const response = await fetch("/api/user/projects/file/upload", {
+web/src/app/app/projects/projectsService.ts:108:    handleRequestError("Upload files", response);
+backend/onyx/server/documents/models.py:711:class FileUploadResponse(BaseModel):
+backend/onyx/server/documents/models.py:721:    upload_date: str | None = None
+backend/onyx/server/documents/private_key_types.py:6:from fastapi import UploadFile
+backend/onyx/server/documents/private_key_types.py:12:    def __call__(self, file: UploadFile) -> str:
+backend/onyx/server/documents/private_key_types.py:25:def process_sharepoint_private_key_file(file: UploadFile) -> str:
+backend/onyx/server/documents/private_key_types.py:27:    Process and validate a private key file upload.
+backend/onyx/server/documents/private_key_types.py:45:            detail="Invalid file content. The uploaded file does not appear to be a valid PKCS#12 (.pfx) file.",
+backend/onyx/server/documents/credential.py:9:from fastapi import UploadFile
+backend/onyx/server/documents/credential.py:181:    uploaded_file: UploadFile = File(...),
+backend/onyx/server/documents/credential.py:202:    private_key_content: str = private_key_processor(uploaded_file)
+backend/onyx/server/documents/credential.py:313:    uploaded_file: UploadFile = File(...),
+backend/onyx/server/documents/credential.py:335:    private_key_content: str = private_key_processor(uploaded_file)
+backend/onyx/server/manage/voice/user_api.py:8:from fastapi import UploadFile
+backend/onyx/server/manage/voice/user_api.py:36:# Chunk size for streaming uploads (8KB)
+backend/onyx/server/manage/voice/user_api.py:37:UPLOAD_READ_CHUNK_SIZE = 8192
+backend/onyx/server/manage/voice/user_api.py:61:    audio: UploadFile = File(...),
+backend/onyx/server/manage/voice/user_api.py:82:    while chunk := await audio.read(UPLOAD_READ_CHUNK_SIZE):
+backend/onyx/server/documents/connector.py:19:from fastapi import UploadFile
+backend/onyx/server/documents/connector.py:34:from onyx.configs.constants import FileOrigin
+backend/onyx/server/documents/connector.py:123:from onyx.server.documents.models import FileUploadResponse
+backend/onyx/server/documents/connector.py:351:            name="Service Account (uploaded)",
+backend/onyx/server/documents/connector.py:440:                file_origin=FileOrigin.CONNECTOR_METADATA,
+backend/onyx/server/documents/connector.py:449:def is_zip_file(file: UploadFile) -> bool:
+backend/onyx/server/documents/connector.py:469:def upload_files(
+backend/onyx/server/documents/connector.py:470:    files: list[UploadFile],
+backend/onyx/server/documents/connector.py:471:    file_origin: FileOrigin = FileOrigin.CONNECTOR,
+backend/onyx/server/documents/connector.py:473:) -> FileUploadResponse:
+backend/onyx/server/documents/connector.py:562:    return FileUploadResponse(
+backend/onyx/server/documents/connector.py:617:@router.post("/admin/connector/file/upload", tags=PUBLIC_API_TAGS)
+backend/onyx/server/documents/connector.py:618:def upload_files_api(
+backend/onyx/server/documents/connector.py:619:    files: list[UploadFile],
+backend/onyx/server/documents/connector.py:622:) -> FileUploadResponse:
+backend/onyx/server/documents/connector.py:623:    return upload_files(files, FileOrigin.CONNECTOR_FILE_UPLOAD, unzip=unzip)
+backend/onyx/server/documents/connector.py:664:            upload_date = None
+backend/onyx/server/documents/connector.py:667:                upload_date = (
+backend/onyx/server/documents/connector.py:677:                    upload_date=upload_date,
+backend/onyx/server/documents/connector.py:693:@router.post("/admin/connector/{connector_id}/files/update", tags=PUBLIC_API_TAGS)
+backend/onyx/server/documents/connector.py:696:    files: list[UploadFile] | None = File(None),
+backend/onyx/server/documents/connector.py:700:) -> FileUploadResponse:
+backend/onyx/server/documents/connector.py:763:    # Upload new files if any
+backend/onyx/server/documents/connector.py:770:        upload_response = upload_files(files, FileOrigin.CONNECTOR)
+backend/onyx/server/documents/connector.py:771:        new_file_paths = upload_response.file_paths
+backend/onyx/server/documents/connector.py:772:        new_file_names_list = upload_response.file_names
+backend/onyx/server/documents/connector.py:773:        new_zip_metadata_file_id = upload_response.zip_metadata_file_id
+backend/onyx/server/documents/connector.py:834:            file_origin=FileOrigin.CONNECTOR_METADATA,
+backend/onyx/server/documents/connector.py:908:    return FileUploadResponse(
+backend/onyx/server/documents/connector.py:1847:        GoogleOAuthAuthenticationMethod.UPLOADED,
+backend/onyx/server/documents/connector.py:1878:        GoogleOAuthAuthenticationMethod.UPLOADED,
+backend/onyx/server/features/skill/api.py:9:from fastapi import UploadFile
+backend/onyx/server/features/skill/api.py:117:    bundle: UploadFile = File(...),
+backend/onyx/server/features/skill/api.py:187:    bundle: UploadFile = File(...),
+backend/onyx/server/features/persona/models.py:118:    uploaded_image_id: str | None = None  # New field for uploaded image
+backend/onyx/server/features/persona/models.py:161:    uploaded_image_id: str | None
+backend/onyx/server/features/persona/models.py:221:            uploaded_image_id=persona.uploaded_image_id,
+backend/onyx/server/features/persona/models.py:243:    uploaded_image_id: str | None
+backend/onyx/server/features/persona/models.py:277:            uploaded_image_id=persona.uploaded_image_id,
+backend/onyx/server/features/persona/models.py:342:            uploaded_image_id=persona.uploaded_image_id,
+backend/onyx/server/features/persona/api.py:9:from fastapi import UploadFile
+backend/onyx/server/features/persona/api.py:20:from onyx.configs.constants import FileOrigin
+backend/onyx/server/features/persona/api.py:285:@admin_router.post("/upload-image")
+backend/onyx/server/features/persona/api.py:286:def upload_file(
+backend/onyx/server/features/persona/api.py:287:    file: UploadFile,
+backend/onyx/server/features/persona/api.py:295:        file_origin=FileOrigin.CHAT_UPLOAD,
+backend/onyx/server/features/persona/api.py:566:    file_id = persona.uploaded_image_id
+backend/onyx/server/features/persona/api.py:571:    # avatar upload endpoint, so a crafted PATCH cannot rebind a persona
+backend/onyx/server/features/persona/api.py:581:    if file_record.file_origin != FileOrigin.CHAT_UPLOAD:
+backend/onyx/server/metrics/image_processing.py:109:            # Metrics for how long image X took to upload plus the details about it
+backend/onyx/server/features/projects/api.py:11:from fastapi import UploadFile
+backend/onyx/server/features/projects/api.py:32:from onyx.db.projects import upload_files_to_user_files_with_indexing
+backend/onyx/server/features/projects/api.py:128:@router.post("/file/upload", tags=PUBLIC_API_TAGS)
+backend/onyx/server/features/projects/api.py:129:def upload_user_files(
+backend/onyx/server/features/projects/api.py:131:    files: list[UploadFile] = File(...),
+backend/onyx/server/features/projects/api.py:151:        categorized_files_result = upload_files_to_user_files_with_indexing(
+backend/onyx/server/features/projects/api.py:163:        logger.exception("Error uploading files - %s: %s", type(e).__name__, str(e))
+backend/onyx/server/features/projects/api.py:166:            detail="Failed to upload files. Please try again or contact support if the issue persists.",
+backend/onyx/server/features/projects/projects_file_utils.py:3:from fastapi import UploadFile
+backend/onyx/server/features/projects/projects_file_utils.py:13:from onyx.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_UPLOAD
+backend/onyx/server/features/projects/projects_file_utils.py:31:def get_safe_filename(upload: UploadFile) -> str:
+backend/onyx/server/features/projects/projects_file_utils.py:32:    """Get filename from upload, with fallback to UNKNOWN_FILENAME if None."""
+backend/onyx/server/features/projects/projects_file_utils.py:33:    if not upload.filename:
+backend/onyx/server/features/projects/projects_file_utils.py:34:        logger.warning("Received upload with no filename")
+backend/onyx/server/features/projects/projects_file_utils.py:36:    return upload.filename
+backend/onyx/server/features/projects/projects_file_utils.py:39:def get_upload_size_bytes(upload: UploadFile) -> int | None:
+backend/onyx/server/features/projects/projects_file_utils.py:41:    if upload.size is not None:
+backend/onyx/server/features/projects/projects_file_utils.py:42:        return upload.size
+backend/onyx/server/features/projects/projects_file_utils.py:45:        current_pos = upload.file.tell()
+backend/onyx/server/features/projects/projects_file_utils.py:46:        upload.file.seek(0, 2)
+backend/onyx/server/features/projects/projects_file_utils.py:47:        size = upload.file.tell()
+backend/onyx/server/features/projects/projects_file_utils.py:48:        upload.file.seek(current_pos)
+backend/onyx/server/features/projects/projects_file_utils.py:52:            "Could not determine upload size via stream seek (filename='%s', error_type=%s, error=%s)",
+backend/onyx/server/features/projects/projects_file_utils.py:53:            get_safe_filename(upload),
+backend/onyx/server/features/projects/projects_file_utils.py:60:def is_upload_too_large(upload: UploadFile, max_bytes: int) -> bool:
+backend/onyx/server/features/projects/projects_file_utils.py:61:    """Return True when upload size is known and exceeds max_bytes."""
+backend/onyx/server/features/projects/projects_file_utils.py:62:    size_bytes = get_upload_size_bytes(upload)
+backend/onyx/server/features/projects/projects_file_utils.py:65:            "Could not determine upload size; skipping size-limit check for '%s'",
+backend/onyx/server/features/projects/projects_file_utils.py:66:            get_safe_filename(upload),
+backend/onyx/server/features/projects/projects_file_utils.py:82:    acceptable: list[UploadFile] = Field(default_factory=list)
+backend/onyx/server/features/projects/projects_file_utils.py:88:    # Allow FastAPI UploadFile instances
+backend/onyx/server/features/projects/projects_file_utils.py:115:def estimate_image_tokens_for_upload(
+backend/onyx/server/features/projects/projects_file_utils.py:116:    upload: UploadFile,
+backend/onyx/server/features/projects/projects_file_utils.py:121:    """Open the uploaded image, normalize orientation, cap long side, and estimate tokens.
+backend/onyx/server/features/projects/projects_file_utils.py:147:        img = Image.open(upload.file)
+backend/onyx/server/features/projects/projects_file_utils.py:156:            upload.file.seek(0)
+backend/onyx/server/features/projects/projects_file_utils.py:161:def categorize_uploaded_files(
+backend/onyx/server/features/projects/projects_file_utils.py:162:    files: list[UploadFile], db_session: Session
+backend/onyx/server/features/projects/projects_file_utils.py:165:    Categorize uploaded files based on text extractability and tokenized length.
+backend/onyx/server/features/projects/projects_file_utils.py:185:    # For upload size: load_settings() resolves 0/None to a positive default.
+backend/onyx/server/features/projects/projects_file_utils.py:188:    max_upload_size_mb = (
+backend/onyx/server/features/projects/projects_file_utils.py:189:        settings.user_file_max_upload_size_mb
+backend/onyx/server/features/projects/projects_file_utils.py:191:    max_upload_size_bytes = (
+backend/onyx/server/features/projects/projects_file_utils.py:192:        max_upload_size_mb * 1024 * 1024 if max_upload_size_mb else None
+backend/onyx/server/features/projects/projects_file_utils.py:200:    # aggregate cap is reached, subsequent PDFs in the same upload are
+backend/onyx/server/features/projects/projects_file_utils.py:207:    for upload in files:
+backend/onyx/server/features/projects/projects_file_utils.py:209:            filename = get_safe_filename(upload)
+backend/onyx/server/features/projects/projects_file_utils.py:212:            if max_upload_size_bytes is not None and is_upload_too_large(
+backend/onyx/server/features/projects/projects_file_utils.py:213:                upload, max_upload_size_bytes
+backend/onyx/server/features/projects/projects_file_utils.py:218:                        reason=f"Exceeds {max_upload_size_mb} MB file size limit",
+backend/onyx/server/features/projects/projects_file_utils.py:228:                    token_count = estimate_image_tokens_for_upload(upload)
+backend/onyx/server/features/projects/projects_file_utils.py:248:                    results.acceptable.append(upload)
+backend/onyx/server/features/projects/projects_file_utils.py:257:                    file=upload.file,
+backend/onyx/server/features/projects/projects_file_utils.py:270:                # images (either per-file or accumulated across this upload
+backend/onyx/server/features/projects/projects_file_utils.py:278:                    batch_cap = MAX_EMBEDDED_IMAGES_PER_UPLOAD
+backend/onyx/server/features/projects/projects_file_utils.py:287:                    count = counter(upload.file, max(file_cap, batch_cap))
+backend/onyx/server/features/projects/projects_file_utils.py:305:                                    f"Upload would exceed the "
+backend/onyx/server/features/projects/projects_file_utils.py:307:                                    f"files in this batch. Try uploading "
+backend/onyx/server/features/projects/projects_file_utils.py:316:                    file=upload.file,
+backend/onyx/server/features/projects/projects_file_utils.py:327:                        results.acceptable.append(upload)
+backend/onyx/server/features/projects/projects_file_utils.py:330:                            upload.file.seek(0)
+backend/onyx/server/features/projects/projects_file_utils.py:358:                    results.acceptable.append(upload)
+backend/onyx/server/features/projects/projects_file_utils.py:369:                    results.acceptable.append(upload)
+backend/onyx/server/features/projects/projects_file_utils.py:372:                # Reset file pointer for subsequent upload handling
+backend/onyx/server/features/projects/projects_file_utils.py:374:                    upload.file.seek(0)
+backend/onyx/server/features/projects/projects_file_utils.py:381:                "Failed to process uploaded file '%s' (error_type=%s, error=%s)",
+backend/onyx/server/features/projects/projects_file_utils.py:382:                get_safe_filename(upload),
+backend/onyx/server/features/projects/projects_file_utils.py:388:                    filename=get_safe_filename(upload),
+backend/onyx/server/features/projects/projects_file_utils.py:389:                    reason="Failed to process upload",
+backend/onyx/server/settings/models.py:7:from onyx.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
+backend/onyx/server/settings/models.py:9:from onyx.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
+backend/onyx/server/settings/models.py:75:    user_file_max_upload_size_mb: int | None = Field(
+backend/onyx/server/settings/models.py:76:        default=DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB, ge=0
+backend/onyx/server/settings/models.py:115:    # Hard ceiling for user_file_max_upload_size_mb, derived from env var.
+backend/onyx/server/settings/models.py:116:    max_allowed_upload_size_mb: int = MAX_ALLOWED_UPLOAD_SIZE_MB
+backend/onyx/server/settings/models.py:119:    default_user_file_max_upload_size_mb: int = DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
+backend/onyx/server/settings/api.py:11:from onyx.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
+backend/onyx/server/settings/api.py:13:from onyx.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
+backend/onyx/server/settings/api.py:58:        settings.user_file_max_upload_size_mb is not None
+backend/onyx/server/settings/api.py:59:        and settings.user_file_max_upload_size_mb > 0
+backend/onyx/server/settings/api.py:60:        and settings.user_file_max_upload_size_mb > MAX_ALLOWED_UPLOAD_SIZE_MB
+backend/onyx/server/settings/api.py:64:            f"File upload size limit cannot exceed {MAX_ALLOWED_UPLOAD_SIZE_MB} MB",
+backend/onyx/server/settings/api.py:142:        max_allowed_upload_size_mb=MAX_ALLOWED_UPLOAD_SIZE_MB,
+backend/onyx/server/settings/api.py:143:        default_user_file_max_upload_size_mb=min(
+backend/onyx/server/settings/api.py:144:            DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB,
+backend/onyx/server/settings/api.py:145:            MAX_ALLOWED_UPLOAD_SIZE_MB,
+backend/onyx/server/settings/store.py:2:from onyx.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
+backend/onyx/server/settings/store.py:7:from onyx.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
+backend/onyx/server/settings/store.py:76:    # Upload size: 0 and None are treated as "unset" (not "no limit") →
+backend/onyx/server/settings/store.py:78:    if not settings.user_file_max_upload_size_mb:
+backend/onyx/server/settings/store.py:79:        settings.user_file_max_upload_size_mb = min(
+backend/onyx/server/settings/store.py:80:            DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB,
+backend/onyx/server/settings/store.py:81:            MAX_ALLOWED_UPLOAD_SIZE_MB,
+backend/onyx/server/settings/store.py:85:    # operator lowered MAX_ALLOWED_UPLOAD_SIZE_MB after a higher value
+backend/onyx/server/settings/store.py:88:        settings.user_file_max_upload_size_mb > 0
+backend/onyx/server/settings/store.py:89:        and settings.user_file_max_upload_size_mb > MAX_ALLOWED_UPLOAD_SIZE_MB
+backend/onyx/server/settings/store.py:91:        settings.user_file_max_upload_size_mb = MAX_ALLOWED_UPLOAD_SIZE_MB
+backend/onyx/server/features/build/api/external_apps_api.py:5:from fastapi import UploadFile
+backend/onyx/server/features/build/api/external_apps_api.py:235:    bundle: UploadFile | None = File(None),
+backend/onyx/server/features/build/api/external_apps_api.py:308:    bundle: UploadFile = File(...),
+backend/onyx/server/features/build/session/errors.py:25:class UploadLimitExceededError(ValueError):
+backend/onyx/server/features/build/session/errors.py:26:    """Raised when an upload would exceed the per-session file count or
+backend/onyx/server/features/build/api/models.py:303:# ===== File Upload Models =====
+backend/onyx/server/features/build/api/models.py:304:class UploadResponse(BaseModel):
+backend/onyx/server/features/build/api/models.py:305:    """Response after successful file upload."""
+backend/onyx/server/features/build/session/manager.py:39:from onyx.server.features.build.configs import MAX_TOTAL_UPLOAD_SIZE_BYTES
+backend/onyx/server/features/build/session/manager.py:40:from onyx.server.features.build.configs import MAX_UPLOAD_FILES_PER_SESSION
+backend/onyx/server/features/build/session/manager.py:64:from onyx.server.features.build.session.errors import UploadLimitExceededError
+backend/onyx/server/features/build/session/manager.py:1366:    def get_upload_stats(
+backend/onyx/server/features/build/session/manager.py:1371:        """Get current file count and total size for a session's uploads.
+backend/onyx/server/features/build/session/manager.py:1389:        return self._sandbox_manager.get_upload_stats(
+backend/onyx/server/features/build/session/manager.py:1394:    def upload_file(
+backend/onyx/server/features/build/session/manager.py:1401:        """Upload a file to the session's workspace.
+backend/onyx/server/features/build/session/manager.py:1416:            ValueError: If session not found or upload limits exceeded
+backend/onyx/server/features/build/session/manager.py:1420:        # Check upload limits
+backend/onyx/server/features/build/session/manager.py:1421:        file_count, total_size = self.get_upload_stats(session_id, user_id)
+backend/onyx/server/features/build/session/manager.py:1423:        if file_count >= MAX_UPLOAD_FILES_PER_SESSION:
+backend/onyx/server/features/build/session/manager.py:1424:            raise UploadLimitExceededError(
+backend/onyx/server/features/build/session/manager.py:1425:                f"Maximum number of files ({MAX_UPLOAD_FILES_PER_SESSION}) reached"
+backend/onyx/server/features/build/session/manager.py:1428:        if total_size + len(content) > MAX_TOTAL_UPLOAD_SIZE_BYTES:
+backend/onyx/server/features/build/session/manager.py:1429:            max_mb = MAX_TOTAL_UPLOAD_SIZE_BYTES // (1024 * 1024)
+backend/onyx/server/features/build/session/manager.py:1430:            raise UploadLimitExceededError(
+backend/onyx/server/features/build/session/manager.py:1431:                f"Total upload size limit ({max_mb}MB) exceeded"
+backend/onyx/server/features/build/session/manager.py:1435:        relative_path = self._sandbox_manager.upload_file(
+backend/onyx/server/features/build/session/manager.py:1442:        # Update heartbeat - file upload is user activity that keeps sandbox alive
+backend/onyx/server/features/build/api/user_library.py:15:from fastapi import UploadFile
+backend/onyx/server/features/build/api/user_library.py:21:from onyx.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_UPLOAD
+backend/onyx/server/features/build/api/user_library.py:31:from onyx.server.features.build.configs import USER_LIBRARY_MAX_FILES_PER_UPLOAD
+backend/onyx/server/features/build/api/user_library.py:70:class UploadResponse(BaseModel):
+backend/onyx/server/features/build/api/user_library.py:72:    total_uploaded: int
+backend/onyx/server/features/build/api/user_library.py:105:    batch_cap = MAX_EMBEDDED_IMAGES_PER_UPLOAD
+backend/onyx/server/features/build/api/user_library.py:117:            f"Upload would exceed the {batch_cap}-image limit across all "
+backend/onyx/server/features/build/api/user_library.py:118:            f"files in this batch. Try uploading fewer image-heavy files at once.",
+backend/onyx/server/features/build/api/user_library.py:141:    if len(zip_file.namelist()) > USER_LIBRARY_MAX_FILES_PER_UPLOAD:
+backend/onyx/server/features/build/api/user_library.py:144:            f"Zip contains too many files. Maximum is {USER_LIBRARY_MAX_FILES_PER_UPLOAD}.",
+backend/onyx/server/features/build/api/user_library.py:163:    """Get user's uploaded files as a tree structure."""
+backend/onyx/server/features/build/api/user_library.py:186:@router.post("/upload")
+backend/onyx/server/features/build/api/user_library.py:187:async def upload_files(
+backend/onyx/server/features/build/api/user_library.py:188:    files: list[UploadFile] = File(...),
+backend/onyx/server/features/build/api/user_library.py:192:) -> UploadResponse:
+backend/onyx/server/features/build/api/user_library.py:193:    """Upload files as raw binary (no text extraction) for sandbox access."""
+backend/onyx/server/features/build/api/user_library.py:194:    if len(files) > USER_LIBRARY_MAX_FILES_PER_UPLOAD:
+backend/onyx/server/features/build/api/user_library.py:197:            f"Too many files. Maximum is {USER_LIBRARY_MAX_FILES_PER_UPLOAD} per upload.",
+backend/onyx/server/features/build/api/user_library.py:203:    uploaded_entries: list[LibraryEntryResponse] = []
+backend/onyx/server/features/build/api/user_library.py:249:        uploaded_entries.append(
+backend/onyx/server/features/build/api/user_library.py:267:        net_docs=len(uploaded_entries),
+backend/onyx/server/features/build/api/user_library.py:275:        "Uploaded %s files (%s bytes) for user %s",
+backend/onyx/server/features/build/api/user_library.py:276:        len(uploaded_entries),
+backend/onyx/server/features/build/api/user_library.py:283:    return UploadResponse(
+backend/onyx/server/features/build/api/user_library.py:284:        entries=uploaded_entries,
+backend/onyx/server/features/build/api/user_library.py:285:        total_uploaded=len(uploaded_entries),
+backend/onyx/server/features/build/api/user_library.py:290:@router.post("/upload-zip")
+backend/onyx/server/features/build/api/user_library.py:291:async def upload_zip(
+backend/onyx/server/features/build/api/user_library.py:292:    file: UploadFile = File(...),
+backend/onyx/server/features/build/api/user_library.py:296:) -> UploadResponse:
+backend/onyx/server/features/build/api/user_library.py:297:    """Upload and extract a zip file, preserving directory structure."""
+backend/onyx/server/features/build/api/user_library.py:308:    uploaded_entries: list[LibraryEntryResponse] = []
+backend/onyx/server/features/build/api/user_library.py:313:    zip_name = api_sanitize_filename(file.filename or "upload")
+backend/onyx/server/features/build/api/user_library.py:353:                            MAX_EMBEDDED_IMAGES_PER_UPLOAD,
+backend/onyx/server/features/build/api/user_library.py:363:                    if batch_image_total + image_count > MAX_EMBEDDED_IMAGES_PER_UPLOAD:
+backend/onyx/server/features/build/api/user_library.py:367:                            MAX_EMBEDDED_IMAGES_PER_UPLOAD,
+backend/onyx/server/features/build/api/user_library.py:402:                uploaded_entries.append(
+backend/onyx/server/features/build/api/user_library.py:432:        net_docs=len(uploaded_entries),
+backend/onyx/server/features/build/api/user_library.py:441:        len(uploaded_entries),
+backend/onyx/server/features/build/api/user_library.py:448:    return UploadResponse(
+backend/onyx/server/features/build/api/user_library.py:449:        entries=uploaded_entries,
+backend/onyx/server/features/build/api/user_library.py:450:        total_uploaded=len(uploaded_entries),
+backend/onyx/server/features/build/configs.py:38:MAX_UPLOAD_FILE_SIZE_MB = int(os.environ.get("BUILD_MAX_UPLOAD_FILE_SIZE_MB", "50"))
+backend/onyx/server/features/build/configs.py:39:MAX_UPLOAD_FILE_SIZE_BYTES = MAX_UPLOAD_FILE_SIZE_MB * 1024 * 1024
+backend/onyx/server/features/build/configs.py:40:MAX_UPLOAD_FILES_PER_SESSION = int(
+backend/onyx/server/features/build/configs.py:41:    os.environ.get("BUILD_MAX_UPLOAD_FILES_PER_SESSION", "20")
+backend/onyx/server/features/build/configs.py:43:MAX_TOTAL_UPLOAD_SIZE_MB = int(os.environ.get("BUILD_MAX_TOTAL_UPLOAD_SIZE_MB", "200"))
+backend/onyx/server/features/build/configs.py:44:MAX_TOTAL_UPLOAD_SIZE_BYTES = MAX_TOTAL_UPLOAD_SIZE_MB * 1024 * 1024
+backend/onyx/server/features/build/configs.py:59:#                 s3://{bucket}/{tenant_id}/uploads/{session_id}/
+backend/onyx/server/features/build/configs.py:199:# User Library (user-uploaded raw files: xlsx, pptx, docx, etc.)
+backend/onyx/server/features/build/configs.py:212:USER_LIBRARY_MAX_FILES_PER_UPLOAD = int(
+backend/onyx/server/features/build/configs.py:213:    os.environ.get("USER_LIBRARY_MAX_FILES_PER_UPLOAD", "100")
+backend/onyx/server/features/build/api/sessions_api.py:15:from fastapi import UploadFile
+backend/onyx/server/features/build/api/sessions_api.py:46:from onyx.server.features.build.api.models import UploadResponse
+backend/onyx/server/features/build/api/sessions_api.py:57:from onyx.server.features.build.session.errors import UploadLimitExceededError
+backend/onyx/server/features/build/api/sessions_api.py:804:@router.post("/{session_id}/upload", response_model=UploadResponse)
+backend/onyx/server/features/build/api/sessions_api.py:805:def upload_file_endpoint(
+backend/onyx/server/features/build/api/sessions_api.py:807:    file: UploadFile = File(...),
+backend/onyx/server/features/build/api/sessions_api.py:810:) -> UploadResponse:
+backend/onyx/server/features/build/api/sessions_api.py:811:    """Upload a file to the session's sandbox.
+backend/onyx/server/features/build/api/sessions_api.py:833:        relative_path, _ = session_manager.upload_file(
+backend/onyx/server/features/build/api/sessions_api.py:839:    except UploadLimitExceededError as e:
+backend/onyx/server/features/build/api/sessions_api.py:848:    return UploadResponse(
+backend/onyx/server/features/build/utils.py:14:from onyx.server.features.build.configs import MAX_UPLOAD_FILE_SIZE_BYTES
+backend/onyx/server/features/build/utils.py:20:# File Upload Validation
+backend/onyx/server/features/build/utils.py:23:# Craft does NOT restrict uploads by file extension or MIME type. Uploaded
+backend/onyx/server/features/build/utils.py:73:    """Validate a file for upload.
+backend/onyx/server/features/build/utils.py:76:    restricted (see the File Upload Validation note above).
+backend/onyx/server/features/build/utils.py:87:    if size > MAX_UPLOAD_FILE_SIZE_BYTES:
+backend/onyx/server/features/build/utils.py:90:            f"File size exceeds maximum allowed size of {MAX_UPLOAD_FILE_SIZE_BYTES} bytes",
+backend/onyx/server/features/build/db/user_library.py:19:from onyx.configs.constants import FileOrigin
+backend/onyx/server/features/build/db/user_library.py:112:        file_origin=FileOrigin.USER_FILE,
+backend/onyx/server/features/build/sandbox/manager/snapshot_manager.py:10:from onyx.configs.constants import FileOrigin
+backend/onyx/server/features/build/sandbox/manager/snapshot_manager.py:49:        and uploads it to the file store.
+backend/onyx/server/features/build/sandbox/manager/snapshot_manager.py:91:            # Upload to file store
+backend/onyx/server/features/build/sandbox/manager/snapshot_manager.py:96:                    file_origin=FileOrigin.SANDBOX_SNAPSHOT,
+backend/onyx/server/features/build/sandbox/manager/snapshot_manager.py:246:                    file_origin=FileOrigin.SANDBOX_SNAPSHOT,
+backend/onyx/server/features/build/sandbox/manager/snapshot_manager.py:281:                    file_origin=FileOrigin.SANDBOX_SNAPSHOT,
+backend/onyx/server/features/build/sandbox/base.py:224:        - sessions/$session_id/attachments/ (user uploaded files)
+backend/onyx/server/features/build/sandbox/base.py:421:    def upload_file(
+backend/onyx/server/features/build/sandbox/base.py:428:        """Upload a file to the session's attachments directory.
+backend/onyx/server/features/build/sandbox/base.py:440:            RuntimeError: If upload fails
+backend/onyx/server/features/build/sandbox/base.py:492:    def get_upload_stats(
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:1602:        # - {session_path}/attachments: user-uploaded files
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:1604:        # Attachments section is injected dynamically when first file is uploaded.
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2421:        Called after uploading a file. Only adds the section if it doesn't exist.
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2482:    def upload_file(
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2489:        """Upload a file to the session's attachments directory.
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2508:            RuntimeError: If upload fails
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2593:                logger.warning("Upload stderr: %s", stderr_data.strip())
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2600:                    f"Upload failed - no filename returned. stderr: {stderr_data}"
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2604:                "Uploaded file to session %s: attachments/%s (%s bytes)",
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2616:            raise RuntimeError(f"Failed to upload file: {e}") from e
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2730:    def get_upload_stats(
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2787:                    logger.warning("Failed to parse upload stats: %s", resp)
+backend/onyx/server/features/build/sandbox/kubernetes/kubernetes_sandbox_manager.py:2793:            logger.warning("Failed to get upload stats: %s", e)
+backend/onyx/server/features/build/sandbox/README.md:16:- **Knowledge files** - Access to indexed documents and user uploads
+backend/onyx/server/features/build/sandbox/README.md:73:├── attachments/                    # User uploads
+backend/onyx/server/features/build/sandbox/image/sandbox_daemon/models.py:22:# the S3 key on snapshot upload.
+backend/onyx/server/features/build/sandbox/image/sandbox_daemon/snapshot.py:4:upload/download tar.gz archives to/from S3. Tarring/extraction happens
+backend/onyx/server/features/build/sandbox/image/README.md:109:        ├── attachments/    # User-uploaded files
+backend/onyx/server/features/build/sandbox/docker/docker_sandbox_manager.py:1409:    def upload_file(
+backend/onyx/server/features/build/sandbox/docker/docker_sandbox_manager.py:1458:            raise RuntimeError(f"Failed to upload file: {e}") from e
+backend/onyx/server/features/build/sandbox/docker/docker_sandbox_manager.py:1467:                f"Upload failed - no filename returned. stderr: {result.stderr_text}"
+backend/onyx/server/features/build/sandbox/docker/docker_sandbox_manager.py:1564:    def get_upload_stats(
+backend/onyx/server/features/build/sandbox/docker/docker_sandbox_manager.py:1585:            logger.warning("get_upload_stats failed: %s", e)
+backend/onyx/server/features/build/sandbox/util/agent_instructions.py:37:# Content for the attachments section when user has uploaded files
+backend/onyx/server/features/build/sandbox/util/agent_instructions.py:41:uploaded during this session. **These files are critically important** and
+backend/onyx/server/features/build/sandbox/util/agent_instructions.py:46:- The user deliberately chose to upload these files, signaling they are directly relevant to the task
+backend/onyx/server/features/build/sandbox/util/agent_instructions.py:60:- Uploaded files may be in various formats: CSV, JSON, PDF, images, text files, etc.
+backend/onyx/server/features/build/sandbox/util/agent_instructions.py:66:**Do NOT ignore user uploaded files.** They are there for a reason and likely

@@ -1,0 +1,17 @@
+> This is the client-facing mirror of the PHASE 12 document ingestion review file. The canonical evidence copy remains under rag-security-readiness-review/02_evidence/phase_12/.
+
+# PHASE 12 — Indexing Logic
+
+| Indexing path | Index type | File/path | Line reference if available | Input | Output/index target | Update/delete behavior | Evidence label |
+| ------------- | ---------- | --------- | --------------------------- | ----- | ------------------- | ---------------------- | -------------- |
+| Batch preparation and DB upsert | DB pre-index | `backend/onyx/indexing/indexing_pipeline.py` | L494-L587 | Sanitized `Document` batch and connector/index context | DB document rows, staged-file promotion, document/CC-pair rows | Promotes staged files and deletes replaced files in source code. | OBSERVATION |
+| Document filtering | Pre-index validation | `backend/onyx/indexing/indexing_pipeline.py` | L596-L693 | Connector/user documents | Filtered documents and connector failures | Skips empty/oversized source documents in code path. | CONFIRMED-FINDING |
+| Main indexing flow | Hybrid/vector indexing pipeline | `backend/onyx/indexing/indexing_pipeline.py` | L1240-L1425 | Document batch | Chunks, embeddings, vector DB writes, index-attempt metrics | Calls chunking, embedding, and `write_chunks_to_vector_db_with_backoff`. | OBSERVATION |
+| Document ingestion hook | Optional enrichment/hook | `backend/onyx/indexing/indexing_pipeline.py` | L1021-L1148 | Document plus metadata/sections/owners | Hook-modified document payload | Hook can inspect/modify ingestion payload. | UNVERIFIED-RISK |
+| Document-index interface | Index abstraction | `backend/onyx/document_index/interfaces_new.py` | L205-L309 | Chunks/update/delete requests | Indexable/deletable/updatable implementations | Delete contract says all document chunks should be deleted, but runtime behavior not proven. | OBSERVATION |
+| Vespa write/update/delete | Vector/hybrid index | `backend/onyx/document_index/vespa/vespa_document_index.py` | L643-L847 | Indexed chunks and metadata updates/deletes | Vespa feed/update/delete requests | Deletes old chunks by chunk-count range and deletes by document ID in source code. | OBSERVATION |
+| Vespa hybrid retrieval target | Hybrid index retrieval | `backend/onyx/document_index/vespa/vespa_document_index.py` | L853-L930 | Document/chunk IDs and filters | Vespa retrieval results | Shows source-level index target used later for retrieval. | OBSERVATION |
+| Vespa delete helper | Index deletion | `backend/onyx/document_index/vespa/deletion.py` | L17-L69 | Document/chunk IDs | HTTP delete requests with retry wrapper | Retry path exists, but live deletion success not validated. | OBSERVATION |
+| OpenSearch update | Keyword/vector index implementation | `backend/onyx/document_index/opensearch/opensearch_document_index.py` | L573-L650 | Metadata update request | Bulk update by chunk IDs | Handles missing/zero chunk-count cases in source code. | OBSERVATION |
+| OpenSearch retrieval/index pair | Index implementation wrapper | `backend/onyx/document_index/opensearch/opensearch_document_index.py` | L890-L1045 | Retrieval/update/index requests | OpenSearch-backed operations | Source path supports OpenSearch document index operations. | OBSERVATION |
+| Stale index behavior | Update/delete/prune paths | Multiple source paths | See rows above and `document_update_delete_logic.md` | DB/index changes | Target indexes and DB rows | Stale behavior remains runtime-dependent. | UNVERIFIED-RISK |

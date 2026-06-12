@@ -1,0 +1,25 @@
+# PHASE 12 — Document Ingestion Review Limitations
+
+- Source-only limitation: PHASE 12 reviewed source and prior evidence files only.
+- Current-checkout limitation: findings apply only to the current checkout reviewed in this repository.
+- Original source unavailable: no upstream/original source state was available for comparison.
+- Working copy unavailable: no prior working-copy state was available for comparison beyond current repository contents.
+- Tests discovered but not executed: ingestion-related test files were identified by search, but no tests were run.
+- CI not executed: no CI jobs were run and no CI results were reviewed as PHASE 12 execution evidence.
+- Runtime ingestion behavior not validated: upload, connector ingestion, indexing, and deletion flows were not exercised.
+- Runtime parser behavior not validated: parsers were not run against benign or malicious files.
+- Runtime connector ingestion not validated: no live connector syncs were executed.
+- Runtime permission sync not validated: permission sync tasks and connector permission changes were not exercised.
+- Runtime index update/delete behavior not validated: no live index state was inspected before or after updates/deletes.
+- Runtime embedding provider behavior not validated: no provider requests, payload logs, provider settings, or retention behavior were inspected.
+- Production behavior not validated: production configuration, telemetry, and deployment behavior were unavailable.
+- Live database unavailable: no live database rows were queried as evidence.
+- Live vector index unavailable: no live vector index documents/chunks were inspected.
+- Live keyword index unavailable: no live keyword index documents/chunks were inspected.
+- Live connector state unavailable: no source-system connector state or credentials were used.
+- Live file/object storage unavailable: no live storage buckets, objects, or staged files were inspected.
+- No customer data: no customer documents or customer metadata were reviewed.
+- No real secrets: no real connector credentials or provider secrets were used.
+- Source evidence does not prove runtime enforcement: source paths show intended behavior only.
+- Existing test file does not prove test passed: discovered tests are not pass/fail evidence.
+- Missing evidence does not prove control absence: areas marked NO-EVIDENCE-FOUND or UNVERIFIED may have controls not identified in this pass.

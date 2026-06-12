@@ -1,0 +1,345 @@
+backend/onyx/server/documents/models.py:714:    zip_metadata_file_id: str | None  # File ID pointing to metadata in file store
+backend/onyx/server/documents/document_utils.py:8:def _is_password_related_error(error: Exception) -> bool:
+backend/onyx/server/documents/document_utils.py:10:    Check if the exception indicates a password-related issue rather than a format issue.
+backend/onyx/server/documents/document_utils.py:13:    password_keywords = ["mac", "integrity", "password", "authentication", "verify"]
+backend/onyx/server/documents/document_utils.py:14:    return any(keyword in error_msg for keyword in password_keywords)
+backend/onyx/server/documents/document_utils.py:20:    This performs basic format validation without requiring passwords.
+backend/onyx/server/documents/document_utils.py:34:        # Try to parse the outer ASN.1 structure without password validation
+backend/onyx/server/documents/document_utils.py:38:            # We expect this to fail due to password, but it should fail with a specific error
+backend/onyx/server/documents/document_utils.py:39:            pkcs12.load_key_and_certificates(file_bytes, password=None)
+backend/onyx/server/documents/document_utils.py:42:            # Check if the error is related to password (expected) vs format issues
+backend/onyx/server/documents/document_utils.py:43:            if _is_password_related_error(e):
+backend/onyx/server/documents/document_utils.py:44:                # These errors indicate the file format is correct but password is wrong/missing
+backend/onyx/server/documents/document_utils.py:46:                    "PKCS#12 format appears valid, password-related error: %s", e
+backend/onyx/server/documents/document_utils.py:54:            # Try with empty password as fallback
+backend/onyx/server/documents/document_utils.py:56:                pkcs12.load_key_and_certificates(file_bytes, password=b"")
+backend/onyx/server/documents/document_utils.py:59:                if _is_password_related_error(e2):
+backend/onyx/server/documents/document_utils.py:61:                        "PKCS#12 format appears valid with empty password attempt: %s",
+backend/onyx/server/features/projects/projects_file_utils.py:16:from onyx.file_processing.extract_file_text import count_docx_embedded_images
+backend/onyx/server/features/projects/projects_file_utils.py:17:from onyx.file_processing.extract_file_text import count_pdf_embedded_images
+backend/onyx/server/features/projects/projects_file_utils.py:18:from onyx.file_processing.extract_file_text import extract_file_text
+backend/onyx/server/features/projects/projects_file_utils.py:19:from onyx.file_processing.extract_file_text import get_file_ext
+backend/onyx/server/features/projects/projects_file_utils.py:20:from onyx.file_processing.file_types import OnyxFileExtensions
+backend/onyx/server/features/projects/projects_file_utils.py:21:from onyx.file_processing.password_validation import is_file_password_protected
+backend/onyx/server/features/projects/projects_file_utils.py:92:def _skip_token_threshold(extension: str) -> bool:
+backend/onyx/server/features/projects/projects_file_utils.py:93:    """Return True if this file extension should bypass the token limit."""
+backend/onyx/server/features/projects/projects_file_utils.py:94:    return extension.lower() in OnyxFileExtensions.TABULAR_EXTENSIONS
+backend/onyx/server/features/projects/projects_file_utils.py:168:    - All other files are run through extract_file_text, which handles known
+backend/onyx/server/features/projects/projects_file_utils.py:169:      document formats (.pdf, .docx, …) and falls back to a text-detection
+backend/onyx/server/features/projects/projects_file_utils.py:170:      heuristic for unknown extensions (.py, .js, .rs, …).
+backend/onyx/server/features/projects/projects_file_utils.py:173:    - If extension unsupported or text cannot be extracted, reject file.
+backend/onyx/server/features/projects/projects_file_utils.py:199:    # Running total of embedded images across PDFs in this batch. Once the
+backend/onyx/server/features/projects/projects_file_utils.py:200:    # aggregate cap is reached, subsequent PDFs in the same upload are
+backend/onyx/server/features/projects/projects_file_utils.py:223:            extension = get_file_ext(filename)
+backend/onyx/server/features/projects/projects_file_utils.py:226:            if extension in OnyxFileExtensions.IMAGE_EXTENSIONS:
+backend/onyx/server/features/projects/projects_file_utils.py:235:                            filename=filename, reason="Unsupported file contents"
+backend/onyx/server/features/projects/projects_file_utils.py:253:            # This accepts any file that extract_file_text can handle, including
+backend/onyx/server/features/projects/projects_file_utils.py:256:                if is_file_password_protected(
+backend/onyx/server/features/projects/projects_file_utils.py:259:                    extension=extension,
+backend/onyx/server/features/projects/projects_file_utils.py:261:                    logger.warning("%s is password protected", filename)
+backend/onyx/server/features/projects/projects_file_utils.py:264:                            filename=filename, reason="Document is password protected"
+backend/onyx/server/features/projects/projects_file_utils.py:275:                image_bearing_ext = extension in (".pdf", ".docx")
+backend/onyx/server/features/projects/projects_file_utils.py:283:                        count_pdf_embedded_images
+backend/onyx/server/features/projects/projects_file_utils.py:284:                        if extension == ".pdf"
+backend/onyx/server/features/projects/projects_file_utils.py:285:                        else count_docx_embedded_images
+backend/onyx/server/features/projects/projects_file_utils.py:315:                text_content = extract_file_text(
+backend/onyx/server/features/projects/projects_file_utils.py:319:                    extension=extension,
+backend/onyx/server/features/projects/projects_file_utils.py:343:                            reason=f"Unsupported file type: {extension}",
+backend/onyx/server/features/projects/projects_file_utils.py:354:                if exceeds_threshold and _skip_token_threshold(extension):
+backend/onyx/server/features/projects/projects_file_utils.py:355:                    # Exempt extensions (e.g. spreadsheets) are accepted
+backend/onyx/server/documents/private_key_types.py:14:        Accepts a file-like object, validates the file (e.g., checks extension and content),
+backend/onyx/server/documents/private_key_types.py:29:    Validates both the file extension and file content to ensure it's a valid PKCS#12 file.
+backend/onyx/server/documents/private_key_types.py:30:    Content validation prevents attacks that rely on file extension spoofing.
+backend/onyx/server/documents/private_key_types.py:32:    # First check file extension (basic filter)
+backend/onyx/server/documents/private_key_types.py:41:    # Validate file content to prevent extension spoofing attacks
+backend/onyx/file_processing/html_utils.py:9:from onyx.configs.app_configs import HTML_BASED_CONNECTOR_TRANSFORM_LINKS_STRATEGY
+backend/onyx/file_processing/html_utils.py:13:from onyx.file_processing.enums import HtmlBasedConnectorTransformLinksStrategy
+backend/onyx/file_processing/html_utils.py:22:class ParsedHTML:
+backend/onyx/file_processing/html_utils.py:38:    # HTML might contain newlines which are just whitespaces to a browser
+backend/onyx/file_processing/html_utils.py:47:        or HTML_BASED_CONNECTOR_TRANSFORM_LINKS_STRATEGY
+backend/onyx/file_processing/html_utils.py:48:        == HtmlBasedConnectorTransformLinksStrategy.STRIP
+backend/onyx/file_processing/html_utils.py:55:def parse_html_with_trafilatura(html_content: str) -> str:
+backend/onyx/file_processing/html_utils.py:56:    """Parse HTML content using trafilatura."""
+backend/onyx/file_processing/html_utils.py:66:    extracted_text = trafilatura.extract(html_content, config=config)
+backend/onyx/file_processing/html_utils.py:73:    """Format html to a flat text document.
+backend/onyx/file_processing/html_utils.py:76:    - Newlines from within the HTML are removed (as browser would ignore them as well).
+backend/onyx/file_processing/html_utils.py:124:            # table is standard HTML element
+backend/onyx/file_processing/html_utils.py:140:                # mostly for typing, having multiple hrefs is not valid HTML
+backend/onyx/file_processing/html_utils.py:166:def parse_html_page_basic(text: str | BytesIO | IO[bytes]) -> str:
+backend/onyx/file_processing/html_utils.py:171:def web_html_cleanup(
+backend/onyx/file_processing/html_utils.py:175:) -> ParsedHTML:
+backend/onyx/file_processing/html_utils.py:211:            page_text = parse_html_with_trafilatura(soup_string)
+backend/onyx/file_processing/html_utils.py:223:    return ParsedHTML(title=title, cleaned_text=cleaned_text)
+backend/onyx/server/documents/connector.py:3:import mimetypes
+backend/onyx/server/documents/connector.py:5:import zipfile
+backend/onyx/server/documents/connector.py:151:SEEN_ZIP_DETAIL = "Only one zip file is allowed per file connector, \
+backend/onyx/server/documents/connector.py:414:def save_zip_metadata_to_file_store(
+backend/onyx/server/documents/connector.py:415:    zf: zipfile.ZipFile, file_store: FileStore
+backend/onyx/server/documents/connector.py:418:    Extract .onyx_metadata.json from zip and save to file store.
+backend/onyx/server/documents/connector.py:449:def is_zip_file(file: UploadFile) -> bool:
+backend/onyx/server/documents/connector.py:451:    Check if the file is a zip file by content type or filename.
+backend/onyx/server/documents/connector.py:458:                    "application/zip",
+backend/onyx/server/documents/connector.py:459:                    "application/x-zip-compressed",  # May be this in Windows
+backend/onyx/server/documents/connector.py:460:                    "application/x-zip",
+backend/onyx/server/documents/connector.py:461:                    "multipart/x-zip",
+backend/onyx/server/documents/connector.py:465:        or (file.filename and file.filename.lower().endswith(".zip"))
+backend/onyx/server/documents/connector.py:472:    unzip: bool = True,
+backend/onyx/server/documents/connector.py:481:    zip_metadata_file_id: str | None = None
+backend/onyx/server/documents/connector.py:484:        seen_zip = False
+backend/onyx/server/documents/connector.py:490:            if is_zip_file(file):
+backend/onyx/server/documents/connector.py:491:                if seen_zip:
+backend/onyx/server/documents/connector.py:492:                    raise HTTPException(status_code=400, detail=SEEN_ZIP_DETAIL)
+backend/onyx/server/documents/connector.py:493:                seen_zip = True
+backend/onyx/server/documents/connector.py:495:                # Validate the zip by opening it (catches corrupt/non-zip files)
+backend/onyx/server/documents/connector.py:496:                with zipfile.ZipFile(file.file, "r") as zf:
+backend/onyx/server/documents/connector.py:497:                    if unzip:
+backend/onyx/server/documents/connector.py:498:                        zip_metadata_file_id = save_zip_metadata_to_file_store(
+backend/onyx/server/documents/connector.py:510:                            mime_type, __ = mimetypes.guess_type(file_info)
+backend/onyx/server/documents/connector.py:524:                # Store the zip as-is (unzip=False)
+backend/onyx/server/documents/connector.py:530:                    file_type=file.content_type or "application/zip",
+backend/onyx/server/documents/connector.py:536:            # Since we can't render docx files in the UI,
+backend/onyx/server/documents/connector.py:540:                from onyx.file_processing.extract_file_text import read_docx_file
+backend/onyx/server/documents/connector.py:542:                text, _ = read_docx_file(file.file, file.filename)
+backend/onyx/server/documents/connector.py:565:        zip_metadata_file_id=zip_metadata_file_id,
+backend/onyx/server/documents/connector.py:620:    unzip: bool = True,
+backend/onyx/server/documents/connector.py:623:    return upload_files(files, FileOrigin.CONNECTOR_FILE_UPLOAD, unzip=unzip)
+backend/onyx/server/documents/connector.py:660:    for file_id, file_name in zip(file_locations, file_names):
+backend/onyx/server/documents/connector.py:740:    current_zip_metadata_file_id = current_config.get("zip_metadata_file_id")
+backend/onyx/server/documents/connector.py:744:    current_zip_metadata: dict[str, Any] = {}
+backend/onyx/server/documents/connector.py:745:    if current_zip_metadata_file_id:
+backend/onyx/server/documents/connector.py:748:                file_id=current_zip_metadata_file_id, mode="b"
+backend/onyx/server/documents/connector.py:753:                current_zip_metadata = {d["filename"]: d for d in loaded_metadata}
+backend/onyx/server/documents/connector.py:755:                current_zip_metadata = loaded_metadata
+backend/onyx/server/documents/connector.py:766:    new_zip_metadata_file_id: str | None = None
+backend/onyx/server/documents/connector.py:767:    new_zip_metadata: dict[str, Any] = {}
+backend/onyx/server/documents/connector.py:773:        new_zip_metadata_file_id = upload_response.zip_metadata_file_id
+backend/onyx/server/documents/connector.py:776:        if new_zip_metadata_file_id:
+backend/onyx/server/documents/connector.py:779:                    file_id=new_zip_metadata_file_id, mode="b"
+backend/onyx/server/documents/connector.py:784:                    new_zip_metadata = {d["filename"]: d for d in loaded_metadata}
+backend/onyx/server/documents/connector.py:786:                    new_zip_metadata = loaded_metadata
+backend/onyx/server/documents/connector.py:802:    for file_id, file_name in zip(current_file_locations, current_file_names):
+backend/onyx/server/documents/connector.py:821:    final_zip_metadata = {
+backend/onyx/server/documents/connector.py:823:        for key, value in current_zip_metadata.items()
+backend/onyx/server/documents/connector.py:826:    final_zip_metadata.update(new_zip_metadata)
+backend/onyx/server/documents/connector.py:829:    final_zip_metadata_file_id: str | None = None
+backend/onyx/server/documents/connector.py:830:    if final_zip_metadata:
+backend/onyx/server/documents/connector.py:831:        final_zip_metadata_file_id = file_store.save_file(
+backend/onyx/server/documents/connector.py:832:            content=BytesIO(json.dumps(final_zip_metadata).encode("utf-8")),
+backend/onyx/server/documents/connector.py:843:        "zip_metadata_file_id": final_zip_metadata_file_id,
+backend/onyx/server/documents/connector.py:845:    # Remove old zip_metadata dict if present (backwards compatibility cleanup)
+backend/onyx/server/documents/connector.py:846:    updated_config.pop("zip_metadata", None)
+backend/onyx/server/documents/connector.py:911:        zip_metadata_file_id=final_zip_metadata_file_id,
+backend/onyx/server/documents/connector.py:1984:            email_body_html = f"""<html>
+backend/onyx/server/documents/connector.py:1993:</html>"""
+backend/onyx/server/documents/connector.py:1998:                html_body=email_body_html,
+backend/onyx/file_processing/file_types.py:11:PDF_MIME_TYPE = "application/pdf"
+backend/onyx/file_processing/file_types.py:15:class OnyxMimeTypes:
+backend/onyx/file_processing/file_types.py:35:        PDF_MIME_TYPE,
+backend/onyx/file_processing/file_types.py:39:        "application/epub+zip",
+backend/onyx/file_processing/file_types.py:55:class OnyxFileExtensions:
+backend/onyx/file_processing/file_types.py:56:    SPREADSHEET_EXTENSIONS = {
+backend/onyx/file_processing/file_types.py:57:        ".xlsx",
+backend/onyx/file_processing/file_types.py:60:    TABULAR_EXTENSIONS = {
+backend/onyx/file_processing/file_types.py:63:    } | SPREADSHEET_EXTENSIONS
+backend/onyx/file_processing/file_types.py:64:    PLAIN_TEXT_EXTENSIONS = {
+backend/onyx/file_processing/file_types.py:78:    DOCUMENT_EXTENSIONS = {
+backend/onyx/file_processing/file_types.py:79:        ".pdf",
+backend/onyx/file_processing/file_types.py:80:        ".docx",
+backend/onyx/file_processing/file_types.py:81:        ".pptx",
+backend/onyx/file_processing/file_types.py:84:        ".html",
+backend/onyx/file_processing/file_types.py:85:    } | SPREADSHEET_EXTENSIONS
+backend/onyx/file_processing/file_types.py:86:    IMAGE_EXTENSIONS = {
+backend/onyx/file_processing/file_types.py:93:    TEXT_AND_DOCUMENT_EXTENSIONS = PLAIN_TEXT_EXTENSIONS.union(DOCUMENT_EXTENSIONS)
+backend/onyx/file_processing/file_types.py:95:    ALL_ALLOWED_EXTENSIONS = TEXT_AND_DOCUMENT_EXTENSIONS.union(IMAGE_EXTENSIONS)
+backend/onyx/file_processing/image_summarization.py:27:class UnsupportedImageFormatError(ValueError):
+backend/onyx/file_processing/image_summarization.py:28:    """Raised when an image uses a MIME type unsupported by the summarization flow."""
+backend/onyx/file_processing/image_summarization.py:93:    except UnsupportedImageFormatError:
+backend/onyx/file_processing/image_summarization.py:96:            "Skipping image summarization due to unsupported MIME type "
+backend/onyx/file_processing/image_summarization.py:168:        raise UnsupportedImageFormatError(
+backend/onyx/file_processing/image_summarization.py:169:            "Unsupported image format for summarization"
+backend/onyx/file_processing/image_utils.py:9:from onyx.file_processing.file_types import OnyxMimeTypes
+backend/onyx/file_processing/image_utils.py:26:    to handle embedded images extracted from documents like PPTX, DOCX, and PDF.
+backend/onyx/file_processing/image_utils.py:39:        if img_mime in OnyxMimeTypes.EXCLUDED_IMAGE_TYPES:
+backend/onyx/file_processing/enums.py:4:class HtmlBasedConnectorTransformLinksStrategy(str, Enum):
+backend/onyx/file_processing/enums.py:7:    # turn HTML links into markdown links
+backend/onyx/file_processing/password_validation.py:7:from onyx.file_processing.extract_file_text import get_file_ext
+backend/onyx/file_processing/password_validation.py:12:PASSWORD_PROTECTED_FILES = [
+backend/onyx/file_processing/password_validation.py:13:    ".pdf",
+backend/onyx/file_processing/password_validation.py:14:    ".docx",
+backend/onyx/file_processing/password_validation.py:15:    ".pptx",
+backend/onyx/file_processing/password_validation.py:16:    ".xlsx",
+backend/onyx/file_processing/password_validation.py:31:def is_pdf_protected(file: IO[Any]) -> bool:
+backend/onyx/file_processing/password_validation.py:32:    from pypdf import PdfReader
+backend/onyx/file_processing/password_validation.py:35:        reader = PdfReader(file)
+backend/onyx/file_processing/password_validation.py:39:        # PDFs with only an owner password (permission restrictions like
+backend/onyx/file_processing/password_validation.py:40:        # print/copy disabled) use an empty user password — any viewer can open
+backend/onyx/file_processing/password_validation.py:42:        # password is required.  See https://github.com/onyx-dot-app/onyx/issues/9754
+backend/onyx/file_processing/password_validation.py:47:                "Failed to evaluate PDF encryption; treating as password protected"
+backend/onyx/file_processing/password_validation.py:52:def is_docx_protected(file: IO[Any]) -> bool:
+backend/onyx/file_processing/password_validation.py:56:def is_pptx_protected(file: IO[Any]) -> bool:
+backend/onyx/file_processing/password_validation.py:60:def is_xlsx_protected(file: IO[Any]) -> bool:
+backend/onyx/file_processing/password_validation.py:73:def is_file_password_protected(
+backend/onyx/file_processing/password_validation.py:76:    extension: str | None = None,
+backend/onyx/file_processing/password_validation.py:78:    extension_to_function: dict[str, Callable[[IO[Any]], bool]] = {
+backend/onyx/file_processing/password_validation.py:79:        ".pdf": is_pdf_protected,
+backend/onyx/file_processing/password_validation.py:80:        ".docx": is_docx_protected,
+backend/onyx/file_processing/password_validation.py:81:        ".pptx": is_pptx_protected,
+backend/onyx/file_processing/password_validation.py:82:        ".xlsx": is_xlsx_protected,
+backend/onyx/file_processing/password_validation.py:85:    if not extension:
+backend/onyx/file_processing/password_validation.py:86:        extension = get_file_ext(file_name)
+backend/onyx/file_processing/password_validation.py:88:    if extension not in PASSWORD_PROTECTED_FILES:
+backend/onyx/file_processing/password_validation.py:91:    if extension not in extension_to_function:
+backend/onyx/file_processing/password_validation.py:93:            "Extension=%s can be password protected, but no function found", extension
+backend/onyx/file_processing/password_validation.py:97:    func = extension_to_function[extension]
+backend/onyx/file_processing/extract_file_text.py:7:import zipfile
+backend/onyx/file_processing/extract_file_text.py:20:from zipfile import BadZipFile
+backend/onyx/file_processing/extract_file_text.py:28:from onyx.configs.app_configs import MAX_XLSX_CELLS_PER_SHEET
+backend/onyx/file_processing/extract_file_text.py:31:from onyx.file_processing.file_types import OnyxFileExtensions
+backend/onyx/file_processing/extract_file_text.py:32:from onyx.file_processing.file_types import OnyxMimeTypes
+backend/onyx/file_processing/extract_file_text.py:35:from onyx.file_processing.html_utils import parse_html_page_basic
+backend/onyx/file_processing/extract_file_text.py:68:        from markitdown.converters._pptx_converter import PptxConverter
+backend/onyx/file_processing/extract_file_text.py:71:            PptxConverter,
+backend/onyx/file_processing/extract_file_text.py:80:    _, extension = os.path.splitext(file_path_or_name)
+backend/onyx/file_processing/extract_file_text.py:81:    return extension.lower()
+backend/onyx/file_processing/extract_file_text.py:129:def load_files_from_zip(
+backend/onyx/file_processing/extract_file_text.py:130:    zip_file_io: IO,
+backend/onyx/file_processing/extract_file_text.py:133:) -> Iterator[tuple[zipfile.ZipInfo, IO[Any]]]:
+backend/onyx/file_processing/extract_file_text.py:135:    Iterates through files in a zip archive, yielding (ZipInfo, file handle) pairs.
+backend/onyx/file_processing/extract_file_text.py:137:    with zipfile.ZipFile(zip_file_io, "r") as zip_file:
+backend/onyx/file_processing/extract_file_text.py:138:        for file_info in zip_file.infolist():
+backend/onyx/file_processing/extract_file_text.py:148:            with zip_file.open(file_info.filename, "r") as subfile:
+backend/onyx/file_processing/extract_file_text.py:160:    html_comment_pattern = r"<!--\s*ONYX_METADATA=\{(.*?)\}\s*-->"
+backend/onyx/file_processing/extract_file_text.py:163:    html_comment_match = re.search(html_comment_pattern, line)
+backend/onyx/file_processing/extract_file_text.py:166:    if html_comment_match:
+backend/onyx/file_processing/extract_file_text.py:167:        json_str = html_comment_match.group(1)
+backend/onyx/file_processing/extract_file_text.py:213:def count_pdf_embedded_images(file: IO[Any], cap: int) -> int:
+backend/onyx/file_processing/extract_file_text.py:214:    """Return the number of embedded images in a PDF, short-circuiting at cap+1.
+backend/onyx/file_processing/extract_file_text.py:216:    Used to reject PDFs whose image count would OOM the user-file-processing
+backend/onyx/file_processing/extract_file_text.py:219:    to report a number. Returns 0 if the PDF cannot be parsed.
+backend/onyx/file_processing/extract_file_text.py:221:    Owner-password-only PDFs (permission restrictions but no open password) are
+backend/onyx/file_processing/extract_file_text.py:222:    counted normally — they decrypt with an empty string. Truly password-locked
+backend/onyx/file_processing/extract_file_text.py:223:    PDFs are skipped (return 0) since we can't inspect them; the caller should
+backend/onyx/file_processing/extract_file_text.py:224:    ensure the password-protected check runs first.
+backend/onyx/file_processing/extract_file_text.py:228:    from pypdf import PdfReader
+backend/onyx/file_processing/extract_file_text.py:237:        reader = PdfReader(file)
+backend/onyx/file_processing/extract_file_text.py:239:            # Try empty password first (owner-password-only PDFs); give up if that fails.
+backend/onyx/file_processing/extract_file_text.py:253:        logger.warning("Failed to count embedded images in PDF", exc_info=True)
+backend/onyx/file_processing/extract_file_text.py:263:def pdf_to_text(file: IO[Any], pdf_pass: str | None = None) -> str:
+backend/onyx/file_processing/extract_file_text.py:265:    Extract text from a PDF. For embedded images, a more complex approach is needed.
+backend/onyx/file_processing/extract_file_text.py:268:    text, _, _ = read_pdf_file(file, pdf_pass)
+backend/onyx/file_processing/extract_file_text.py:272:def read_pdf_file(
+backend/onyx/file_processing/extract_file_text.py:274:    pdf_pass: str | None = None,
+backend/onyx/file_processing/extract_file_text.py:279:    Returns the text, basic PDF metadata, and optionally extracted images.
+backend/onyx/file_processing/extract_file_text.py:281:    from pypdf import PdfReader
+backend/onyx/file_processing/extract_file_text.py:282:    from pypdf.errors import PdfStreamError
+backend/onyx/file_processing/extract_file_text.py:287:        pdf_reader = PdfReader(file)
+backend/onyx/file_processing/extract_file_text.py:289:        if pdf_reader.is_encrypted:
+backend/onyx/file_processing/extract_file_text.py:290:            # Try the explicit password first, then fall back to an empty
+backend/onyx/file_processing/extract_file_text.py:291:            # string.  Owner-password-only PDFs (permission restrictions but
+backend/onyx/file_processing/extract_file_text.py:292:            # no open password) decrypt successfully with "".
+backend/onyx/file_processing/extract_file_text.py:294:            passwords = [p for p in [pdf_pass, ""] if p is not None]
+backend/onyx/file_processing/extract_file_text.py:296:            for pw in passwords:
+backend/onyx/file_processing/extract_file_text.py:298:                    if pdf_reader.decrypt(pw) != 0:
+backend/onyx/file_processing/extract_file_text.py:306:                    "Encrypted PDF could not be decrypted, returning empty text."
+backend/onyx/file_processing/extract_file_text.py:310:        # Basic PDF metadata
+backend/onyx/file_processing/extract_file_text.py:311:        if pdf_reader.metadata is not None:
+backend/onyx/file_processing/extract_file_text.py:312:            for key, value in pdf_reader.metadata.items():
+backend/onyx/file_processing/extract_file_text.py:322:            page.extract_text() for page in pdf_reader.pages
+backend/onyx/file_processing/extract_file_text.py:329:            for page_num, page in enumerate(pdf_reader.pages):
+backend/onyx/file_processing/extract_file_text.py:336:                        # we also break here so a single oversized file can
+backend/onyx/file_processing/extract_file_text.py:339:                            "PDF embedded image cap reached (%d). "
+backend/onyx/file_processing/extract_file_text.py:363:    except PdfStreamError as e:
+backend/onyx/file_processing/extract_file_text.py:364:        # Malformed/truncated PDF content — a per-document content issue, not
+backend/onyx/file_processing/extract_file_text.py:368:        logger.warning("Invalid PDF file, skipping content extraction: %s", e)
+backend/onyx/file_processing/extract_file_text.py:370:        # Unknown PDF parsing failure — elevate just the message, not a
+backend/onyx/file_processing/extract_file_text.py:373:        logger.warning("Failed to read PDF, skipping content extraction: %s", e)
+backend/onyx/file_processing/extract_file_text.py:378:def extract_docx_images(docx_bytes: IO[Any]) -> Iterator[tuple[bytes, str]]:
+backend/onyx/file_processing/extract_file_text.py:380:    Given the bytes of a docx file, extract all the images.
+backend/onyx/file_processing/extract_file_text.py:384:        with zipfile.ZipFile(docx_bytes) as z:
+backend/onyx/file_processing/extract_file_text.py:389:        logger.exception("Failed to extract all docx images")
+backend/onyx/file_processing/extract_file_text.py:392:def count_docx_embedded_images(file: IO[Any], cap: int) -> int:
+backend/onyx/file_processing/extract_file_text.py:393:    """Return the number of embedded images in a docx, short-circuiting at cap+1.
+backend/onyx/file_processing/extract_file_text.py:395:    Mirrors count_pdf_embedded_images so upload validation can apply the same
+backend/onyx/file_processing/extract_file_text.py:408:        with zipfile.ZipFile(file) as z:
+backend/onyx/file_processing/extract_file_text.py:416:        logger.warning("Failed to count embedded images in docx", exc_info=True)
+backend/onyx/file_processing/extract_file_text.py:426:def read_docx_file(
+backend/onyx/file_processing/extract_file_text.py:433:    Extract text from a docx.
+backend/onyx/file_processing/extract_file_text.py:443:    from markitdown import UnsupportedFormatException
+backend/onyx/file_processing/extract_file_text.py:450:        BadZipFile,
+backend/onyx/file_processing/extract_file_text.py:453:        UnsupportedFormatException,
+backend/onyx/file_processing/extract_file_text.py:456:            "Failed to extract docx %s: %s. Attempting to read as text file.",
+backend/onyx/file_processing/extract_file_text.py:457:            file_name or "docx file",
+backend/onyx/file_processing/extract_file_text.py:461:        # May be an invalid docx, but still a valid text file
+backend/onyx/file_processing/extract_file_text.py:473:            return doc.markdown, list(extract_docx_images(to_bytesio(file)))
+backend/onyx/file_processing/extract_file_text.py:476:            for img_file_bytes, img_file_name in extract_docx_images(to_bytesio(file)):
+backend/onyx/file_processing/extract_file_text.py:479:            logger.exception("Failed to stream docx images")
+backend/onyx/file_processing/extract_file_text.py:483:def extract_pptx_images(pptx_bytes: IO[Any]) -> Iterator[tuple[bytes, str]]:
+backend/onyx/file_processing/extract_file_text.py:485:    Given the bytes of a pptx file, extract all the images.
+backend/onyx/file_processing/extract_file_text.py:489:        with zipfile.ZipFile(pptx_bytes) as z:
+backend/onyx/file_processing/extract_file_text.py:494:        logger.exception("Failed to extract all pptx images")
+backend/onyx/file_processing/extract_file_text.py:497:def pptx_to_text(file: IO[Any], file_name: str = "") -> str:
+backend/onyx/file_processing/extract_file_text.py:501:    from markitdown import UnsupportedFormatException
+backend/onyx/file_processing/extract_file_text.py:504:        mimetype=PRESENTATION_MIME_TYPE, filename=file_name or None, extension=".pptx"
+backend/onyx/file_processing/extract_file_text.py:509:        BadZipFile,
+backend/onyx/file_processing/extract_file_text.py:512:        UnsupportedFormatException,
+backend/onyx/file_processing/extract_file_text.py:514:        error_str = f"Failed to extract text from {file_name or 'pptx file'}: {e}"
+backend/onyx/file_processing/extract_file_text.py:520:def read_pptx_file(
+backend/onyx/file_processing/extract_file_text.py:527:    Extract text and optionally images from a pptx.
+backend/onyx/file_processing/extract_file_text.py:530:    text = pptx_to_text(file, file_name=file_name)
+backend/onyx/file_processing/extract_file_text.py:536:            return text, list(extract_pptx_images(to_bytesio(file)))
+backend/onyx/file_processing/extract_file_text.py:538:            for img_file_bytes, img_file_name in extract_pptx_images(to_bytesio(file)):
+backend/onyx/file_processing/extract_file_text.py:541:            logger.exception("Failed to stream pptx images")
+backend/onyx/file_processing/extract_file_text.py:567:    Scanning stops once ``MAX_XLSX_CELLS_PER_SHEET`` non-empty cells have been
+backend/onyx/file_processing/extract_file_text.py:595:        if total_non_empty > MAX_XLSX_CELLS_PER_SHEET:
+backend/onyx/file_processing/extract_file_text.py:624:def xlsx_sheet_extraction(file: IO[Any], file_name: str = "") -> list[tuple[str, str]]:
+backend/onyx/file_processing/extract_file_text.py:633:    except BadZipFile as e:
+backend/onyx/file_processing/extract_file_text.py:634:        error_str = f"Failed to extract text from {file_name or 'xlsx file'}: {e}"
+backend/onyx/file_processing/extract_file_text.py:644:                file_name or "xlsx file",
+backend/onyx/file_processing/extract_file_text.py:664:def xlsx_to_text(file: IO[Any], file_name: str = "") -> str:
+backend/onyx/file_processing/extract_file_text.py:665:    sheets = xlsx_sheet_extraction(file, file_name)
+backend/onyx/file_processing/extract_file_text.py:706:    with zipfile.ZipFile(file) as epub:
+backend/onyx/file_processing/extract_file_text.py:709:            if item.filename.endswith(".xhtml") or item.filename.endswith(".html"):
+backend/onyx/file_processing/extract_file_text.py:710:                with epub.open(item) as html_file:
+backend/onyx/file_processing/extract_file_text.py:711:                    text_content.append(parse_html_page_basic(html_file))
+backend/onyx/file_processing/extract_file_text.py:721:def extract_file_text(
+backend/onyx/file_processing/extract_file_text.py:725:    extension: str | None = None,
+backend/onyx/file_processing/extract_file_text.py:734:    extension_to_function: dict[str, Callable[[IO[Any]], str]] = {
+backend/onyx/file_processing/extract_file_text.py:735:        ".pdf": pdf_to_text,
+backend/onyx/file_processing/extract_file_text.py:736:        ".docx": lambda f: read_docx_file(f, file_name)[0],  # no images
+backend/onyx/file_processing/extract_file_text.py:737:        ".pptx": lambda f: pptx_to_text(f, file_name),
+backend/onyx/file_processing/extract_file_text.py:738:        ".xlsx": lambda f: xlsx_to_text(f, file_name),
+backend/onyx/file_processing/extract_file_text.py:741:        ".html": parse_html_page_basic,
+backend/onyx/file_processing/extract_file_text.py:753:        if extension is None:
+backend/onyx/file_processing/extract_file_text.py:754:            extension = get_file_ext(file_name)
+backend/onyx/file_processing/extract_file_text.py:756:        if extension in OnyxFileExtensions.TEXT_AND_DOCUMENT_EXTENSIONS:
+backend/onyx/file_processing/extract_file_text.py:757:            func = extension_to_function.get(extension, file_io_to_text)
+backend/onyx/file_processing/extract_file_text.py:761:        # If unknown extension, maybe it's a text file
+backend/onyx/file_processing/extract_file_text.py:766:        raise ValueError("Unknown file extension or not recognized as text data")
+backend/onyx/file_processing/extract_file_text.py:800:    pdf_pass: str | None = None,
+backend/onyx/file_processing/extract_file_text.py:810:        file_name: Name of the file (used to determine extension/type).
+backend/onyx/file_processing/extract_file_text.py:811:        pdf_pass: Optional password for encrypted PDFs.
+backend/onyx/file_processing/extract_file_text.py:826:        file, file_name, pdf_pass, content_type, image_callback
+backend/onyx/file_processing/extract_file_text.py:838:    pdf_pass: str | None = None,
+backend/onyx/file_processing/extract_file_text.py:858:    # with content types in UploadMimeTypes.DOCUMENT_MIME_TYPES as plain text files.
+backend/onyx/file_processing/extract_file_text.py:859:    # As a result, the file name extension may differ from the original content type.
+backend/onyx/file_processing/extract_file_text.py:861:    if content_type in OnyxMimeTypes.TEXT_MIME_TYPES:
+backend/onyx/file_processing/extract_file_text.py:866:        extension = get_file_ext(file_name)
+backend/onyx/file_processing/extract_file_text.py:867:        # docx example for embedded images
+backend/onyx/file_processing/extract_file_text.py:868:        if extension == ".docx":
+backend/onyx/file_processing/extract_file_text.py:869:            text_content, images = read_docx_file(
+backend/onyx/file_processing/extract_file_text.py:876:        # PDF example: we do not show complicated PDF image extraction here
+backend/onyx/file_processing/extract_file_text.py:878:        if extension == ".pdf":
+backend/onyx/file_processing/extract_file_text.py:879:            text_content, pdf_metadata, images = read_pdf_file(
+backend/onyx/file_processing/extract_file_text.py:881:                pdf_pass,
+backend/onyx/file_processing/extract_file_text.py:886:                text_content=text_content, embedded_images=images, metadata=pdf_metadata
+backend/onyx/file_processing/extract_file_text.py:889:        if extension == ".pptx":
+backend/onyx/file_processing/extract_file_text.py:890:            text_content, images = read_pptx_file(
+backend/onyx/file_processing/extract_file_text.py:897:        if extension == ".xlsx":
+backend/onyx/file_processing/extract_file_text.py:899:                text_content=xlsx_to_text(file, file_name=file_name),
+backend/onyx/file_processing/extract_file_text.py:904:        if extension == ".eml":
+backend/onyx/file_processing/extract_file_text.py:909:        if extension == ".epub":
+backend/onyx/file_processing/extract_file_text.py:914:        if extension == ".html":
+backend/onyx/file_processing/extract_file_text.py:916:                text_content=parse_html_page_basic(file),
+backend/onyx/file_processing/extract_file_text.py:921:        # If we reach here and it's a recognized text extension
+backend/onyx/file_processing/extract_file_text.py:922:        if extension in OnyxFileExtensions.PLAIN_TEXT_EXTENSIONS:
+backend/onyx/file_processing/extract_file_text.py:934:def docx_to_txt_filename(file_path: str) -> str:
