@@ -1,0 +1,13 @@
+# Auth review summary
+
+## Confirmed summary
+- Browser session auth is cookie-based, with a configurable cookie name shared between backend and frontend. The backend cookie transport uses `AUTH_COOKIE_NAME`/`fastapiusersauth` by default, and the frontend reads the same name from `SERVER_SIDE_ONLY__AUTH_COOKIE_NAME`. 【F:backend/onyx/configs/constants.py†L34-L43】【F:web/src/lib/constants.ts†L31-L39】【F:backend/onyx/auth/users.py†L1296-L1300】
+- The backend registers browser login, logout, registration, verification, password-reset, OAuth, OIDC, SAML, refresh, PAT, API-key, and captcha routes through the main FastAPI app, and the auth checker only allows routes that are either in the public list or carry an auth dependency. 【F:backend/onyx/main.py†L540-L687】【F:backend/onyx/server/auth_check.py†L16-L72】【F:backend/onyx/server/auth_check.py†L109-L163】【F:backend/onyx/main.py†L727-L728】
+- Frontend route protection is split into a private app layout and a private admin layout. `/app` uses `requireAuth()`, and `/admin` plus `/ee/admin` use `requireAdminAuth()`. 【F:web/src/app/app/layout.tsx†L15-L37】【F:web/src/layouts/admin/Layout.tsx†L11-L25】【F:web/src/app/ee/admin/layout.tsx†L1-L9】
+- Verification is enforced for BASIC and CLOUD users only, while SAML/OIDC users are treated as already verified in the invite/verification checks. 【F:backend/onyx/auth/users.py†L221-L227】【F:backend/onyx/auth/users.py†L247-L283】【F:backend/onyx/auth/users.py†L1908-L1938】
+- PATs and API keys are distinct bearer-token paths. PATs require a `Bearer` header and the `onyx_pat_` prefix; API keys accept bearer or raw format and use `on_` with deprecated `dn_` support. 【F:backend/onyx/auth/constants.py†L3-L15】【F:backend/onyx/auth/pat.py†L1-L43】【F:backend/onyx/auth/api_key.py†L1-L32】【F:backend/onyx/auth/utils.py†L16-L55】
+- JWT bearer login from an upstream IdP is present as a separate path: the backend validates a bearer JWT when `JWT_PUBLIC_KEY_URL` is configured, extracts an email claim, and provisions or reuses a user. 【F:backend/onyx/auth/users.py†L1666-L1786】【F:backend/onyx/configs/app_configs.py†L267-L304】
+
+## Unverified risks
+- I did not identify a dedicated automated test that asserts the browser logout route clears the auth cookie via `Set-Cookie`; the implementation is present, but test coverage for that exact behavior was not located in the reviewed files. 【F:web/src/app/auth/logout/route.ts†L15-L42】
+- I did not verify any live deployment configuration, so environment-dependent auth mode selection remains out of scope. That includes which of BASIC, GOOGLE_OAUTH, OIDC, SAML, or CLOUD is active at runtime.

@@ -1,0 +1,4 @@
+backend/tests/unit/onyx/server/features/mcp/test_per_user_listing_invariants.py
+backend/tests/unit/onyx/server/features/mcp/test_oauth_credentials_resolver.py
+backend/tests/external_dependency_unit/tools/test_mcp_passthrough_oauth.py
+web/tests/e2e/mcp/mcp_oauth_flow.spec.ts

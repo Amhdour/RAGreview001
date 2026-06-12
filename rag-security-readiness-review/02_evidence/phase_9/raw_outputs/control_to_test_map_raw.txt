@@ -1,0 +1,6 @@
+Category rows generated for the PHASE 9 control-to-test map.
+TEST-FILE-FOUND=9
+EVIDENCE-FILE-FOUND=5
+NO-TEST-FOUND=1
+UNVERIFIED-COVERAGE=3
+NOT-APPLICABLE=0

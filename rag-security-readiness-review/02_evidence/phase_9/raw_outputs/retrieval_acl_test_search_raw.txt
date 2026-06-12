@@ -1,0 +1,3 @@
+backend/tests/integration/multitenant_tests/syncing/test_search_permissions.py
+backend/tests/unit/onyx/access/test_user_file_access.py
+backend/tests/unit/onyx/chat/test_citation_utils.py

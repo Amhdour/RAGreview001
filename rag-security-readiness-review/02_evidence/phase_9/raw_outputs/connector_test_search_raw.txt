@@ -1,0 +1,4 @@
+backend/tests/external_dependency_unit/tools/test_oauth_token_manager.py
+backend/tests/external_dependency_unit/tools/test_oauth_config_crud.py
+backend/tests/unit/onyx/federated_connectors/test_oauth_utils.py
+backend/tests/unit/onyx/connectors/test_microsoft_graph_env.py

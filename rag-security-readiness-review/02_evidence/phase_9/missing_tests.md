@@ -1,0 +1,9 @@
+# Missing Tests
+
+| Missing test ID | Related category | Related risk/control | Expected test/evidence | Evidence searched | Why missing | Later validation method | Priority |
+|---|---|---|---|---|---|---|---|
+| MISSING-TEST-001 | Authentication | Logout/session invalidation / AUTH-01 | End-to-end logout cookie-clearing assertion | `auth_review.md`, `login_logout_flow.md`, `web/src/app/auth/logout/route.ts` | I found implementation evidence, but no executed browser/logout test output. | Playwright auth logout test. | High |
+| MISSING-TEST-002 | Authorization | Admin deny/allow path / AUTHZ-01, AUTHZ-02 | API-level authorization denial test | `backend/tests/unit/onyx/auth/test_permissions.py`, `docs/security/authorization_risk_to_code.md` | The relevant file exists, but no execution evidence was collected. | Integration API request validation. | High |
+| MISSING-TEST-003 | Retrieval ACL | Retrieval filtering / ACL-01, ACL-02 | Search-result ACL enforcement test | `backend/tests/integration/multitenant_tests/syncing/test_search_permissions.py`, `backend/tests/unit/onyx/access/test_user_file_access.py` | Search-permission files were found, but not a runtime proof of search-time ACL enforcement. | Integration search ACL test. | High |
+| MISSING-TEST-004 | Prompt/context | Prompt safety / PI-01, PI-02 | Adversarial prompt-injection test | `backend/tests/unit/onyx/chat/test_citation_processor.py`, `docs/security/prompt_risk_to_code.md` | Citation-processing coverage does not prove prompt-injection resistance. | Prompt-injection regression or integration test. | High |
+| MISSING-TEST-005 | Deployment/CI | CI pipeline / DEP-01, DEP-02 | Workflow execution record | `backend/tests/unit/onyx/configs/test_sentry.py`, `docs/security/deployment_ci_risk_to_code.md` | No CI workflow execution output was collected in this pass. | Inspect workflow files and capture CI run evidence. | High |

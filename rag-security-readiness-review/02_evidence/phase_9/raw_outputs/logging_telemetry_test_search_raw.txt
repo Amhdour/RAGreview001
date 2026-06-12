@@ -1,0 +1,4 @@
+backend/tests/unit/onyx/tracing/test_flows_registry.py
+backend/tests/unit/onyx/tracing/test_tracing_setup.py
+backend/tests/external_dependency_unit/tracing/test_llm_span_recording.py
+backend/tests/unit/onyx/configs/test_sentry.py
