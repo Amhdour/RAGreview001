@@ -1,0 +1,11 @@
+rag-security-readiness-review/02_evidence/phase_2/access_level_limitations.md
+rag-security-readiness-review/02_evidence/phase_2/assumptions.md
+rag-security-readiness-review/02_evidence/phase_2/claim_boundaries.md
+rag-security-readiness-review/02_evidence/phase_2/constraints.md
+rag-security-readiness-review/02_evidence/phase_2/evidence_standard.md
+rag-security-readiness-review/02_evidence/phase_2/go_no_go_criteria.md
+rag-security-readiness-review/02_evidence/phase_2/phase_2_review_boundaries_summary.md
+rag-security-readiness-review/02_evidence/phase_2/readiness_scoring_scale.md
+rag-security-readiness-review/02_evidence/phase_2/scope.md
+rag-security-readiness-review/02_evidence/phase_2/severity_scale.md
+rag-security-readiness-review/02_evidence/phase_2/testing_rules.md

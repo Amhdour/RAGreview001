@@ -1,0 +1,11 @@
+RAG Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED / UNVERIFIED
+Agent Risks	count=4	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED
+Authentication Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED / UNVERIFIED
+Authorization Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED / UNVERIFIED
+Retrieval ACL Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED / UNVERIFIED
+Prompt-Injection Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED
+Connector Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED
+Tool/MCP Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED / UNVERIFIED
+Logging/Telemetry Risks	count=5	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / UNVERIFIED
+Deployment/Supply-Chain Risks	count=6	highest=Critical candidate	evidence=Mixed: EVIDENCE-LINKED / INFERRED / UNVERIFIED
+Threats covered: TH-01, TH-02, TH-03, TH-04, TH-05, TH-06, TH-07, TH-08, TH-09, TH-10, TH-11, TH-12, TH-13, TH-14, TH-15, TH-16

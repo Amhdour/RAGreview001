@@ -1,0 +1,50 @@
+RAG-01	RAG Risks	TH-01	EVIDENCE-LINKED	Unauthorized retrieval of private documents; sensitive data returned through search/chat.
+RAG-02	RAG Risks	TH-02	INFERRED	Cross-tenant or cross-group retrieval; missing retrieval authorization evidence.
+RAG-03	RAG Risks	TH-09	INFERRED	Retrieval poisoning and RAG quality failure can distort search results.
+RAG-04	RAG Risks	TH-08	UNVERIFIED	Incomplete citation/source integrity can undermine provenance trust.
+RAG-05	RAG Risks	TH-06	INFERRED	Over-indexing of private data can expand the retrieval blast radius.
+AGENT-01	Agent Risks	TH-11	EVIDENCE-LINKED	Agent action without clear authorization may trigger unintended side effects.
+AGENT-02	Agent Risks	TH-07,TH-11	EVIDENCE-LINKED	Agent/tool output injection can alter later model or tool behavior.
+AGENT-03	Agent Risks	TH-07,TH-12	INFERRED	Agent state confusion can mix instructions, context, or conversation boundaries.
+AGENT-04	Agent Risks	TH-01,TH-07	EVIDENCE-LINKED	Agent misuse of retrieved context may amplify a retrieval issue into an action issue.
+AUTH-01	Authentication Risks	TH-13	EVIDENCE-LINKED	API key abuse can grant programmatic access without interactive login.
+AUTH-02	Authentication Risks	TH-13	EVIDENCE-LINKED	PAT abuse can permit durable bearer-token misuse.
+AUTH-03	Authentication Risks	TH-13	INFERRED	Session or JWT misuse can keep a compromised identity active.
+AUTH-04	Authentication Risks	TH-14	UNVERIFIED	OAuth/OIDC/SAML misconfiguration could map identities incorrectly.
+AUTH-05	Authentication Risks	TH-13,TH-14	UNVERIFIED	Weak lifecycle around token issuance or revocation remains unverified.
+AUTHZ-01	Authorization Risks	TH-03	EVIDENCE-LINKED	Broken authorization on document routes can expose contents or metadata.
+AUTHZ-02	Authorization Risks	TH-04	EVIDENCE-LINKED	Broken authorization on admin routes can enable privileged actions.
+AUTHZ-03	Authorization Risks	TH-03,TH-04	INFERRED	Permission mismatch between frontend and backend can confuse users and checks.
+AUTHZ-04	Authorization Risks	TH-02	INFERRED	Tenant boundary confusion can leak data across tenant partitions.
+AUTHZ-05	Authorization Risks	TH-03,TH-04	UNVERIFIED	Route-level authorization has not been validated across the document and admin surfaces.
+ACL-01	Retrieval ACL Risks	TH-01,TH-03	EVIDENCE-LINKED	Missing or inconsistent document-level ACL enforcement can let search surface restricted content.
+ACL-02	Retrieval ACL Risks	TH-05,TH-06	INFERRED	Stale connector permissions can cause search results to reflect outdated access rights.
+ACL-03	Retrieval ACL Risks	TH-05,TH-06	INFERRED	Overbroad connector sync permissions may ingest content outside intended scope.
+ACL-04	Retrieval ACL Risks	TH-01,TH-02	EVIDENCE-LINKED	Cross-user retrieval leakage can expose another user’s private documents.
+ACL-05	Retrieval ACL Risks	TH-08	UNVERIFIED	Citation output may expose inaccessible source metadata even when content is blocked.
+PI-01	Prompt-Injection Risks	TH-07	EVIDENCE-LINKED	Malicious document injection can place hostile instructions into the retrieval corpus.
+PI-02	Prompt-Injection Risks	TH-07,TH-01	EVIDENCE-LINKED	Indirect prompt injection through retrieval can carry hostile instructions into model context.
+PI-03	Prompt-Injection Risks	TH-07,TH-11	INFERRED	Prompt/context construction abuse can reshape instructions or hide higher-priority guidance.
+PI-04	Prompt-Injection Risks	TH-07,TH-11	EVIDENCE-LINKED	Tool-use escalation through injected content can turn a text issue into an action issue.
+PI-05	Prompt-Injection Risks	TH-10	EVIDENCE-LINKED	Sensitive prompt data can leak into logs or telemetry as part of prompt tracing.
+CONN-01	Connector Risks	TH-05	EVIDENCE-LINKED	Connector credential exposure can allow external source compromise or over-sync.
+CONN-02	Connector Risks	TH-05,TH-06	INFERRED	Overbroad connector permission scope can ingest data beyond intended boundaries.
+CONN-03	Connector Risks	TH-06,TH-02	INFERRED	Stale permission sync can leave revoked access effective in the index.
+CONN-04	Connector Risks	TH-07,TH-05	EVIDENCE-LINKED	Untrusted source ingestion can import hostile content or poisoned documents.
+CONN-05	Connector Risks	TH-06,TH-05	INFERRED	Connector sync of unauthorized documents can expand the corpus without policy approval.
+TOOL-01	Tool/MCP Risks	TH-11	EVIDENCE-LINKED	Unauthorized tool execution can run actions outside the expected chat flow.
+TOOL-02	Tool/MCP Risks	TH-11	EVIDENCE-LINKED	MCP endpoint or tool exposure can broaden the reachable backend attack surface.
+TOOL-03	Tool/MCP Risks	TH-11,TH-07	EVIDENCE-LINKED	Tool output injection can contaminate later prompts, chats, or actions.
+TOOL-04	Tool/MCP Risks	TH-11	INFERRED	Tool registry confusion can blur which operations are allowed or trusted.
+TOOL-05	Tool/MCP Risks	TH-11	UNVERIFIED	Missing approval workflow for sensitive tool actions remains unverified.
+LOG-01	Logging/Telemetry Risks	TH-10	EVIDENCE-LINKED	Prompt leakage into logs can expose user or system content.
+LOG-02	Logging/Telemetry Risks	TH-10,TH-01	EVIDENCE-LINKED	Retrieved document leakage into logs can expose source content and metadata.
+LOG-03	Logging/Telemetry Risks	TH-10,TH-13,TH-15	EVIDENCE-LINKED	Token or API-key leakage into logs can turn observability into a credential sink.
+LOG-04	Logging/Telemetry Risks	TH-10	EVIDENCE-LINKED	Sensitive telemetry spans can carry more context than needed for debugging.
+LOG-05	Logging/Telemetry Risks	TH-10	UNVERIFIED	Missing redaction evidence leaves observability protections unproven.
+DEP-01	Deployment/Supply-Chain Risks	TH-15	EVIDENCE-LINKED	Exposed deployment secrets can weaken the runtime and adjacent systems.
+DEP-02	Deployment/Supply-Chain Risks	TH-15	EVIDENCE-LINKED	Insecure environment configuration can expose services or weaken access controls.
+DEP-03	Deployment/Supply-Chain Risks	TH-15	UNVERIFIED	Unverified production deployment target leaves the real target environment unknown.
+DEP-04	Deployment/Supply-Chain Risks	TH-16	UNVERIFIED	CI/CD secret leakage remains unverified when workflow evidence is absent.
+DEP-05	Deployment/Supply-Chain Risks	TH-16	UNVERIFIED	Dependency or supply-chain compromise can alter artifacts before deployment.
+DEP-06	Deployment/Supply-Chain Risks	TH-15,TH-12	INFERRED	Container or runtime misconfiguration can expose internal services or secrets.

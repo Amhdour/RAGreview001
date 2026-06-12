@@ -1,0 +1,50 @@
+RAG-01	EVIDENCE-LINKED	TH-01	Critical candidate	Unauthorized retrieval of private documents; sensitive data returned through search/chat.
+RAG-02	INFERRED	TH-02	High candidate	Cross-tenant or cross-group retrieval; missing retrieval authorization evidence.
+RAG-03	INFERRED	TH-09	Medium candidate	Retrieval poisoning and RAG quality failure can distort search results.
+RAG-04	UNVERIFIED	TH-08	Medium candidate	Incomplete citation/source integrity can undermine provenance trust.
+RAG-05	INFERRED	TH-06	Medium candidate	Over-indexing of private data can expand the retrieval blast radius.
+AGENT-01	EVIDENCE-LINKED	TH-11	High candidate	Agent action without clear authorization may trigger unintended side effects.
+AGENT-02	EVIDENCE-LINKED	TH-07,TH-11	Critical candidate	Agent/tool output injection can alter later model or tool behavior.
+AGENT-03	INFERRED	TH-07,TH-12	Medium candidate	Agent state confusion can mix instructions, context, or conversation boundaries.
+AGENT-04	EVIDENCE-LINKED	TH-01,TH-07	High candidate	Agent misuse of retrieved context may amplify a retrieval issue into an action issue.
+AUTH-01	EVIDENCE-LINKED	TH-13	Critical candidate	API key abuse can grant programmatic access without interactive login.
+AUTH-02	EVIDENCE-LINKED	TH-13	High candidate	PAT abuse can permit durable bearer-token misuse.
+AUTH-03	INFERRED	TH-13	High candidate	Session or JWT misuse can keep a compromised identity active.
+AUTH-04	UNVERIFIED	TH-14	Medium candidate	OAuth/OIDC/SAML misconfiguration could map identities incorrectly.
+AUTH-05	UNVERIFIED	TH-13,TH-14	Medium candidate	Weak lifecycle around token issuance or revocation remains unverified.
+AUTHZ-01	EVIDENCE-LINKED	TH-03	Critical candidate	Broken authorization on document routes can expose contents or metadata.
+AUTHZ-02	EVIDENCE-LINKED	TH-04	Critical candidate	Broken authorization on admin routes can enable privileged actions.
+AUTHZ-03	INFERRED	TH-03,TH-04	Medium candidate	Permission mismatch between frontend and backend can confuse users and checks.
+AUTHZ-04	INFERRED	TH-02	High candidate	Tenant boundary confusion can leak data across tenant partitions.
+AUTHZ-05	UNVERIFIED	TH-03,TH-04	Informational	Route-level authorization has not been validated across the document and admin surfaces.
+ACL-01	EVIDENCE-LINKED	TH-01,TH-03	Critical candidate	Missing or inconsistent document-level ACL enforcement can let search surface restricted content.
+ACL-02	INFERRED	TH-05,TH-06	High candidate	Stale connector permissions can cause search results to reflect outdated access rights.
+ACL-03	INFERRED	TH-05,TH-06	High candidate	Overbroad connector sync permissions may ingest content outside intended scope.
+ACL-04	EVIDENCE-LINKED	TH-01,TH-02	High candidate	Cross-user retrieval leakage can expose another user’s private documents.
+ACL-05	UNVERIFIED	TH-08	Medium candidate	Citation output may expose inaccessible source metadata even when content is blocked.
+PI-01	EVIDENCE-LINKED	TH-07	Critical candidate	Malicious document injection can place hostile instructions into the retrieval corpus.
+PI-02	EVIDENCE-LINKED	TH-07,TH-01	High candidate	Indirect prompt injection through retrieval can carry hostile instructions into model context.
+PI-03	INFERRED	TH-07,TH-11	High candidate	Prompt/context construction abuse can reshape instructions or hide higher-priority guidance.
+PI-04	EVIDENCE-LINKED	TH-07,TH-11	Critical candidate	Tool-use escalation through injected content can turn a text issue into an action issue.
+PI-05	EVIDENCE-LINKED	TH-10	High candidate	Sensitive prompt data can leak into logs or telemetry as part of prompt tracing.
+CONN-01	EVIDENCE-LINKED	TH-05	Critical candidate	Connector credential exposure can allow external source compromise or over-sync.
+CONN-02	INFERRED	TH-05,TH-06	High candidate	Overbroad connector permission scope can ingest data beyond intended boundaries.
+CONN-03	INFERRED	TH-06,TH-02	Medium candidate	Stale permission sync can leave revoked access effective in the index.
+CONN-04	EVIDENCE-LINKED	TH-07,TH-05	High candidate	Untrusted source ingestion can import hostile content or poisoned documents.
+CONN-05	INFERRED	TH-06,TH-05	High candidate	Connector sync of unauthorized documents can expand the corpus without policy approval.
+TOOL-01	EVIDENCE-LINKED	TH-11	Critical candidate	Unauthorized tool execution can run actions outside the expected chat flow.
+TOOL-02	EVIDENCE-LINKED	TH-11	High candidate	MCP endpoint or tool exposure can broaden the reachable backend attack surface.
+TOOL-03	EVIDENCE-LINKED	TH-11,TH-07	High candidate	Tool output injection can contaminate later prompts, chats, or actions.
+TOOL-04	INFERRED	TH-11	Medium candidate	Tool registry confusion can blur which operations are allowed or trusted.
+TOOL-05	UNVERIFIED	TH-11	Informational	Missing approval workflow for sensitive tool actions remains unverified.
+LOG-01	EVIDENCE-LINKED	TH-10	High candidate	Prompt leakage into logs can expose user or system content.
+LOG-02	EVIDENCE-LINKED	TH-10,TH-01	High candidate	Retrieved document leakage into logs can expose source content and metadata.
+LOG-03	EVIDENCE-LINKED	TH-10,TH-13,TH-15	Critical candidate	Token or API-key leakage into logs can turn observability into a credential sink.
+LOG-04	EVIDENCE-LINKED	TH-10	Medium candidate	Sensitive telemetry spans can carry more context than needed for debugging.
+LOG-05	UNVERIFIED	TH-10	Informational	Missing redaction evidence leaves observability protections unproven.
+DEP-01	EVIDENCE-LINKED	TH-15	Critical candidate	Exposed deployment secrets can weaken the runtime and adjacent systems.
+DEP-02	EVIDENCE-LINKED	TH-15	High candidate	Insecure environment configuration can expose services or weaken access controls.
+DEP-03	UNVERIFIED	TH-15	Informational	Unverified production deployment target leaves the real target environment unknown.
+DEP-04	UNVERIFIED	TH-16	Medium candidate	CI/CD secret leakage remains unverified when workflow evidence is absent.
+DEP-05	UNVERIFIED	TH-16	Medium candidate	Dependency or supply-chain compromise can alter artifacts before deployment.
+DEP-06	INFERRED	TH-15,TH-12	High candidate	Container or runtime misconfiguration can expose internal services or secrets.
