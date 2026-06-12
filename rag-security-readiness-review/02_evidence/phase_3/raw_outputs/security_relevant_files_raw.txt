@@ -1,0 +1,48 @@
+# Security Relevant Files Raw
+## Authentication
+No confirmed files found in this inventory pass.
+
+## Authorization and permissions
+No confirmed files found in this inventory pass.
+
+## RAG/retrieval
+No confirmed files found in this inventory pass.
+
+## Document ingestion
+No confirmed files found in this inventory pass.
+
+## Prompt-construction exposure
+No confirmed files found in this inventory pass.
+
+## Citation/source integrity
+No confirmed files found in this inventory pass.
+
+## Connectors
+No confirmed files found in this inventory pass.
+
+## Agent/tool behavior
+No confirmed files found in this inventory pass.
+
+## MCP
+No confirmed files found in this inventory pass.
+
+## Sandbox/file handling
+No confirmed files found in this inventory pass.
+
+## Secrets and credentials
+No confirmed files found in this inventory pass.
+
+## Logging and telemetry
+No confirmed files found in this inventory pass.
+
+## CI/CD
+No confirmed files found in this inventory pass.
+
+## Supply chain
+No confirmed files found in this inventory pass.
+
+## Deployment
+No confirmed files found in this inventory pass.
+
+## Tests
+No confirmed files found in this inventory pass.
