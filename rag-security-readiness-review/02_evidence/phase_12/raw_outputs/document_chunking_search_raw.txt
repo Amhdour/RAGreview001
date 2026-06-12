@@ -1,0 +1,856 @@
+backend/onyx/indexing/indexing_pipeline.py:16:from onyx.configs.app_configs import MAX_CHUNKS_PER_DOC_BATCH
+backend/onyx/indexing/indexing_pipeline.py:19:from onyx.configs.app_configs import USE_CHUNK_SUMMARY
+backend/onyx/indexing/indexing_pipeline.py:29:from onyx.connectors.models import ImageSection
+backend/onyx/indexing/indexing_pipeline.py:32:from onyx.connectors.models import Section
+backend/onyx/indexing/indexing_pipeline.py:33:from onyx.connectors.models import SectionType
+backend/onyx/indexing/indexing_pipeline.py:34:from onyx.connectors.models import TextSection
+backend/onyx/indexing/indexing_pipeline.py:65:from onyx.hooks.points.document_ingestion import DocumentIngestionSection
+backend/onyx/indexing/indexing_pipeline.py:68:from onyx.indexing.chunk_batch_store import ChunkBatchStore
+backend/onyx/indexing/indexing_pipeline.py:69:from onyx.indexing.chunker import Chunker
+backend/onyx/indexing/indexing_pipeline.py:70:from onyx.indexing.embedder import embed_chunks_with_failure_handling
+backend/onyx/indexing/indexing_pipeline.py:72:from onyx.indexing.models import DocAwareChunk
+backend/onyx/indexing/indexing_pipeline.py:73:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/indexing_pipeline.py:75:from onyx.indexing.models import UpdatableChunkData
+backend/onyx/indexing/indexing_pipeline.py:76:from onyx.indexing.vector_db_insertion import write_chunks_to_vector_db_with_backoff
+backend/onyx/indexing/indexing_pipeline.py:112:    """An image section awaiting LLM summarization."""
+backend/onyx/indexing/indexing_pipeline.py:114:    section: Section
+backend/onyx/indexing/indexing_pipeline.py:136:    # number of chunks that were inserted into Vespa
+backend/onyx/indexing/indexing_pipeline.py:137:    total_chunks: int
+backend/onyx/indexing/indexing_pipeline.py:146:            total_chunks=0,
+backend/onyx/indexing/indexing_pipeline.py:151:class ChunkEmbeddingResult(BaseModel):
+backend/onyx/indexing/indexing_pipeline.py:152:    successful_chunk_ids: list[tuple[int, str]]  # (chunk_id, document_id)
+backend/onyx/indexing/indexing_pipeline.py:173:            (section.link for section in doc.sections if section.link), ""
+backend/onyx/indexing/indexing_pipeline.py:209:def _embed_chunks_to_store(
+backend/onyx/indexing/indexing_pipeline.py:210:    chunks: list[DocAwareChunk],
+backend/onyx/indexing/indexing_pipeline.py:214:    store: ChunkBatchStore,
+backend/onyx/indexing/indexing_pipeline.py:215:) -> ChunkEmbeddingResult:
+backend/onyx/indexing/indexing_pipeline.py:216:    """Embed chunks in batches, spilling each batch to *store*.
+backend/onyx/indexing/indexing_pipeline.py:218:    If a document fails embedding in any batch, its chunks are excluded from
+backend/onyx/indexing/indexing_pipeline.py:222:    successful_chunk_ids: list[tuple[int, str]] = []
+backend/onyx/indexing/indexing_pipeline.py:225:    # causes chunks for that doc to be skipped in batch N+1 and stripped
+backend/onyx/indexing/indexing_pipeline.py:229:    for batch_idx, chunk_batch in enumerate(
+backend/onyx/indexing/indexing_pipeline.py:230:        batch_generator(chunks, MAX_CHUNKS_PER_DOC_BATCH)
+backend/onyx/indexing/indexing_pipeline.py:232:        # Skip chunks belonging to documents that failed in earlier batches.
+backend/onyx/indexing/indexing_pipeline.py:233:        chunk_batch = [
+backend/onyx/indexing/indexing_pipeline.py:234:            c for c in chunk_batch if c.source_document.id not in all_failed_doc_ids
+backend/onyx/indexing/indexing_pipeline.py:236:        if not chunk_batch:
+backend/onyx/indexing/indexing_pipeline.py:239:        logger.debug("Embedding batch %s: %s chunks", batch_idx, len(chunk_batch))
+backend/onyx/indexing/indexing_pipeline.py:241:        chunks_with_embeddings, embedding_failures = embed_chunks_with_failure_handling(
+backend/onyx/indexing/indexing_pipeline.py:242:            chunks=chunk_batch,
+backend/onyx/indexing/indexing_pipeline.py:250:        # Only keep successfully embedded chunks for non-failed docs.
+backend/onyx/indexing/indexing_pipeline.py:251:        chunks_with_embeddings = [
+backend/onyx/indexing/indexing_pipeline.py:253:            for c in chunks_with_embeddings
+backend/onyx/indexing/indexing_pipeline.py:257:        successful_chunk_ids.extend(
+backend/onyx/indexing/indexing_pipeline.py:258:            (c.chunk_id, c.source_document.id) for c in chunks_with_embeddings
+backend/onyx/indexing/indexing_pipeline.py:261:        store.save(chunks_with_embeddings, batch_idx)
+backend/onyx/indexing/indexing_pipeline.py:262:        del chunks_with_embeddings
+backend/onyx/indexing/indexing_pipeline.py:267:        successful_chunk_ids = [
+backend/onyx/indexing/indexing_pipeline.py:268:            (chunk_id, doc_id)
+backend/onyx/indexing/indexing_pipeline.py:269:            for chunk_id, doc_id in successful_chunk_ids
+backend/onyx/indexing/indexing_pipeline.py:273:    return ChunkEmbeddingResult(
+backend/onyx/indexing/indexing_pipeline.py:274:        successful_chunk_ids=successful_chunk_ids,
+backend/onyx/indexing/indexing_pipeline.py:281:    chunks: list[DocAwareChunk],
+backend/onyx/indexing/indexing_pipeline.py:286:) -> Generator[tuple[ChunkEmbeddingResult, ChunkBatchStore], None, None]:
+backend/onyx/indexing/indexing_pipeline.py:287:    """Embed chunks to disk and yield a ``(result, store)`` pair.
+backend/onyx/indexing/indexing_pipeline.py:300:        with embed_and_stream(chunks, embedder, tenant_id, req_id) as (result, store):
+backend/onyx/indexing/indexing_pipeline.py:301:            for chunk in store.stream():
+backend/onyx/indexing/indexing_pipeline.py:304:    with ChunkBatchStore() as store:
+backend/onyx/indexing/indexing_pipeline.py:306:        result = _embed_chunks_to_store(
+backend/onyx/indexing/indexing_pipeline.py:307:            chunks=chunks,
+backend/onyx/indexing/indexing_pipeline.py:389:    chunker: Chunker,
+backend/onyx/indexing/indexing_pipeline.py:403:            chunker=chunker,
+backend/onyx/indexing/indexing_pipeline.py:434:            total_chunks=0,
+backend/onyx/indexing/indexing_pipeline.py:440:                            document.sections[0].link if document.sections else None
+backend/onyx/indexing/indexing_pipeline.py:600:            isinstance(section, TextSection)
+backend/onyx/indexing/indexing_pipeline.py:601:            and section.text is not None
+backend/onyx/indexing/indexing_pipeline.py:602:            and section.text.strip()
+backend/onyx/indexing/indexing_pipeline.py:603:            for section in document.sections
+backend/onyx/indexing/indexing_pipeline.py:612:            # This is again verified later in the pipeline after chunking but at that point there should
+backend/onyx/indexing/indexing_pipeline.py:622:            # so when building the chunk text representation, it will be empty and unuseable
+backend/onyx/indexing/indexing_pipeline.py:624:                "Skipping document with ID %s as the chunks will be empty.", document.id
+backend/onyx/indexing/indexing_pipeline.py:628:        section_chars = sum(
+backend/onyx/indexing/indexing_pipeline.py:630:                len(section.text)
+backend/onyx/indexing/indexing_pipeline.py:631:                if isinstance(section, TextSection) and section.text is not None
+backend/onyx/indexing/indexing_pipeline.py:634:            for section in document.sections
+backend/onyx/indexing/indexing_pipeline.py:637:            len(document.title or document.semantic_identifier) + section_chars
+backend/onyx/indexing/indexing_pipeline.py:658:                            document.sections[0].link if document.sections else None
+backend/onyx/indexing/indexing_pipeline.py:696:def process_image_sections(documents: list[Document]) -> list[IndexingDocument]:
+backend/onyx/indexing/indexing_pipeline.py:698:    Process all sections in documents by:
+backend/onyx/indexing/indexing_pipeline.py:699:    1. Converting both TextSection and ImageSection objects to base Section objects
+backend/onyx/indexing/indexing_pipeline.py:700:    2. Processing ImageSections to generate text summaries using a vision-capable LLM
+backend/onyx/indexing/indexing_pipeline.py:701:    3. Returning IndexingDocument objects with both original and processed sections
+backend/onyx/indexing/indexing_pipeline.py:704:        documents: List of documents with TextSection | ImageSection objects
+backend/onyx/indexing/indexing_pipeline.py:707:        List of IndexingDocument objects with processed_sections as list[Section]
+backend/onyx/indexing/indexing_pipeline.py:710:    # Use section.type rather than isinstance because sections can round-trip
+backend/onyx/indexing/indexing_pipeline.py:711:    # through pydantic as base Section instances (not the concrete subclass).
+backend/onyx/indexing/indexing_pipeline.py:712:    has_image_section = any(
+backend/onyx/indexing/indexing_pipeline.py:713:        section.type == SectionType.IMAGE
+backend/onyx/indexing/indexing_pipeline.py:715:        for section in document.sections
+backend/onyx/indexing/indexing_pipeline.py:717:    if not get_image_extraction_and_analysis_enabled() or not has_image_section:
+backend/onyx/indexing/indexing_pipeline.py:730:        # Even without LLM, we still convert to IndexingDocument with base Sections
+backend/onyx/indexing/indexing_pipeline.py:734:                processed_sections=[
+backend/onyx/indexing/indexing_pipeline.py:735:                    Section(
+backend/onyx/indexing/indexing_pipeline.py:736:                        type=section.type,
+backend/onyx/indexing/indexing_pipeline.py:737:                        text="" if isinstance(section, ImageSection) else section.text,
+backend/onyx/indexing/indexing_pipeline.py:738:                        link=section.link,
+backend/onyx/indexing/indexing_pipeline.py:740:                            section.image_file_id
+backend/onyx/indexing/indexing_pipeline.py:741:                            if isinstance(section, ImageSection)
+backend/onyx/indexing/indexing_pipeline.py:745:                    for section in document.sections
+backend/onyx/indexing/indexing_pipeline.py:752:    # Sections that need LLM summarization, paired with their image data.
+backend/onyx/indexing/indexing_pipeline.py:753:    # Each Section is already placed in its document's processed_sections
+backend/onyx/indexing/indexing_pipeline.py:759:        processed_sections: list[Section] = []
+backend/onyx/indexing/indexing_pipeline.py:761:        for section in document.sections:
+backend/onyx/indexing/indexing_pipeline.py:762:            if not isinstance(section, ImageSection):
+backend/onyx/indexing/indexing_pipeline.py:763:                processed_sections.append(
+backend/onyx/indexing/indexing_pipeline.py:764:                    Section(
+backend/onyx/indexing/indexing_pipeline.py:765:                        type=section.type,
+backend/onyx/indexing/indexing_pipeline.py:766:                        text=section.text or "",
+backend/onyx/indexing/indexing_pipeline.py:767:                        link=section.link,
+backend/onyx/indexing/indexing_pipeline.py:773:            processed_section = Section(
+backend/onyx/indexing/indexing_pipeline.py:774:                type=section.type,
+backend/onyx/indexing/indexing_pipeline.py:775:                link=section.link,
+backend/onyx/indexing/indexing_pipeline.py:776:                image_file_id=section.image_file_id,
+backend/onyx/indexing/indexing_pipeline.py:779:            processed_sections.append(processed_section)
+backend/onyx/indexing/indexing_pipeline.py:782:                file_record = file_store.read_file_record(file_id=section.image_file_id)
+backend/onyx/indexing/indexing_pipeline.py:785:                        "Image file %s not found in FileStore", section.image_file_id
+backend/onyx/indexing/indexing_pipeline.py:787:                    processed_section.text = "[Image could not be processed]"
+backend/onyx/indexing/indexing_pipeline.py:790:                image_data = file_store.read_file(file_id=section.image_file_id).read()
+backend/onyx/indexing/indexing_pipeline.py:793:                        section=processed_section,
+backend/onyx/indexing/indexing_pipeline.py:799:                logger.error("Error reading image section: %s", e)
+backend/onyx/indexing/indexing_pipeline.py:800:                processed_section.text = "[Error processing image]"
+backend/onyx/indexing/indexing_pipeline.py:804:                **document.model_dump(), processed_sections=processed_sections
+backend/onyx/indexing/indexing_pipeline.py:826:            p.section.text = result or "[Error processing image]"
+backend/onyx/indexing/indexing_pipeline.py:832:    chunks_by_doc: list[DocAwareChunk],
+backend/onyx/indexing/indexing_pipeline.py:838:    Adds a document summary to a list of chunks from the same document.
+backend/onyx/indexing/indexing_pipeline.py:843:    # this is value is the same for each chunk in the document; 0 indicates
+backend/onyx/indexing/indexing_pipeline.py:844:    # There is not enough space for contextual RAG (the chunk content
+backend/onyx/indexing/indexing_pipeline.py:846:    if chunks_by_doc[0].contextual_rag_reserved_tokens == 0:
+backend/onyx/indexing/indexing_pipeline.py:849:    doc_tokens = tokenizer.encode(chunks_by_doc[0].source_document.get_text_content())
+backend/onyx/indexing/indexing_pipeline.py:867:    for chunk in chunks_by_doc:
+backend/onyx/indexing/indexing_pipeline.py:868:        chunk.doc_summary = doc_summary
+backend/onyx/indexing/indexing_pipeline.py:873:def add_chunk_summaries(
+backend/onyx/indexing/indexing_pipeline.py:874:    chunks_by_doc: list[DocAwareChunk],
+backend/onyx/indexing/indexing_pipeline.py:877:    trunc_doc_chunk_tokens: int,
+backend/onyx/indexing/indexing_pipeline.py:881:    Adds chunk summaries to the chunks grouped by document id.
+backend/onyx/indexing/indexing_pipeline.py:882:    Chunk summaries look at the chunk as well as the entire document (or a summary,
+backend/onyx/indexing/indexing_pipeline.py:883:    if the document is too long) and describe how the chunk relates to the document.
+backend/onyx/indexing/indexing_pipeline.py:885:    # all chunks within a document have the same contextual_rag_reserved_tokens
+backend/onyx/indexing/indexing_pipeline.py:886:    if chunks_by_doc[0].contextual_rag_reserved_tokens == 0:
+backend/onyx/indexing/indexing_pipeline.py:889:    # use values computed in above doc summary section if available
+backend/onyx/indexing/indexing_pipeline.py:891:        chunks_by_doc[0].source_document.get_text_content()
+backend/onyx/indexing/indexing_pipeline.py:893:    doc_content = tokenizer_trim_middle(doc_tokens, trunc_doc_chunk_tokens, tokenizer)
+backend/onyx/indexing/indexing_pipeline.py:899:        else chunks_by_doc[0].doc_summary
+backend/onyx/indexing/indexing_pipeline.py:920:    def assign_context(chunk: DocAwareChunk) -> None:
+backend/onyx/indexing/indexing_pipeline.py:921:        context_prompt2 = CONTEXTUAL_RAG_PROMPT2.format(chunk=chunk.content)
+backend/onyx/indexing/indexing_pipeline.py:923:            # Apply prompt caching: cache the document context (prompt1), chunk content is the suffix
+backend/onyx/indexing/indexing_pipeline.py:929:                continuation=True,  # Append chunk to the document context
+backend/onyx/indexing/indexing_pipeline.py:934:                flow=LLMFlow.CONTEXTUAL_RAG_CHUNK_CONTEXT,
+backend/onyx/indexing/indexing_pipeline.py:939:            chunk.chunk_context = llm_response_to_string(response)
+backend/onyx/indexing/indexing_pipeline.py:942:            # Erroring during chunker is undesirable, so we log the error and continue
+backend/onyx/indexing/indexing_pipeline.py:944:            logger.exception("Rate limit adding chunk summary: %s", e, exc_info=e)
+backend/onyx/indexing/indexing_pipeline.py:945:            chunk.chunk_context = ""
+backend/onyx/indexing/indexing_pipeline.py:947:            logger.exception("Error adding chunk summary: %s", e, exc_info=e)
+backend/onyx/indexing/indexing_pipeline.py:948:            chunk.chunk_context = ""
+backend/onyx/indexing/indexing_pipeline.py:951:        functions_with_args=[(assign_context, (chunk,)) for chunk in chunks_by_doc],
+backend/onyx/indexing/indexing_pipeline.py:957:    chunks: list[DocAwareChunk],
+backend/onyx/indexing/indexing_pipeline.py:960:    chunk_token_limit: int,
+backend/onyx/indexing/indexing_pipeline.py:961:) -> list[DocAwareChunk]:
+backend/onyx/indexing/indexing_pipeline.py:963:    Adds Document summary and chunk-within-document context to the chunks
+backend/onyx/indexing/indexing_pipeline.py:966:    doc2chunks = defaultdict(list)
+backend/onyx/indexing/indexing_pipeline.py:967:    for chunk in chunks:
+backend/onyx/indexing/indexing_pipeline.py:968:        doc2chunks[chunk.source_document.id].append(chunk)
+backend/onyx/indexing/indexing_pipeline.py:979:    # "chunk in context of document" summary
+backend/onyx/indexing/indexing_pipeline.py:980:    trunc_doc_chunk_tokens = (
+backend/onyx/indexing/indexing_pipeline.py:981:        llm.config.max_input_tokens - prompt_tokens - chunk_token_limit
+backend/onyx/indexing/indexing_pipeline.py:983:    for chunks_by_doc in doc2chunks.values():
+backend/onyx/indexing/indexing_pipeline.py:987:                chunks_by_doc, llm, tokenizer, trunc_doc_summary_tokens
+backend/onyx/indexing/indexing_pipeline.py:990:        if USE_CHUNK_SUMMARY:
+backend/onyx/indexing/indexing_pipeline.py:991:            add_chunk_summaries(
+backend/onyx/indexing/indexing_pipeline.py:992:                chunks_by_doc, llm, tokenizer, trunc_doc_chunk_tokens, doc_tokens
+backend/onyx/indexing/indexing_pipeline.py:995:    return chunks
+backend/onyx/indexing/indexing_pipeline.py:1027:    - Response with sections=None → document is dropped (logged).
+backend/onyx/indexing/indexing_pipeline.py:1028:    - Response with sections → document sections are replaced with the hook's output.
+backend/onyx/indexing/indexing_pipeline.py:1040:            sections=[
+backend/onyx/indexing/indexing_pipeline.py:1041:                DocumentIngestionSection(
+backend/onyx/indexing/indexing_pipeline.py:1042:                    text=s.text if isinstance(s, TextSection) else None,
+backend/onyx/indexing/indexing_pipeline.py:1045:                        s.image_file_id if isinstance(s, ImageSection) else None
+backend/onyx/indexing/indexing_pipeline.py:1048:                for s in doc.sections
+backend/onyx/indexing/indexing_pipeline.py:1087:        if not hook_result.sections:
+backend/onyx/indexing/indexing_pipeline.py:1093:        new_sections: list[TextSection | ImageSection] = []
+backend/onyx/indexing/indexing_pipeline.py:1094:        for s in hook_result.sections:
+backend/onyx/indexing/indexing_pipeline.py:1096:                new_sections.append(
+backend/onyx/indexing/indexing_pipeline.py:1097:                    ImageSection(image_file_id=s.image_file_id, link=s.link)
+backend/onyx/indexing/indexing_pipeline.py:1100:                new_sections.append(TextSection(text=s.text, link=s.link))
+backend/onyx/indexing/indexing_pipeline.py:1103:                    "Document ingestion hook returned a section with neither text nor image_file_id for doc_id=%r — skipping section.",
+backend/onyx/indexing/indexing_pipeline.py:1106:        if not new_sections:
+backend/onyx/indexing/indexing_pipeline.py:1108:                "Document ingestion hook produced no valid sections for doc_id=%r — dropping document.",
+backend/onyx/indexing/indexing_pipeline.py:1112:        return doc.model_copy(update={"sections": new_sections})
+backend/onyx/indexing/indexing_pipeline.py:1189:                s.text for s in doc.sections if isinstance(s, TextSection) and s.text
+backend/onyx/indexing/indexing_pipeline.py:1199:                        for s in doc.sections
+backend/onyx/indexing/indexing_pipeline.py:1200:                        if isinstance(s, TextSection) and s.link
+backend/onyx/indexing/indexing_pipeline.py:1224:    chunker: Chunker,
+backend/onyx/indexing/indexing_pipeline.py:1244:    second element is the number of chunks."""
+backend/onyx/indexing/indexing_pipeline.py:1276:    # Convert documents to IndexingDocument objects with processed section.
+backend/onyx/indexing/indexing_pipeline.py:1279:    has_image_section = any(
+backend/onyx/indexing/indexing_pipeline.py:1280:        section.type == SectionType.IMAGE
+backend/onyx/indexing/indexing_pipeline.py:1282:        for section in document.sections
+backend/onyx/indexing/indexing_pipeline.py:1284:    if has_image_section:
+backend/onyx/indexing/indexing_pipeline.py:1286:            context.indexable_docs = process_image_sections(context.updatable_docs)
+backend/onyx/indexing/indexing_pipeline.py:1288:        context.indexable_docs = process_image_sections(context.updatable_docs)
+backend/onyx/indexing/indexing_pipeline.py:1299:    logger.debug("Starting chunking")
+backend/onyx/indexing/indexing_pipeline.py:1300:    # NOTE: no special handling for failures here, since the chunker is not
+backend/onyx/indexing/indexing_pipeline.py:1302:    with time_stage_if_set(IndexAttemptStage.CHUNKING, attempt_id):
+backend/onyx/indexing/indexing_pipeline.py:1303:        chunks: list[DocAwareChunk] = chunker.chunk(context.indexable_docs)
+backend/onyx/indexing/indexing_pipeline.py:1314:        # Because the chunker's tokens are different from the LLM's tokens,
+backend/onyx/indexing/indexing_pipeline.py:1317:            chunks = add_contextual_summaries(
+backend/onyx/indexing/indexing_pipeline.py:1318:                chunks=chunks,
+backend/onyx/indexing/indexing_pipeline.py:1321:                chunk_token_limit=chunker.chunk_token_limit * 2,
+backend/onyx/indexing/indexing_pipeline.py:1329:        chunks, embedder, tenant_id, request_id, attempt_id=attempt_id
+backend/onyx/indexing/indexing_pipeline.py:1332:        chunk_store,
+backend/onyx/indexing/indexing_pipeline.py:1335:        updatable_chunk_data = [
+backend/onyx/indexing/indexing_pipeline.py:1336:            UpdatableChunkData(
+backend/onyx/indexing/indexing_pipeline.py:1337:                chunk_id=chunk_id,
+backend/onyx/indexing/indexing_pipeline.py:1341:            for chunk_id, document_id in embedding_result.successful_chunk_ids
+backend/onyx/indexing/indexing_pipeline.py:1348:        # Filter to only successfully embedded chunks so
+backend/onyx/indexing/indexing_pipeline.py:1349:        # doc_id_to_new_chunk_cnt reflects what's actually written to Vespa.
+backend/onyx/indexing/indexing_pipeline.py:1350:        embedded_chunks = [
+backend/onyx/indexing/indexing_pipeline.py:1351:            c for c in chunks if c.source_document.id not in embedding_failed_doc_ids
+backend/onyx/indexing/indexing_pipeline.py:1361:                chunks=embedded_chunks,
+backend/onyx/indexing/indexing_pipeline.py:1365:            doc_id_to_chunk_cnt_diff: dict[str, IndexingMetadata.ChunkCounts] = {}
+backend/onyx/indexing/indexing_pipeline.py:1367:                enricher.doc_id_to_previous_chunk_cnt.keys()
+backend/onyx/indexing/indexing_pipeline.py:1368:            ) | set(enricher.doc_id_to_new_chunk_cnt.keys())
+backend/onyx/indexing/indexing_pipeline.py:1370:                doc_id_to_chunk_cnt_diff[doc_id] = IndexingMetadata.ChunkCounts(
+backend/onyx/indexing/indexing_pipeline.py:1371:                    old_chunk_cnt=enricher.doc_id_to_previous_chunk_cnt.get(doc_id, 0),
+backend/onyx/indexing/indexing_pipeline.py:1372:                    new_chunk_cnt=enricher.doc_id_to_new_chunk_cnt.get(doc_id, 0),
+backend/onyx/indexing/indexing_pipeline.py:1375:                doc_id_to_chunk_cnt_diff=doc_id_to_chunk_cnt_diff,
+backend/onyx/indexing/indexing_pipeline.py:1393:                def _enriched_stream() -> Iterator[DocMetadataAwareIndexChunk]:
+backend/onyx/indexing/indexing_pipeline.py:1394:                    for chunk in chunk_store.stream():
+backend/onyx/indexing/indexing_pipeline.py:1395:                        yield enricher.enrich_chunk(chunk, 1.0)
+backend/onyx/indexing/indexing_pipeline.py:1399:                    write_chunks_to_vector_db_with_backoff(
+backend/onyx/indexing/indexing_pipeline.py:1401:                        make_chunks=_enriched_stream,
+backend/onyx/indexing/indexing_pipeline.py:1431:                    updatable_chunk_data=updatable_chunk_data,
+backend/onyx/indexing/indexing_pipeline.py:1469:        total_chunks=len(embedding_result.successful_chunk_ids),
+backend/onyx/indexing/indexing_pipeline.py:1485:    chunker: Chunker | None = None,
+backend/onyx/indexing/indexing_pipeline.py:1521:    chunker = chunker or Chunker(
+backend/onyx/indexing/indexing_pipeline.py:1524:        enable_large_chunks=multipass_config.enable_large_chunks,
+backend/onyx/indexing/indexing_pipeline.py:1530:        chunker=chunker,
+backend/onyx/indexing/chunker.py:1:from chonkie import SentenceChunker
+backend/onyx/indexing/chunker.py:5:from onyx.configs.app_configs import LARGE_CHUNK_RATIO
+backend/onyx/indexing/chunker.py:6:from onyx.configs.app_configs import MINI_CHUNK_SIZE
+backend/onyx/indexing/chunker.py:7:from onyx.configs.app_configs import SKIP_METADATA_IN_CHUNK
+backend/onyx/indexing/chunker.py:8:from onyx.configs.app_configs import USE_CHUNK_SUMMARY
+backend/onyx/indexing/chunker.py:12:from onyx.configs.constants import SECTION_SEPARATOR
+backend/onyx/indexing/chunker.py:17:from onyx.indexing.chunking import DocumentChunker
+backend/onyx/indexing/chunker.py:18:from onyx.indexing.chunking import extract_blurb
+backend/onyx/indexing/chunker.py:20:from onyx.indexing.models import DocAwareChunk
+backend/onyx/indexing/chunker.py:26:# Not supporting overlaps, we need a clean combination of chunks and it is unclear if overlaps
+backend/onyx/indexing/chunker.py:28:CHUNK_OVERLAP = 0
+backend/onyx/indexing/chunker.py:30:# overwhelm the actual contents of the chunk
+backend/onyx/indexing/chunker.py:32:CHUNK_MIN_CONTENT = 256
+backend/onyx/indexing/chunker.py:37:def _get_metadata_suffix_for_document_index(
+backend/onyx/indexing/chunker.py:70:def _combine_chunks(chunks: list[DocAwareChunk], large_chunk_id: int) -> DocAwareChunk:
+backend/onyx/indexing/chunker.py:72:    Combines multiple DocAwareChunks into one large chunk (for "multipass" mode),
+backend/onyx/indexing/chunker.py:75:    merged_chunk = DocAwareChunk(
+backend/onyx/indexing/chunker.py:76:        source_document=chunks[0].source_document,
+backend/onyx/indexing/chunker.py:77:        chunk_id=chunks[0].chunk_id,
+backend/onyx/indexing/chunker.py:78:        blurb=chunks[0].blurb,
+backend/onyx/indexing/chunker.py:79:        content=chunks[0].content,
+backend/onyx/indexing/chunker.py:80:        source_links=chunks[0].source_links or {},
+backend/onyx/indexing/chunker.py:82:        section_continuation=(chunks[0].chunk_id > 0),
+backend/onyx/indexing/chunker.py:83:        title_prefix=chunks[0].title_prefix,
+backend/onyx/indexing/chunker.py:84:        metadata_suffix_semantic=chunks[0].metadata_suffix_semantic,
+backend/onyx/indexing/chunker.py:85:        metadata_suffix_keyword=chunks[0].metadata_suffix_keyword,
+backend/onyx/indexing/chunker.py:86:        large_chunk_reference_ids=[chunk.chunk_id for chunk in chunks],
+backend/onyx/indexing/chunker.py:87:        mini_chunk_texts=None,
+backend/onyx/indexing/chunker.py:88:        large_chunk_id=large_chunk_id,
+backend/onyx/indexing/chunker.py:89:        chunk_context="",
+backend/onyx/indexing/chunker.py:95:    for i in range(1, len(chunks)):
+backend/onyx/indexing/chunker.py:96:        merged_chunk.content += SECTION_SEPARATOR + chunks[i].content
+backend/onyx/indexing/chunker.py:98:        offset += len(SECTION_SEPARATOR) + len(chunks[i - 1].content)
+backend/onyx/indexing/chunker.py:99:        for link_offset, link_text in (chunks[i].source_links or {}).items():
+backend/onyx/indexing/chunker.py:100:            if merged_chunk.source_links is None:
+backend/onyx/indexing/chunker.py:101:                merged_chunk.source_links = {}
+backend/onyx/indexing/chunker.py:102:            merged_chunk.source_links[link_offset + offset] = link_text
+backend/onyx/indexing/chunker.py:104:    return merged_chunk
+backend/onyx/indexing/chunker.py:107:def generate_large_chunks(chunks: list[DocAwareChunk]) -> list[DocAwareChunk]:
+backend/onyx/indexing/chunker.py:109:    Generates larger "grouped" chunks by combining sets of smaller chunks.
+backend/onyx/indexing/chunker.py:111:    large_chunks = []
+backend/onyx/indexing/chunker.py:112:    for idx, i in enumerate(range(0, len(chunks), LARGE_CHUNK_RATIO)):
+backend/onyx/indexing/chunker.py:113:        chunk_group = chunks[i : i + LARGE_CHUNK_RATIO]
+backend/onyx/indexing/chunker.py:114:        if len(chunk_group) > 1:
+backend/onyx/indexing/chunker.py:115:            large_chunk = _combine_chunks(chunk_group, idx)
+backend/onyx/indexing/chunker.py:116:            large_chunks.append(large_chunk)
+backend/onyx/indexing/chunker.py:117:    return large_chunks
+backend/onyx/indexing/chunker.py:120:class Chunker:
+backend/onyx/indexing/chunker.py:122:    Chunks documents into smaller chunks for indexing.
+backend/onyx/indexing/chunker.py:129:        enable_large_chunks: bool = False,
+backend/onyx/indexing/chunker.py:132:        include_metadata: bool = not SKIP_METADATA_IN_CHUNK,
+backend/onyx/indexing/chunker.py:133:        chunk_token_limit: int = DOC_EMBEDDING_CONTEXT_SIZE,
+backend/onyx/indexing/chunker.py:134:        chunk_overlap: int = CHUNK_OVERLAP,
+backend/onyx/indexing/chunker.py:135:        mini_chunk_size: int = MINI_CHUNK_SIZE,
+backend/onyx/indexing/chunker.py:139:        self.chunk_token_limit = chunk_token_limit
+backend/onyx/indexing/chunker.py:141:        self.enable_large_chunks = enable_large_chunks
+backend/onyx/indexing/chunker.py:144:            assert USE_CHUNK_SUMMARY or USE_DOCUMENT_SUMMARY, (
+backend/onyx/indexing/chunker.py:145:                "Contextual RAG requires at least one of chunk summary and document summary enabled"
+backend/onyx/indexing/chunker.py:148:            int(USE_CHUNK_SUMMARY) + int(USE_DOCUMENT_SUMMARY)
+backend/onyx/indexing/chunker.py:157:        self.blurb_splitter = SentenceChunker(
+backend/onyx/indexing/chunker.py:159:            chunk_size=blurb_size,
+backend/onyx/indexing/chunker.py:160:            chunk_overlap=0,
+backend/onyx/indexing/chunker.py:164:        self.chunk_splitter = SentenceChunker(
+backend/onyx/indexing/chunker.py:166:            chunk_size=chunk_token_limit,
+backend/onyx/indexing/chunker.py:167:            chunk_overlap=chunk_overlap,
+backend/onyx/indexing/chunker.py:171:        self.mini_chunk_splitter = (
+backend/onyx/indexing/chunker.py:172:            SentenceChunker(
+backend/onyx/indexing/chunker.py:174:                chunk_size=mini_chunk_size,
+backend/onyx/indexing/chunker.py:175:                chunk_overlap=0,
+backend/onyx/indexing/chunker.py:182:        self._document_chunker = DocumentChunker(
+backend/onyx/indexing/chunker.py:185:            chunk_splitter=self.chunk_splitter,
+backend/onyx/indexing/chunker.py:186:            mini_chunk_splitter=self.mini_chunk_splitter,
+backend/onyx/indexing/chunker.py:191:    ) -> list[DocAwareChunk]:
+backend/onyx/indexing/chunker.py:194:            logger.debug("Chunking %s", document.semantic_identifier)
+backend/onyx/indexing/chunker.py:205:        metadata_suffix_semantic = ""
+backend/onyx/indexing/chunker.py:206:        metadata_suffix_keyword = ""
+backend/onyx/indexing/chunker.py:210:                metadata_suffix_semantic,
+backend/onyx/indexing/chunker.py:211:                metadata_suffix_keyword,
+backend/onyx/indexing/chunker.py:212:            ) = _get_metadata_suffix_for_document_index(
+backend/onyx/indexing/chunker.py:215:            metadata_tokens = len(self.tokenizer.encode(metadata_suffix_semantic))
+backend/onyx/indexing/chunker.py:218:        if metadata_tokens >= self.chunk_token_limit * MAX_METADATA_PERCENTAGE:
+backend/onyx/indexing/chunker.py:219:            metadata_suffix_semantic = ""
+backend/onyx/indexing/chunker.py:222:        single_chunk_fits = True
+backend/onyx/indexing/chunker.py:229:            # check if doc + title + metadata fits in a single chunk. If so, no need for contextual RAG
+backend/onyx/indexing/chunker.py:230:            single_chunk_fits = (
+backend/onyx/indexing/chunker.py:232:                <= self.chunk_token_limit
+backend/onyx/indexing/chunker.py:235:        # expand the size of the context used for contextual rag based on whether chunk context and doc summary are used
+backend/onyx/indexing/chunker.py:239:            and not single_chunk_fits
+backend/onyx/indexing/chunker.py:246:            self.chunk_token_limit - title_tokens - metadata_tokens - context_size
+backend/onyx/indexing/chunker.py:249:        # first check: if there is not enough actual chunk content when including contextual rag,
+backend/onyx/indexing/chunker.py:251:        if content_token_limit <= CHUNK_MIN_CONTENT:
+backend/onyx/indexing/chunker.py:255:                self.chunk_token_limit - title_tokens - metadata_tokens
+backend/onyx/indexing/chunker.py:258:        # If there is not enough context remaining then just index the chunk with no prefix/suffix
+backend/onyx/indexing/chunker.py:259:        if content_token_limit <= CHUNK_MIN_CONTENT:
+backend/onyx/indexing/chunker.py:260:            # Not enough space left, so revert to full chunk without the prefix
+backend/onyx/indexing/chunker.py:261:            content_token_limit = self.chunk_token_limit
+backend/onyx/indexing/chunker.py:263:            metadata_suffix_semantic = ""
+backend/onyx/indexing/chunker.py:265:        # Use processed_sections if available (IndexingDocument), otherwise use original sections
+backend/onyx/indexing/chunker.py:266:        sections_to_chunk = document.processed_sections
+backend/onyx/indexing/chunker.py:268:        normal_chunks = self._document_chunker.chunk(
+backend/onyx/indexing/chunker.py:270:            sections_to_chunk,
+backend/onyx/indexing/chunker.py:272:            metadata_suffix_semantic,
+backend/onyx/indexing/chunker.py:273:            metadata_suffix_keyword,
+backend/onyx/indexing/chunker.py:277:        # Optional "multipass" large chunk creation
+backend/onyx/indexing/chunker.py:278:        if self.enable_multipass and self.enable_large_chunks:
+backend/onyx/indexing/chunker.py:279:            large_chunks = generate_large_chunks(normal_chunks)
+backend/onyx/indexing/chunker.py:280:            normal_chunks.extend(large_chunks)
+backend/onyx/indexing/chunker.py:282:        for chunk in normal_chunks:
+backend/onyx/indexing/chunker.py:283:            chunk.contextual_rag_reserved_tokens = context_size
+backend/onyx/indexing/chunker.py:285:        return normal_chunks
+backend/onyx/indexing/chunker.py:287:    def chunk(self, documents: list[IndexingDocument]) -> list[DocAwareChunk]:
+backend/onyx/indexing/chunker.py:289:        Takes in a list of documents and chunks them into smaller chunks for indexing
+backend/onyx/indexing/chunker.py:292:        Works with both standard Document objects and IndexingDocument objects with processed_sections.
+backend/onyx/indexing/chunker.py:294:        final_chunks: list[DocAwareChunk] = []
+backend/onyx/indexing/chunker.py:297:                raise RuntimeError("Chunker.chunk: Stop signal detected")
+backend/onyx/indexing/chunker.py:299:            chunks = self._handle_single_document(document)
+backend/onyx/indexing/chunker.py:300:            final_chunks.extend(chunks)
+backend/onyx/indexing/chunker.py:303:                self.callback.progress("Chunker.chunk", len(chunks))
+backend/onyx/indexing/chunker.py:305:        return final_chunks
+backend/onyx/indexing/models.py:30:class ChunkEmbedding(BaseModel):
+backend/onyx/indexing/models.py:32:    mini_chunk_embeddings: list[Embedding]
+backend/onyx/indexing/models.py:35:class BaseChunk(BaseModel):
+backend/onyx/indexing/models.py:36:    chunk_id: int
+backend/onyx/indexing/models.py:37:    # The first sentence(s) of the first Section of the chunk
+backend/onyx/indexing/models.py:40:    # Holds the link and the offsets into the raw Chunk text
+backend/onyx/indexing/models.py:43:    # True if this Chunk's start is not at the start of a Section
+backend/onyx/indexing/models.py:46:    section_continuation: bool
+backend/onyx/indexing/models.py:49:class DocAwareChunk(BaseChunk):
+backend/onyx/indexing/models.py:54:    # This could be an empty string if the title is too long and taking up too much of the chunk
+backend/onyx/indexing/models.py:61:    metadata_suffix_semantic: str
+backend/onyx/indexing/models.py:62:    metadata_suffix_keyword: str
+backend/onyx/indexing/models.py:65:    # in the chunk. doc_summary and chunk_context conbined should
+backend/onyx/indexing/models.py:70:    # This is the context for this chunk generated for contextual RAG
+backend/onyx/indexing/models.py:71:    chunk_context: str
+backend/onyx/indexing/models.py:73:    mini_chunk_texts: list[str] | None
+backend/onyx/indexing/models.py:75:    large_chunk_id: int | None
+backend/onyx/indexing/models.py:77:    large_chunk_reference_ids: list[int] = Field(default_factory=list)
+backend/onyx/indexing/models.py:80:        """Used when logging the identity of a chunk"""
+backend/onyx/indexing/models.py:81:        return f"{self.source_document.to_short_descriptor()} Chunk ID: {self.chunk_id}"
+backend/onyx/indexing/models.py:85:            self.source_document.sections[0].link
+backend/onyx/indexing/models.py:86:            if self.source_document.sections
+backend/onyx/indexing/models.py:91:class IndexChunk(DocAwareChunk):
+backend/onyx/indexing/models.py:92:    embeddings: ChunkEmbedding
+backend/onyx/indexing/models.py:98:class DocMetadataAwareIndexChunk(IndexChunk):
+backend/onyx/indexing/models.py:99:    """An `IndexChunk` that contains all necessary metadata to be indexed. This includes
+backend/onyx/indexing/models.py:103:            source document for this chunk.
+backend/onyx/indexing/models.py:104:    document_sets: all document sets the source document for this chunk is a part
+backend/onyx/indexing/models.py:106:    boost: influences the ranking of this chunk at query time. Positive -> ranked higher,
+backend/onyx/indexing/models.py:109:    aggregated_chunk_boost_factor: represents the aggregated chunk-level boost (currently: information content)
+backend/onyx/indexing/models.py:118:    aggregated_chunk_boost_factor: float
+backend/onyx/indexing/models.py:125:    def from_index_chunk(
+backend/onyx/indexing/models.py:127:        index_chunk: IndexChunk,
+backend/onyx/indexing/models.py:133:        aggregated_chunk_boost_factor: float,
+backend/onyx/indexing/models.py:136:    ) -> "DocMetadataAwareIndexChunk":
+backend/onyx/indexing/models.py:138:            **shallow_model_dump(index_chunk),
+backend/onyx/indexing/models.py:144:            aggregated_chunk_boost_factor=aggregated_chunk_boost_factor,
+backend/onyx/indexing/models.py:238:    enable_large_chunks: bool
+backend/onyx/indexing/models.py:241:class UpdatableChunkData(BaseModel):
+backend/onyx/indexing/models.py:242:    chunk_id: int
+backend/onyx/indexing/models.py:247:class ChunkEnrichmentContext(Protocol):
+backend/onyx/indexing/models.py:249:    and provides per-chunk enrichment."""
+backend/onyx/indexing/models.py:251:    doc_id_to_previous_chunk_cnt: dict[str, int]
+backend/onyx/indexing/models.py:252:    doc_id_to_new_chunk_cnt: dict[str, int]
+backend/onyx/indexing/models.py:254:    def enrich_chunk(
+backend/onyx/indexing/models.py:255:        self, chunk: IndexChunk, score: float
+backend/onyx/indexing/models.py:256:    ) -> DocMetadataAwareIndexChunk: ...
+backend/onyx/indexing/models.py:269:        """Acquire row locks and yield the session for the critical section."""
+backend/onyx/indexing/models.py:275:        chunks: list[DocAwareChunk],
+backend/onyx/indexing/models.py:277:    ) -> ChunkEnrichmentContext:
+backend/onyx/indexing/models.py:278:        """Prepare per-chunk enrichment data (access, document sets, boost, etc.).
+backend/onyx/indexing/models.py:280:        Precondition: ``chunks`` have already been through the embedding step
+backend/onyx/indexing/models.py:281:        (i.e. they are ``IndexChunk`` instances with populated embeddings,
+backend/onyx/indexing/models.py:282:        passed here as the base ``DocAwareChunk`` type).
+backend/onyx/indexing/models.py:289:        updatable_chunk_data: list[UpdatableChunkData],
+backend/onyx/indexing/models.py:291:        enrichment: ChunkEnrichmentContext,
+backend/onyx/indexing/embedder.py:12:from onyx.document_index.chunk_content_enrichment import (
+backend/onyx/indexing/embedder.py:13:    generate_enriched_content_for_chunk_embedding,
+backend/onyx/indexing/embedder.py:16:from onyx.indexing.models import ChunkEmbedding
+backend/onyx/indexing/embedder.py:17:from onyx.indexing.models import DocAwareChunk
+backend/onyx/indexing/embedder.py:18:from onyx.indexing.models import IndexChunk
+backend/onyx/indexing/embedder.py:33:    """Converts chunks into chunks with embeddings. Note that one chunk may have
+backend/onyx/indexing/embedder.py:79:    def embed_chunks(
+backend/onyx/indexing/embedder.py:81:        chunks: list[DocAwareChunk],
+backend/onyx/indexing/embedder.py:84:    ) -> list[IndexChunk]:
+backend/onyx/indexing/embedder.py:118:    def embed_chunks(
+backend/onyx/indexing/embedder.py:120:        chunks: list[DocAwareChunk],
+backend/onyx/indexing/embedder.py:123:    ) -> list[IndexChunk]:
+backend/onyx/indexing/embedder.py:124:        """Adds embeddings to the chunks, the title and metadata suffixes are added to the chunk as well
+backend/onyx/indexing/embedder.py:125:        if they exist. If there is no space for it, it would have been thrown out at the chunking step.
+backend/onyx/indexing/embedder.py:127:        # All chunks at this point must have some non-empty content
+backend/onyx/indexing/embedder.py:128:        flat_chunk_texts: list[str] = []
+backend/onyx/indexing/embedder.py:129:        large_chunks_present = False
+backend/onyx/indexing/embedder.py:130:        for chunk in chunks:
+backend/onyx/indexing/embedder.py:131:            if chunk.large_chunk_reference_ids:
+backend/onyx/indexing/embedder.py:132:                large_chunks_present = True
+backend/onyx/indexing/embedder.py:133:            chunk_text = (
+backend/onyx/indexing/embedder.py:134:                generate_enriched_content_for_chunk_embedding(chunk)
+backend/onyx/indexing/embedder.py:135:            ) or chunk.source_document.get_title_for_document_index()
+backend/onyx/indexing/embedder.py:137:            if not chunk_text:
+backend/onyx/indexing/embedder.py:140:                raise ValueError(f"Chunk has no content: {chunk.to_short_descriptor()}")
+backend/onyx/indexing/embedder.py:142:            flat_chunk_texts.append(chunk_text)
+backend/onyx/indexing/embedder.py:144:            if chunk.mini_chunk_texts:
+backend/onyx/indexing/embedder.py:145:                if chunk.large_chunk_reference_ids:
+backend/onyx/indexing/embedder.py:146:                    # A large chunk does not contain mini chunks, if it matches the large chunk
+backend/onyx/indexing/embedder.py:147:                    # with a high score, then mini chunks would not be used anyway
+backend/onyx/indexing/embedder.py:148:                    # otherwise it should match the normal chunk
+backend/onyx/indexing/embedder.py:149:                    raise RuntimeError("Large chunk contains mini chunks")
+backend/onyx/indexing/embedder.py:150:                flat_chunk_texts.extend(chunk.mini_chunk_texts)
+backend/onyx/indexing/embedder.py:153:            texts=flat_chunk_texts,
+backend/onyx/indexing/embedder.py:155:            large_chunks_present=large_chunks_present,
+backend/onyx/indexing/embedder.py:160:        chunk_titles = {
+backend/onyx/indexing/embedder.py:161:            chunk.source_document.get_title_for_document_index() for chunk in chunks
+backend/onyx/indexing/embedder.py:167:        chunk_titles_list = [title for title in chunk_titles if title]
+backend/onyx/indexing/embedder.py:171:        if chunk_titles_list:
+backend/onyx/indexing/embedder.py:173:                chunk_titles_list,
+backend/onyx/indexing/embedder.py:181:                    for title, vector in zip(chunk_titles_list, title_embeddings)
+backend/onyx/indexing/embedder.py:185:        # Mapping embeddings to chunks
+backend/onyx/indexing/embedder.py:186:        embedded_chunks: list[IndexChunk] = []
+backend/onyx/indexing/embedder.py:188:        for chunk in chunks:
+backend/onyx/indexing/embedder.py:190:                len(chunk.mini_chunk_texts) if chunk.mini_chunk_texts else 0
+backend/onyx/indexing/embedder.py:192:            chunk_embeddings = embeddings[
+backend/onyx/indexing/embedder.py:196:            title = chunk.source_document.get_title_for_document_index()
+backend/onyx/indexing/embedder.py:201:                    # Using cached value to avoid recalculating for every chunk
+backend/onyx/indexing/embedder.py:215:            new_embedded_chunk = IndexChunk.model_construct(
+backend/onyx/indexing/embedder.py:216:                **shallow_model_dump(chunk),
+backend/onyx/indexing/embedder.py:217:                embeddings=ChunkEmbedding(
+backend/onyx/indexing/embedder.py:218:                    full_embedding=chunk_embeddings[0],
+backend/onyx/indexing/embedder.py:219:                    mini_chunk_embeddings=chunk_embeddings[1:],
+backend/onyx/indexing/embedder.py:223:            embedded_chunks.append(new_embedded_chunk)
+backend/onyx/indexing/embedder.py:226:        return embedded_chunks
+backend/onyx/indexing/embedder.py:249:def embed_chunks_with_failure_handling(
+backend/onyx/indexing/embedder.py:250:    chunks: list[DocAwareChunk],
+backend/onyx/indexing/embedder.py:254:) -> tuple[list[IndexChunk], list[ConnectorFailure]]:
+backend/onyx/indexing/embedder.py:255:    """Tries to embed all chunks in one large batch. If that batch fails for any reason,
+backend/onyx/indexing/embedder.py:262:    # First try to embed all chunks in one batch
+backend/onyx/indexing/embedder.py:265:            embedder.embed_chunks(
+backend/onyx/indexing/embedder.py:266:                chunks=chunks, tenant_id=tenant_id, request_id=request_id
+backend/onyx/indexing/embedder.py:272:            "Connector stop signal detected in embed_chunks_with_failure_handling"
+backend/onyx/indexing/embedder.py:276:        logger.exception("Failed to embed chunk batch. Trying individual docs.")
+backend/onyx/indexing/embedder.py:280:    # Try embedding each document's chunks individually
+backend/onyx/indexing/embedder.py:281:    chunks_by_doc: dict[str, list[DocAwareChunk]] = defaultdict(list)
+backend/onyx/indexing/embedder.py:282:    for chunk in chunks:
+backend/onyx/indexing/embedder.py:283:        chunks_by_doc[chunk.source_document.id].append(chunk)
+backend/onyx/indexing/embedder.py:285:    embedded_chunks: list[IndexChunk] = []
+backend/onyx/indexing/embedder.py:288:    for doc_id, chunks_for_doc in chunks_by_doc.items():
+backend/onyx/indexing/embedder.py:290:            doc_embedded_chunks = embedder.embed_chunks(
+backend/onyx/indexing/embedder.py:291:                chunks=chunks_for_doc, tenant_id=tenant_id, request_id=request_id
+backend/onyx/indexing/embedder.py:293:            embedded_chunks.extend(doc_embedded_chunks)
+backend/onyx/indexing/embedder.py:302:            logger.exception("Failed to embed chunks for document '%s'", doc_id)
+backend/onyx/indexing/embedder.py:308:                            chunks_for_doc[0].get_link() if chunks_for_doc else None
+backend/onyx/indexing/embedder.py:316:    return embedded_chunks, failures
+backend/onyx/indexing/vector_db_insertion.py:16:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/vector_db_insertion.py:32:def write_chunks_to_vector_db_with_backoff(
+backend/onyx/indexing/vector_db_insertion.py:34:    make_chunks: Callable[[], Iterable[DocMetadataAwareIndexChunk]],
+backend/onyx/indexing/vector_db_insertion.py:38:    """Tries to insert all chunks in one large batch. If that batch fails for any reason,
+backend/onyx/indexing/vector_db_insertion.py:41:    IMPORTANT: must pass in whole documents at a time not individual chunks, since the
+backend/onyx/indexing/vector_db_insertion.py:42:    vector DB interface assumes that all chunks for a single document are present. The
+backend/onyx/indexing/vector_db_insertion.py:43:    chunks must also be in contiguous batches
+backend/onyx/indexing/vector_db_insertion.py:45:    # first try to write the chunks to the vector db
+backend/onyx/indexing/vector_db_insertion.py:49:                chunks=make_chunks(),
+backend/onyx/indexing/vector_db_insertion.py:66:            "Failed to write chunk batch to vector db. Trying individual docs. Batch error: %s: %s",
+backend/onyx/indexing/vector_db_insertion.py:80:    def key(chunk: DocMetadataAwareIndexChunk) -> str:
+backend/onyx/indexing/vector_db_insertion.py:81:        return chunk.source_document.id
+backend/onyx/indexing/vector_db_insertion.py:84:    for doc_id, chunks_for_doc in groupby(make_chunks(), key=key):
+backend/onyx/indexing/vector_db_insertion.py:87:                f"Doc chunks are not arriving in order. Current doc_id={doc_id}, seen_doc_ids={list(seen_doc_ids)}"
+backend/onyx/indexing/vector_db_insertion.py:91:        first_chunk = next(chunks_for_doc)
+backend/onyx/indexing/vector_db_insertion.py:92:        chunks_for_doc = chain([first_chunk], chunks_for_doc)
+backend/onyx/indexing/vector_db_insertion.py:97:                    chunks=chunks_for_doc,
+backend/onyx/indexing/vector_db_insertion.py:109:                "Failed to write document chunks for '%s' to vector db", doc_id
+backend/onyx/indexing/vector_db_insertion.py:119:                        document_link=first_chunk.get_link(),
+backend/onyx/indexing/persistent_indexing.py:44:        if document.sections:
+backend/onyx/indexing/persistent_indexing.py:45:            document_link = document.sections[0].link
+backend/onyx/indexing/chunk_batch_store.py:7:from onyx.indexing.models import IndexChunk
+backend/onyx/indexing/chunk_batch_store.py:10:class ChunkBatchStore:
+backend/onyx/indexing/chunk_batch_store.py:11:    """Manages serialization of embedded chunks to a temporary directory.
+backend/onyx/indexing/chunk_batch_store.py:18:        with ChunkBatchStore() as store:
+backend/onyx/indexing/chunk_batch_store.py:19:            store.save(chunks, batch_idx=0)
+backend/onyx/indexing/chunk_batch_store.py:20:            for chunk in store.stream():
+backend/onyx/indexing/chunk_batch_store.py:31:    def __enter__(self) -> "ChunkBatchStore":
+backend/onyx/indexing/chunk_batch_store.py:42:        assert self._tmpdir is not None, "ChunkBatchStore used outside context manager"
+backend/onyx/indexing/chunk_batch_store.py:47:    def save(self, chunks: list[IndexChunk], batch_idx: int) -> None:
+backend/onyx/indexing/chunk_batch_store.py:48:        """Serialize a batch of embedded chunks to disk."""
+backend/onyx/indexing/chunk_batch_store.py:50:            pickle.dump(chunks, f)
+backend/onyx/indexing/chunk_batch_store.py:52:    def _load(self, batch_file: Path) -> list[IndexChunk]:
+backend/onyx/indexing/chunk_batch_store.py:53:        """Deserialize a batch of embedded chunks from a file."""
+backend/onyx/indexing/chunk_batch_store.py:66:    def stream(self) -> Iterator[IndexChunk]:
+backend/onyx/indexing/chunk_batch_store.py:67:        """Yield all chunks across all batch files.
+backend/onyx/indexing/chunk_batch_store.py:76:        """Remove chunks belonging to *failed_doc_ids* from all batch files.
+backend/onyx/indexing/chunk_batch_store.py:79:        already contain successfully embedded chunks for that document.
+backend/onyx/indexing/chunk_batch_store.py:83:            batch_chunks = self._load(batch_file)
+backend/onyx/indexing/chunk_batch_store.py:85:                c for c in batch_chunks if c.source_document.id not in failed_doc_ids
+backend/onyx/indexing/chunk_batch_store.py:87:            if len(cleaned) != len(batch_chunks):
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:24:from onyx.db.user_file import fetch_chunk_counts_for_user_files
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:29:from onyx.indexing.models import ChunkEnrichmentContext
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:30:from onyx.indexing.models import DocAwareChunk
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:31:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:32:from onyx.indexing.models import IndexChunk
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:33:from onyx.indexing.models import UpdatableChunkData
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:116:        chunks: list[DocAwareChunk],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:118:    ) -> UserFileChunkEnricher:
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:119:        """Do all DB lookups and pre-compute file metadata from chunks."""
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:123:        # chunks (e.g. all chunks filtered out, or all embeddings failed) still
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:125:        # docs and their stale chunks from a prior indexing remain in the vector
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:128:        doc_id_to_new_chunk_cnt: dict[str, int] = {
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:132:        for chunk in chunks:
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:133:            doc_id_to_new_chunk_cnt[chunk.source_document.id] += 1
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:134:            content_by_file[chunk.source_document.id].append(chunk.content)
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:156:        user_file_id_to_previous_chunk_cnt: dict[str, int] = {
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:157:            user_file_id: chunk_count
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:158:            for user_file_id, chunk_count in fetch_chunk_counts_for_user_files(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:192:        return UserFileChunkEnricher(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:196:            doc_id_to_previous_chunk_cnt=user_file_id_to_previous_chunk_cnt,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:197:            doc_id_to_new_chunk_cnt=dict(doc_id_to_new_chunk_cnt),
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:243:        updatable_chunk_data: list[UpdatableChunkData],  # noqa: ARG002
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:245:        enrichment: ChunkEnrichmentContext,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:248:        assert isinstance(enrichment, UserFileChunkEnricher)
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:264:            user_file.chunk_count = enrichment.doc_id_to_new_chunk_cnt.get(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:284:class UserFileChunkEnricher:
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:285:    """Pre-computed metadata for per-chunk enrichment of user-uploaded files."""
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:292:        doc_id_to_previous_chunk_cnt: dict[str, int],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:293:        doc_id_to_new_chunk_cnt: dict[str, int],
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:304:        self.doc_id_to_previous_chunk_cnt = doc_id_to_previous_chunk_cnt
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:305:        self.doc_id_to_new_chunk_cnt = doc_id_to_new_chunk_cnt
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:309:    def enrich_chunk(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:310:        self, chunk: IndexChunk, score: float
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:311:    ) -> DocMetadataAwareIndexChunk:
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:312:        return DocMetadataAwareIndexChunk.from_index_chunk(
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:313:            index_chunk=chunk,
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:315:                chunk.source_document.id, self._no_access
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:319:                chunk.source_document.id, []
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:322:                chunk.source_document.id, []
+backend/onyx/indexing/adapters/user_file_indexing_adapter.py:326:            aggregated_chunk_boost_factor=score,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:11:from onyx.db.chunk import update_chunk_boost_components__no_commit
+backend/onyx/indexing/adapters/document_indexing_adapter.py:12:from onyx.db.document import fetch_chunk_counts_for_documents
+backend/onyx/indexing/adapters/document_indexing_adapter.py:15:from onyx.db.document import update_docs_chunk_count__no_commit
+backend/onyx/indexing/adapters/document_indexing_adapter.py:22:from onyx.indexing.models import ChunkEnrichmentContext
+backend/onyx/indexing/adapters/document_indexing_adapter.py:23:from onyx.indexing.models import DocAwareChunk
+backend/onyx/indexing/adapters/document_indexing_adapter.py:24:from onyx.indexing.models import DocMetadataAwareIndexChunk
+backend/onyx/indexing/adapters/document_indexing_adapter.py:25:from onyx.indexing.models import IndexChunk
+backend/onyx/indexing/adapters/document_indexing_adapter.py:27:from onyx.indexing.models import UpdatableChunkData
+backend/onyx/indexing/adapters/document_indexing_adapter.py:105:        chunks: list[DocAwareChunk],
+backend/onyx/indexing/adapters/document_indexing_adapter.py:107:    ) -> "DocumentChunkEnricher":
+backend/onyx/indexing/adapters/document_indexing_adapter.py:108:        """Do all DB lookups once and return a per-chunk enricher."""
+backend/onyx/indexing/adapters/document_indexing_adapter.py:111:        doc_id_to_new_chunk_cnt: dict[str, int] = {
+backend/onyx/indexing/adapters/document_indexing_adapter.py:114:        for chunk in chunks:
+backend/onyx/indexing/adapters/document_indexing_adapter.py:115:            if chunk.source_document.id in doc_id_to_new_chunk_cnt:
+backend/onyx/indexing/adapters/document_indexing_adapter.py:116:                doc_id_to_new_chunk_cnt[chunk.source_document.id] += 1
+backend/onyx/indexing/adapters/document_indexing_adapter.py:126:        return DocumentChunkEnricher(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:140:            doc_id_to_previous_chunk_cnt={
+backend/onyx/indexing/adapters/document_indexing_adapter.py:141:                document_id: chunk_count
+backend/onyx/indexing/adapters/document_indexing_adapter.py:142:                for document_id, chunk_count in fetch_chunk_counts_for_documents(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:147:            doc_id_to_new_chunk_cnt=dict(doc_id_to_new_chunk_cnt),
+backend/onyx/indexing/adapters/document_indexing_adapter.py:189:        updatable_chunk_data: list[UpdatableChunkData],
+backend/onyx/indexing/adapters/document_indexing_adapter.py:191:        enrichment: ChunkEnrichmentContext,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:214:        update_docs_chunk_count__no_commit(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:216:            doc_id_to_chunk_count=enrichment.doc_id_to_new_chunk_cnt,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:232:        # save the chunk boost components to postgres
+backend/onyx/indexing/adapters/document_indexing_adapter.py:233:        update_chunk_boost_components__no_commit(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:234:            chunk_data=updatable_chunk_data, db_session=db_session
+backend/onyx/indexing/adapters/document_indexing_adapter.py:238:class DocumentChunkEnricher:
+backend/onyx/indexing/adapters/document_indexing_adapter.py:239:    """Pre-computed metadata for per-chunk enrichment of connector documents."""
+backend/onyx/indexing/adapters/document_indexing_adapter.py:247:        doc_id_to_previous_chunk_cnt: dict[str, int],
+backend/onyx/indexing/adapters/document_indexing_adapter.py:248:        doc_id_to_new_chunk_cnt: dict[str, int],
+backend/onyx/indexing/adapters/document_indexing_adapter.py:258:        self.doc_id_to_previous_chunk_cnt = doc_id_to_previous_chunk_cnt
+backend/onyx/indexing/adapters/document_indexing_adapter.py:259:        self.doc_id_to_new_chunk_cnt = doc_id_to_new_chunk_cnt
+backend/onyx/indexing/adapters/document_indexing_adapter.py:261:    def enrich_chunk(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:262:        self, chunk: IndexChunk, score: float
+backend/onyx/indexing/adapters/document_indexing_adapter.py:263:    ) -> DocMetadataAwareIndexChunk:
+backend/onyx/indexing/adapters/document_indexing_adapter.py:264:        return DocMetadataAwareIndexChunk.from_index_chunk(
+backend/onyx/indexing/adapters/document_indexing_adapter.py:265:            index_chunk=chunk,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:267:                chunk.source_document.id, self._no_access
+backend/onyx/indexing/adapters/document_indexing_adapter.py:270:                self._doc_id_to_document_set.get(chunk.source_document.id, [])
+backend/onyx/indexing/adapters/document_indexing_adapter.py:275:                self._id_to_boost_map[chunk.source_document.id]
+backend/onyx/indexing/adapters/document_indexing_adapter.py:276:                if chunk.source_document.id in self._id_to_boost_map
+backend/onyx/indexing/adapters/document_indexing_adapter.py:280:            aggregated_chunk_boost_factor=score,
+backend/onyx/indexing/adapters/document_indexing_adapter.py:282:                chunk.source_document.id
+backend/onyx/indexing/chunking/tabular_section_chunker/util.py:18:    """Greedily pack ``lines`` into chunks ≤ ``max_tokens``, prepending
+backend/onyx/indexing/chunking/tabular_section_chunker/util.py:19:    ``prefix`` (verbatim) to every emitted chunk. Lines whose own token
+backend/onyx/indexing/chunking/tabular_section_chunker/util.py:26:    chunks: list[str] = []
+backend/onyx/indexing/chunking/tabular_section_chunker/util.py:35:            chunks.append(_join_with_prefix(current, prefix))
+backend/onyx/indexing/chunking/tabular_section_chunker/util.py:42:        chunks.append(_join_with_prefix(current, prefix))
+backend/onyx/indexing/chunking/tabular_section_chunker/util.py:43:    return chunks
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:5:from onyx.connectors.models import Section
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:6:from onyx.indexing.chunking.section_chunker import AccumulatorState
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:7:from onyx.indexing.chunking.section_chunker import ChunkPayload
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:8:from onyx.indexing.chunking.section_chunker import SectionChunker
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:9:from onyx.indexing.chunking.section_chunker import SectionChunkerOutput
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:10:from onyx.indexing.chunking.tabular_section_chunker.analysis import analyze_sheet
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:11:from onyx.indexing.chunking.tabular_section_chunker.sheet_descriptor import (
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:12:    build_sheet_descriptor_chunks,
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:14:from onyx.indexing.chunking.tabular_section_chunker.total_descriptor import (
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:15:    build_total_descriptor_chunks,
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:70:def pack_chunk(chunk: str, new_row: str) -> str:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:71:    return chunk + "\n" + new_row
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:129:def _build_chunk_from_scratch(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:144:    chunk = formatted_row
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:145:    chunk_tokens = row_tokens
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:148:    candidate_tokens = column_header_tokens + NEWLINE_TOKENS + chunk_tokens
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:150:        chunk = column_header + ROW_JOIN + chunk
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:151:        chunk_tokens = candidate_tokens
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:155:        candidate_tokens = sheet_header_tokens + NEWLINE_TOKENS + chunk_tokens
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:157:            chunk = sheet_header + ROW_JOIN + chunk
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:158:            chunk_tokens = candidate_tokens
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:160:    return [_TokenizedText(text=chunk, token_count=chunk_tokens)]
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:163:def parse_to_chunks(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:177:    chunks: list[str] = []
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:178:    current_chunk = ""
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:179:    current_chunk_tokens = 0
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:186:        if current_chunk:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:188:            if current_chunk_tokens + NEWLINE_TOKENS + row_tokens <= max_tokens:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:189:                current_chunk = pack_chunk(current_chunk, formatted)
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:190:                current_chunk_tokens += NEWLINE_TOKENS + row_tokens
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:193:            chunks.append(current_chunk)
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:194:            current_chunk = ""
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:195:            current_chunk_tokens = 0
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:197:        # Build chunk from scratch
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:198:        for piece in _build_chunk_from_scratch(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:209:            if current_chunk:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:210:                chunks.append(current_chunk)
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:211:            current_chunk = piece.text
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:212:            current_chunk_tokens = piece.token_count
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:215:    if current_chunk:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:216:        chunks.append(current_chunk)
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:218:    return chunks
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:221:class TabularChunker(SectionChunker):
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:225:        ignore_metadata_chunks: bool = False,
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:228:        self.ignore_metadata_chunks = ignore_metadata_chunks
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:230:    def chunk_section(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:232:        section: Section,
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:235:    ) -> SectionChunkerOutput:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:238:        text = section.text or ""
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:241:        heading = section.heading or ""
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:243:        chunk_texts: list[str] = []
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:245:            chunk_texts.extend(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:246:                parse_to_chunks(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:254:        if not self.ignore_metadata_chunks and headers:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:256:            chunk_texts.extend(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:257:                build_sheet_descriptor_chunks(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:265:            chunk_texts.extend(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:266:                build_total_descriptor_chunks(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:275:        if not chunk_texts:
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:277:                "TabularChunker: skipping unparseable section (link=%s)", section.link
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:279:            return SectionChunkerOutput(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:283:        for i, text in enumerate(chunk_texts):
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:285:                ChunkPayload(
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:287:                    links={0: section.link or ""},
+backend/onyx/indexing/chunking/tabular_section_chunker/tabular_section_chunker.py:291:        return SectionChunkerOutput(payloads=payloads, accumulator=AccumulatorState())
+backend/onyx/indexing/chunking/tabular_section_chunker/total_descriptor.py:3:from onyx.indexing.chunking.tabular_section_chunker.analysis import SheetAnalysis
+backend/onyx/indexing/chunking/tabular_section_chunker/total_descriptor.py:4:from onyx.indexing.chunking.tabular_section_chunker.util import label
+backend/onyx/indexing/chunking/tabular_section_chunker/total_descriptor.py:5:from onyx.indexing.chunking.tabular_section_chunker.util import pack_lines
+backend/onyx/indexing/chunking/tabular_section_chunker/total_descriptor.py:15:def build_total_descriptor_chunks(
+backend/onyx/indexing/chunking/tabular_section_chunker/sheet_descriptor.py:1:from onyx.indexing.chunking.tabular_section_chunker.analysis import SheetAnalysis
+backend/onyx/indexing/chunking/tabular_section_chunker/sheet_descriptor.py:2:from onyx.indexing.chunking.tabular_section_chunker.util import label
+backend/onyx/indexing/chunking/tabular_section_chunker/sheet_descriptor.py:3:from onyx.indexing.chunking.tabular_section_chunker.util import pack_lines
+backend/onyx/indexing/chunking/tabular_section_chunker/sheet_descriptor.py:12:def build_sheet_descriptor_chunks(
+backend/onyx/indexing/chunking/tabular_section_chunker/sheet_descriptor.py:19:    """Build sheet descriptor chunk(s) from a pre-parsed sheet.
+backend/onyx/indexing/chunking/tabular_section_chunker/sheet_descriptor.py:23:    chunk so retrieval keeps sheet context after a split):
+backend/onyx/indexing/chunking/tabular_section_chunker/__init__.py:1:from onyx.indexing.chunking.tabular_section_chunker.tabular_section_chunker import (
+backend/onyx/indexing/chunking/tabular_section_chunker/__init__.py:2:    TabularChunker,
+backend/onyx/indexing/chunking/tabular_section_chunker/__init__.py:5:__all__ = ["TabularChunker"]
+backend/onyx/indexing/chunking/document_chunker.py:1:from chonkie import SentenceChunker
+backend/onyx/indexing/chunking/document_chunker.py:4:from onyx.connectors.models import Section
+backend/onyx/indexing/chunking/document_chunker.py:5:from onyx.connectors.models import SectionType
+backend/onyx/indexing/chunking/document_chunker.py:6:from onyx.indexing.chunking.image_section_chunker import ImageChunker
+backend/onyx/indexing/chunking/document_chunker.py:7:from onyx.indexing.chunking.section_chunker import AccumulatorState
+backend/onyx/indexing/chunking/document_chunker.py:8:from onyx.indexing.chunking.section_chunker import ChunkPayload
+backend/onyx/indexing/chunking/document_chunker.py:9:from onyx.indexing.chunking.section_chunker import SectionChunker
+backend/onyx/indexing/chunking/document_chunker.py:10:from onyx.indexing.chunking.tabular_section_chunker import TabularChunker
+backend/onyx/indexing/chunking/document_chunker.py:11:from onyx.indexing.chunking.text_section_chunker import TextChunker
+backend/onyx/indexing/chunking/document_chunker.py:12:from onyx.indexing.models import DocAwareChunk
+backend/onyx/indexing/chunking/document_chunker.py:15:from onyx.utils.text_processing import clean_text
+backend/onyx/indexing/chunking/document_chunker.py:20:class DocumentChunker:
+backend/onyx/indexing/chunking/document_chunker.py:21:    """Converts a document's processed sections into DocAwareChunks.
+backend/onyx/indexing/chunking/document_chunker.py:23:    Drop-in replacement for `Chunker._chunk_document_with_sections`.
+backend/onyx/indexing/chunking/document_chunker.py:29:        blurb_splitter: SentenceChunker,
+backend/onyx/indexing/chunking/document_chunker.py:30:        chunk_splitter: SentenceChunker,
+backend/onyx/indexing/chunking/document_chunker.py:31:        mini_chunk_splitter: SentenceChunker | None = None,
+backend/onyx/indexing/chunking/document_chunker.py:34:        self.mini_chunk_splitter = mini_chunk_splitter
+backend/onyx/indexing/chunking/document_chunker.py:36:        self._dispatch: dict[SectionType, SectionChunker] = {
+backend/onyx/indexing/chunking/document_chunker.py:37:            SectionType.TEXT: TextChunker(
+backend/onyx/indexing/chunking/document_chunker.py:39:                chunk_splitter=chunk_splitter,
+backend/onyx/indexing/chunking/document_chunker.py:41:            SectionType.IMAGE: ImageChunker(),
+backend/onyx/indexing/chunking/document_chunker.py:42:            SectionType.TABULAR: TabularChunker(tokenizer=tokenizer),
+backend/onyx/indexing/chunking/document_chunker.py:45:    def chunk(
+backend/onyx/indexing/chunking/document_chunker.py:48:        sections: list[Section],
+backend/onyx/indexing/chunking/document_chunker.py:50:        metadata_suffix_semantic: str,
+backend/onyx/indexing/chunking/document_chunker.py:51:        metadata_suffix_keyword: str,
+backend/onyx/indexing/chunking/document_chunker.py:53:    ) -> list[DocAwareChunk]:
+backend/onyx/indexing/chunking/document_chunker.py:54:        payloads = self._collect_section_payloads(
+backend/onyx/indexing/chunking/document_chunker.py:56:            sections=sections,
+backend/onyx/indexing/chunking/document_chunker.py:61:            payloads.append(ChunkPayload(text="", links={0: ""}))
+backend/onyx/indexing/chunking/document_chunker.py:64:            payload.to_doc_aware_chunk(
+backend/onyx/indexing/chunking/document_chunker.py:66:                chunk_id=idx,
+backend/onyx/indexing/chunking/document_chunker.py:68:                mini_chunk_splitter=self.mini_chunk_splitter,
+backend/onyx/indexing/chunking/document_chunker.py:70:                metadata_suffix_semantic=metadata_suffix_semantic,
+backend/onyx/indexing/chunking/document_chunker.py:71:                metadata_suffix_keyword=metadata_suffix_keyword,
+backend/onyx/indexing/chunking/document_chunker.py:76:    def _collect_section_payloads(
+backend/onyx/indexing/chunking/document_chunker.py:79:        sections: list[Section],
+backend/onyx/indexing/chunking/document_chunker.py:81:    ) -> list[ChunkPayload]:
+backend/onyx/indexing/chunking/document_chunker.py:83:        payloads: list[ChunkPayload] = []
+backend/onyx/indexing/chunking/document_chunker.py:85:        for section_idx, section in enumerate(sections):
+backend/onyx/indexing/chunking/document_chunker.py:86:            section_text = clean_text(str(section.text or ""))
+backend/onyx/indexing/chunking/document_chunker.py:88:            if not section_text and (not document.title or section_idx > 0):
+backend/onyx/indexing/chunking/document_chunker.py:90:                    "Skipping empty or irrelevant section in doc %s, link=%s",
+backend/onyx/indexing/chunking/document_chunker.py:92:                    section.link,
+backend/onyx/indexing/chunking/document_chunker.py:96:            chunker = self._select_chunker(section)
+backend/onyx/indexing/chunking/document_chunker.py:97:            result = chunker.chunk_section(
+backend/onyx/indexing/chunking/document_chunker.py:98:                section=section,
+backend/onyx/indexing/chunking/document_chunker.py:110:    def _select_chunker(self, section: Section) -> SectionChunker:
+backend/onyx/indexing/chunking/document_chunker.py:112:            return self._dispatch[section.type]
+backend/onyx/indexing/chunking/document_chunker.py:114:            raise ValueError(f"No SectionChunker registered for type={section.type}")
+backend/onyx/indexing/chunking/text_section_chunker.py:3:from chonkie import SentenceChunker
+backend/onyx/indexing/chunking/text_section_chunker.py:5:from onyx.configs.constants import SECTION_SEPARATOR
+backend/onyx/indexing/chunking/text_section_chunker.py:6:from onyx.connectors.models import Section
+backend/onyx/indexing/chunking/text_section_chunker.py:7:from onyx.indexing.chunking.section_chunker import AccumulatorState
+backend/onyx/indexing/chunking/text_section_chunker.py:8:from onyx.indexing.chunking.section_chunker import ChunkPayload
+backend/onyx/indexing/chunking/text_section_chunker.py:9:from onyx.indexing.chunking.section_chunker import SectionChunker
+backend/onyx/indexing/chunking/text_section_chunker.py:10:from onyx.indexing.chunking.section_chunker import SectionChunkerOutput
+backend/onyx/indexing/chunking/text_section_chunker.py:14:from onyx.utils.text_processing import clean_text
+backend/onyx/indexing/chunking/text_section_chunker.py:16:from shared_configs.configs import STRICT_CHUNK_TOKEN_LIMIT
+backend/onyx/indexing/chunking/text_section_chunker.py:19:class TextChunker(SectionChunker):
+backend/onyx/indexing/chunking/text_section_chunker.py:23:        chunk_splitter: SentenceChunker,
+backend/onyx/indexing/chunking/text_section_chunker.py:26:        self.chunk_splitter = chunk_splitter
+backend/onyx/indexing/chunking/text_section_chunker.py:28:        self.section_separator_token_count = count_tokens(
+backend/onyx/indexing/chunking/text_section_chunker.py:29:            SECTION_SEPARATOR,
+backend/onyx/indexing/chunking/text_section_chunker.py:33:    def chunk_section(
+backend/onyx/indexing/chunking/text_section_chunker.py:35:        section: Section,
+backend/onyx/indexing/chunking/text_section_chunker.py:38:    ) -> SectionChunkerOutput:
+backend/onyx/indexing/chunking/text_section_chunker.py:39:        section_text = clean_text(str(section.text or ""))
+backend/onyx/indexing/chunking/text_section_chunker.py:40:        section_link = section.link or ""
+backend/onyx/indexing/chunking/text_section_chunker.py:41:        section_token_count = len(self.tokenizer.encode(section_text))
+backend/onyx/indexing/chunking/text_section_chunker.py:43:        # Oversized — flush buffer and split the section
+backend/onyx/indexing/chunking/text_section_chunker.py:44:        if section_token_count > content_token_limit:
+backend/onyx/indexing/chunking/text_section_chunker.py:45:            return self._handle_oversized_section(
+backend/onyx/indexing/chunking/text_section_chunker.py:46:                section_text=section_text,
+backend/onyx/indexing/chunking/text_section_chunker.py:47:                section_link=section_link,
+backend/onyx/indexing/chunking/text_section_chunker.py:53:        next_section_tokens = self.section_separator_token_count + section_token_count
+backend/onyx/indexing/chunking/text_section_chunker.py:56:        if next_section_tokens + current_token_count <= content_token_limit:
+backend/onyx/indexing/chunking/text_section_chunker.py:60:                new_text += SECTION_SEPARATOR
+backend/onyx/indexing/chunking/text_section_chunker.py:61:            new_text += section_text
+backend/onyx/indexing/chunking/text_section_chunker.py:62:            return SectionChunkerOutput(
+backend/onyx/indexing/chunking/text_section_chunker.py:66:                    link_offsets={**accumulator.link_offsets, offset: section_link},
+backend/onyx/indexing/chunking/text_section_chunker.py:70:        # Doesn't fit — flush buffer and restart with this section
+backend/onyx/indexing/chunking/text_section_chunker.py:71:        return SectionChunkerOutput(
+backend/onyx/indexing/chunking/text_section_chunker.py:74:                text=section_text,
+backend/onyx/indexing/chunking/text_section_chunker.py:75:                link_offsets={0: section_link},
+backend/onyx/indexing/chunking/text_section_chunker.py:79:    def _handle_oversized_section(
+backend/onyx/indexing/chunking/text_section_chunker.py:81:        section_text: str,
+backend/onyx/indexing/chunking/text_section_chunker.py:82:        section_link: str,
+backend/onyx/indexing/chunking/text_section_chunker.py:85:    ) -> SectionChunkerOutput:
+backend/onyx/indexing/chunking/text_section_chunker.py:88:        split_texts = cast(list[str], self.chunk_splitter.chunk(section_text))
+backend/onyx/indexing/chunking/text_section_chunker.py:91:                STRICT_CHUNK_TOKEN_LIMIT
+backend/onyx/indexing/chunking/text_section_chunker.py:94:                smaller_chunks = split_text_by_tokens(
+backend/onyx/indexing/chunking/text_section_chunker.py:97:                for j, small_chunk in enumerate(smaller_chunks):
+backend/onyx/indexing/chunking/text_section_chunker.py:99:                        ChunkPayload(
+backend/onyx/indexing/chunking/text_section_chunker.py:100:                            text=small_chunk,
+backend/onyx/indexing/chunking/text_section_chunker.py:101:                            links={0: section_link},
+backend/onyx/indexing/chunking/text_section_chunker.py:107:                    ChunkPayload(
+backend/onyx/indexing/chunking/text_section_chunker.py:109:                        links={0: section_link},
+backend/onyx/indexing/chunking/text_section_chunker.py:114:        return SectionChunkerOutput(
+backend/onyx/indexing/chunking/image_section_chunker.py:1:from onyx.connectors.models import Section
+backend/onyx/indexing/chunking/image_section_chunker.py:2:from onyx.indexing.chunking.section_chunker import AccumulatorState
+backend/onyx/indexing/chunking/image_section_chunker.py:3:from onyx.indexing.chunking.section_chunker import ChunkPayload
+backend/onyx/indexing/chunking/image_section_chunker.py:4:from onyx.indexing.chunking.section_chunker import SectionChunker
+backend/onyx/indexing/chunking/image_section_chunker.py:5:from onyx.indexing.chunking.section_chunker import SectionChunkerOutput
+backend/onyx/indexing/chunking/image_section_chunker.py:6:from onyx.utils.text_processing import clean_text
+backend/onyx/indexing/chunking/image_section_chunker.py:9:class ImageChunker(SectionChunker):
+backend/onyx/indexing/chunking/image_section_chunker.py:10:    def chunk_section(
+backend/onyx/indexing/chunking/image_section_chunker.py:12:        section: Section,
+backend/onyx/indexing/chunking/image_section_chunker.py:15:    ) -> SectionChunkerOutput:
+backend/onyx/indexing/chunking/image_section_chunker.py:16:        assert section.image_file_id is not None
+backend/onyx/indexing/chunking/image_section_chunker.py:18:        section_text = clean_text(str(section.text or ""))
+backend/onyx/indexing/chunking/image_section_chunker.py:19:        section_link = section.link or ""
+backend/onyx/indexing/chunking/image_section_chunker.py:21:        # Flush any partially built text chunks
+backend/onyx/indexing/chunking/image_section_chunker.py:24:            ChunkPayload(
+backend/onyx/indexing/chunking/image_section_chunker.py:25:                text=section_text,
+backend/onyx/indexing/chunking/image_section_chunker.py:26:                links={0: section_link} if section_link else {},
+backend/onyx/indexing/chunking/image_section_chunker.py:27:                image_file_id=section.image_file_id,
+backend/onyx/indexing/chunking/image_section_chunker.py:32:        return SectionChunkerOutput(
+backend/onyx/indexing/chunking/section_chunker.py:6:from chonkie import SentenceChunker
+backend/onyx/indexing/chunking/section_chunker.py:11:from onyx.connectors.models import Section
+backend/onyx/indexing/chunking/section_chunker.py:12:from onyx.indexing.models import DocAwareChunk
+backend/onyx/indexing/chunking/section_chunker.py:15:def extract_blurb(text: str, blurb_splitter: SentenceChunker) -> str:
+backend/onyx/indexing/chunking/section_chunker.py:16:    texts = cast(list[str], blurb_splitter.chunk(text))
+backend/onyx/indexing/chunking/section_chunker.py:22:def get_mini_chunk_texts(
+backend/onyx/indexing/chunking/section_chunker.py:23:    chunk_text: str,
+backend/onyx/indexing/chunking/section_chunker.py:24:    mini_chunk_splitter: SentenceChunker | None,
+backend/onyx/indexing/chunking/section_chunker.py:26:    if mini_chunk_splitter and chunk_text.strip():
+backend/onyx/indexing/chunking/section_chunker.py:27:        return list(cast(Sequence[str], mini_chunk_splitter.chunk(chunk_text)))
+backend/onyx/indexing/chunking/section_chunker.py:31:class ChunkPayload(BaseModel):
+backend/onyx/indexing/chunking/section_chunker.py:32:    """Section-local chunk content without document-scoped fields.
+backend/onyx/indexing/chunking/section_chunker.py:34:    The orchestrator upgrades these to DocAwareChunks via
+backend/onyx/indexing/chunking/section_chunker.py:35:    `to_doc_aware_chunk` after assigning chunk_ids and attaching
+backend/onyx/indexing/chunking/section_chunker.py:44:    def to_doc_aware_chunk(
+backend/onyx/indexing/chunking/section_chunker.py:47:        chunk_id: int,
+backend/onyx/indexing/chunking/section_chunker.py:48:        blurb_splitter: SentenceChunker,
+backend/onyx/indexing/chunking/section_chunker.py:50:        metadata_suffix_semantic: str = "",
+backend/onyx/indexing/chunking/section_chunker.py:51:        metadata_suffix_keyword: str = "",
+backend/onyx/indexing/chunking/section_chunker.py:52:        mini_chunk_splitter: SentenceChunker | None = None,
+backend/onyx/indexing/chunking/section_chunker.py:53:    ) -> DocAwareChunk:
+backend/onyx/indexing/chunking/section_chunker.py:54:        return DocAwareChunk(
+backend/onyx/indexing/chunking/section_chunker.py:56:            chunk_id=chunk_id,
+backend/onyx/indexing/chunking/section_chunker.py:61:            section_continuation=self.is_continuation,
+backend/onyx/indexing/chunking/section_chunker.py:63:            metadata_suffix_semantic=metadata_suffix_semantic,
+backend/onyx/indexing/chunking/section_chunker.py:64:            metadata_suffix_keyword=metadata_suffix_keyword,
+backend/onyx/indexing/chunking/section_chunker.py:65:            mini_chunk_texts=get_mini_chunk_texts(self.text, mini_chunk_splitter),
+backend/onyx/indexing/chunking/section_chunker.py:66:            large_chunk_id=None,
+backend/onyx/indexing/chunking/section_chunker.py:68:            chunk_context="",
+backend/onyx/indexing/chunking/section_chunker.py:74:    """Cross-section text buffer threaded through SectionChunkers."""
+backend/onyx/indexing/chunking/section_chunker.py:82:    def flush_to_list(self) -> list[ChunkPayload]:
+backend/onyx/indexing/chunking/section_chunker.py:85:        return [ChunkPayload(text=self.text, links=self.link_offsets)]
+backend/onyx/indexing/chunking/section_chunker.py:88:class SectionChunkerOutput(BaseModel):
+backend/onyx/indexing/chunking/section_chunker.py:89:    payloads: list[ChunkPayload]
+backend/onyx/indexing/chunking/section_chunker.py:93:class SectionChunker(ABC):
+backend/onyx/indexing/chunking/section_chunker.py:95:    def chunk_section(
+backend/onyx/indexing/chunking/section_chunker.py:97:        section: Section,
+backend/onyx/indexing/chunking/section_chunker.py:100:    ) -> SectionChunkerOutput: ...
+backend/onyx/indexing/chunking/__init__.py:1:from onyx.indexing.chunking.document_chunker import DocumentChunker
+backend/onyx/indexing/chunking/__init__.py:2:from onyx.indexing.chunking.section_chunker import extract_blurb
+backend/onyx/indexing/chunking/__init__.py:5:    "DocumentChunker",

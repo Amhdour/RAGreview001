@@ -1,0 +1,8 @@
+# Phase 11 sources reviewed
+EXISTS rag-security-readiness-review/03_reports/phase_11_retrieval_acl_review_report.md
+EXISTS rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md
+EXISTS rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md
+EXISTS rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md
+EXISTS rag-security-readiness-review/02_evidence/phase_11/deleted_stale_document_handling.md
+EXISTS rag-security-readiness-review/02_evidence/phase_11/cross_user_group_connector_risks.md
+EXISTS rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_tests_review.md
