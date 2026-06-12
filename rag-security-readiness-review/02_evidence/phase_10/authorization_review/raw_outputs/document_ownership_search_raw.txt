@@ -1,0 +1,6 @@
+Command: rg -n -i "permission|private|public|deleted|restricted|visibility|ownership|owner|external_user_emails|external_user_group_ids|apply_document_access_filter|DocumentSet" backend/onyx backend/ee/onyx
+
+Representative hits:
+- backend/onyx/db/models.py: document ownership fields and document public flag.
+- backend/onyx/db/document_access.py: access filters using public, email, and external-group checks.
+- backend/ee/onyx/access/access.py: EE extension of document access calculations.

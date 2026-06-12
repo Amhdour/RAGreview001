@@ -1,0 +1,13 @@
+Command: find backend/tests web/tests tests -type f 2>/dev/null | sort | rg -i "permission|admin|curator|group|tenant|document|connector|access|role|authz|acl|permission_sync"
+
+Representative discovered files:
+- backend/tests/unit/onyx/auth/test_permissions.py
+- backend/tests/integration/tests/permissions/test_admin_access.py
+- backend/tests/integration/tests/permissions/test_basic_access.py
+- backend/tests/integration/tests/permissions/test_doc_set_permissions.py
+- backend/tests/integration/tests/permissions/test_connector_permissions.py
+- backend/tests/integration/multitenant_tests/syncing/test_search_permissions.py
+- web/tests/e2e/admin/admin_pages.spec.ts
+- web/tests/e2e/admin/groups/groups.spec.ts
+- web/tests/e2e/admin/users/users.spec.ts
+- web/tests/e2e/admin/connector/permission-sync-tabs.spec.ts

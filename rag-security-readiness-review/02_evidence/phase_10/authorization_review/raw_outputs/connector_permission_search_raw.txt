@@ -1,0 +1,6 @@
+Command: rg -n -i "connector|credential|permission_sync|access_type|last_time_perm_sync|last_time_external_group_sync|perm_sync_valid" backend/onyx backend/ee/onyx
+
+Representative hits:
+- backend/onyx/db/models.py: connector credential pair access type and sync timestamps.
+- backend/ee/onyx/connectors/perm_sync_valid.py: connector permission validation probes.
+- backend/ee/onyx/db/external_perm.py: external permission sync and stale cleanup.

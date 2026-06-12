@@ -1,0 +1,6 @@
+Command: rg -n "def (current_.*user|.*admin.*|.*curator.*|.*anonymous.*|.*role.*|.*permission.*|.*auth.*)" backend/onyx/auth/users.py backend/onyx/server/manage/users.py backend/onyx/server/features/oauth_config/api.py backend/onyx/server/features/default_assistant/api.py backend/onyx/server/features/search/api.py
+
+Representative hits:
+- backend/onyx/auth/users.py: `is_user_admin()`, `current_curator_or_admin_user()`, `current_chat_accessible_user()`.
+- backend/onyx/server/manage/users.py: admin-gated endpoints and `/me/permissions`.
+- backend/onyx/server/features/oauth_config/api.py: curator/admin-gated OAuth endpoints.
