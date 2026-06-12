@@ -1,0 +1,24 @@
+# PHASE 4 Baseline vs Modified State
+
+- Review phase: PHASE 4 — Separate original vs added work
+- Repository: <repository>
+- Source input type: <source input type>
+- Current branch: <branch>
+- Current commit: <commit>
+- Date/time: <timestamp>
+- Reviewer: <reviewer>
+- Prepared by: <prepared by>
+- Approved by: <approved by or UNCONFIRMED>
+- Objective: <objective>
+- Original source location: <path/status>
+- Working copy location: <path/status>
+- Current checkout location: <path/status>
+- Git status summary: <summary>
+- Original source preservation status: <status>
+- Working copy status: <status>
+- Added review artifacts summary: <summary>
+- Modified source summary: <summary>
+- Blocked/skipped checks summary: <summary>
+- Limitations: <limitations>
+- Non-claims: <non-claims>
+- Next phase: PHASE 5 — Map architecture
