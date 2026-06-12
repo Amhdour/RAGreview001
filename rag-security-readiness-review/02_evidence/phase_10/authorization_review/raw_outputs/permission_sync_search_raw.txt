@@ -1,0 +1,6 @@
+Command: rg -n -i "permission_sync|external_group_sync|mark_cc_pair_as_permissions_synced|mark_cc_pair_as_external_group_synced|stale|sync_status|SyncType" backend/onyx backend/ee/onyx
+
+Representative hits:
+- backend/onyx/db/connector.py: sync timestamp marker helpers.
+- backend/ee/onyx/background/celery/tasks/doc_permission_syncing/tasks.py: permission sync completion path.
+- backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py: stale cleanup and upsert flow.

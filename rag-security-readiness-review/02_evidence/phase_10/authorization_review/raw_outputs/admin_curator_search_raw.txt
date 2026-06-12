@@ -1,0 +1,6 @@
+Command: rg -n "requireAdminAuth|requireAuth|redirect\(|UserRole|admin|curator|global_curator|is_verified" web/src/app/admin web/src/app/ee/admin web/src/layouts/admin web/src/sections/sidebar web/src/sections/onboarding web/src/components
+
+Representative hits:
+- web/src/lib/auth/requireAuth.ts: admin allowlist includes admin, curator, global curator.
+- web/src/layouts/admin/Layout.tsx: redirects non-admin users.
+- web/src/components/IsPublicGroupSelector.tsx: role-aware UI gating.

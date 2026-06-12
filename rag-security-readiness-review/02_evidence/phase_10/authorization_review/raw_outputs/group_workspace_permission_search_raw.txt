@@ -1,0 +1,6 @@
+Command: rg -n -i "group|groups|user_group|document_set__user_group|tenant|workspace|curator|membership" backend/onyx backend/ee/onyx
+
+Representative hits:
+- backend/onyx/db/models.py: `User__UserGroup`, `DocumentSet__UserGroup`, `UserGroup`.
+- backend/ee/onyx/db/user_group.py: group membership and curator filtering.
+- backend/ee/onyx/db/document_set.py: document-set access via groups.
