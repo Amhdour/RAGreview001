@@ -1,0 +1,5 @@
+backend/onyx/db/document_access.py:66-88 -> exclude ConnectorCredentialPairStatus.DELETING and gate by public/doc-public/email/group ACLs
+backend/ee/onyx/db/external_perm.py:159-216 -> stale external-group rows are marked and removed
+backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py:112-154 -> sync skipped for DELETING cc_pairs and uses last_time_external_group_sync
+backend/onyx/db/connector.py:330-356 -> permission-sync and external-group-sync timestamps persisted on cc_pair
+backend/onyx/access/access.py:202-210 and 293-299 -> deleted personas skipped in user-file access; persona lookups require Persona.deleted is false

@@ -1,0 +1,21 @@
+# Retrieval ACL Limitations
+
+- Source-only limitation.
+- Current-checkout limitation.
+- Original source unavailable.
+- Working copy unavailable.
+- Tests discovered but not executed.
+- CI not executed.
+- Runtime retrieval behavior not validated.
+- Runtime ACL enforcement not validated.
+- Production behavior not validated.
+- Live database unavailable.
+- Live vector index unavailable.
+- Live search index unavailable.
+- Live connector state unavailable.
+- Live permission sync state unavailable.
+- No customer data.
+- No real secrets.
+- Source evidence does not prove runtime enforcement.
+- Existing test file does not prove test passed.
+- Missing evidence does not prove control absence.

@@ -1,0 +1,12 @@
+# Retrieval ACL Tests Review
+
+| Area | Test/evidence file | Test type | What it appears to cover | Was it executed? | Result evidence | Missing assertion | Limitation |
+| ---- | ------------------ | --------- | ------------------------ | ---------------- | --------------- | ----------------- | ---------- |
+| Search ACL synchronization | `rag-security-readiness-review/02_evidence/phase_9/retrieval_acl_test_evidence.md` | Evidence mapping | Search-permission synchronization across tenants appears relevant to retrieval ACL checks. | NO | None collected in this phase. | No execution record. | Source-only review. |
+| Search permission integration | `backend/tests/integration/multitenant_tests/syncing/test_search_permissions.py` | Integration test file found | Likely the most direct search-permission test file discovered. | NO | None collected in this phase. | No runtime assertion evidence. | Not executed. |
+| Search API integration | `backend/tests/integration/tests/search/test_search_api.py` | Integration test file found | Search API behavior and response shaping. | NO | None collected in this phase. | No ACL-specific pass/fail proof. | Not executed. |
+| Document-set permissions | `backend/tests/integration/tests/permissions/test_doc_set_permissions.py` | Integration test file found | Document-set access controls. | NO | None collected in this phase. | No retrieval-specific assertion proof. | Not executed. |
+| Connector permissions | `backend/tests/integration/tests/permissions/test_connector_permissions.py` | Integration test file found | Connector permission behavior. | NO | None collected in this phase. | No retrieval-specific assertion proof. | Not executed. |
+| File-connector permissions | `backend/tests/integration/tests/permissions/test_file_connector_permissions.py` | Integration test file found | File connector permission behavior. | NO | None collected in this phase. | No retrieval ACL execution proof. | Not executed. |
+| User-file access unit tests | `backend/tests/unit/onyx/access/test_user_file_access.py` | Unit test file found | User-file access logic and helper behavior. | NO | None collected in this phase. | No search-time ACL assertion proof. | Not executed. |
+| Federated Slack search test | `backend/tests/external_dependency_unit/slack_bot/test_slack_bot_federated_search.py` | External dependency unit test file found | Federated Slack search behavior. | NO | None collected in this phase. | No ACL execution proof. | Not executed. |

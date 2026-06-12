@@ -1,0 +1,3 @@
+backend/onyx/context/search/retrieval/search_runner.py:28-49 -> combine_retrieval_results keeps highest-scoring duplicate chunk, then sorts descending
+backend/onyx/tools/tool_implementations/search/search_tool.py:754-850 -> parallel search fan-out then weighted reciprocal rank fusion
+backend/onyx/tools/tool_implementations/search/search_tool.py:880-981 -> LLM document selection and section expansion after retrieval
