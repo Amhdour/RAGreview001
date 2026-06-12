@@ -1,0 +1,11 @@
+> This is the client-facing mirror of the PHASE 10 control gap analysis file. The canonical evidence copy remains under rag-security-readiness-review/02_evidence/phase_10/.
+
+# PHASE 10 Unverified Controls
+
+Unverified means a control may exist, but available evidence is insufficient to confirm it.
+
+| Control ID | Category | Unverified control | Why unverified | Evidence searched | Missing evidence | Related risk/threat | Later validation method |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| CTRL-10-002 | Authentication controls | Confirm session invalidation, logout behavior, and replay resistance. | Source is consistent with account/logout handling but does not prove revocation or replay resistance. | backend/onyx/auth/users.py; backend/onyx/auth/utils.py; web/src/app/auth/logout/route.ts; rag-security-readiness-review/02_evidence/phase_9/missing_tests.md | Executed logout cookie-clearing and replay tests. | AUTH-03 / AUTH-05 / TH-13 / TH-14 | Run browser logout and API token replay validation with recorded evidence. |
+| CTRL-10-006 | Retrieval ACL controls | Prevent citation/source metadata from exposing inaccessible sources. | Citation/source handling files exist, but citation privacy was not validated. | backend/onyx/chat/citation_utils.py; backend/onyx/server/features/search/api.py; web/src/components/search/results/Citation.tsx; rag-security-readiness-review/02_evidence/phase_9/unverified_test_coverage.md | Citation output evidence under restricted-access scenarios. | ACL-05 / RAG-04 / TH-08 | Run citation-visibility tests with inaccessible-source fixtures. |
+| CTRL-10-012 | Agent/tool/MCP controls | Verify sandbox isolation and human approval for agent/tool execution where applicable. | Sandbox and hook files suggest relevant surfaces, but approval and isolation controls are not evidenced. | backend/onyx/hooks/registry.py; backend/onyx/hooks/executor.py; backend/onyx/server/features/build/sandbox/util/agent_instructions.py; rag-security-readiness-review/02_evidence/phase_9/unverified_test_coverage.md | Runtime sandbox isolation and approval-flow evidence. | AGENT-03 / AGENT-04 / TOOL-05 / TH-07 / TH-12 | Perform controlled sandbox/tool approval validation without exploit claims. |

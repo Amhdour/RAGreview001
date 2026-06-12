@@ -1,0 +1,6 @@
+rag-security-readiness-review/03_reports/phase_10a_authorization_review_report.md — EXISTS
+rag-security-readiness-review/02_evidence/phase_10/authorization_review/authorization_review.md — EXISTS
+rag-security-readiness-review/02_evidence/phase_10/authorization_review/authorization_findings.md — EXISTS
+rag-security-readiness-review/02_evidence/phase_10/authorization_review/backend_frontend_enforcement.md — EXISTS
+rag-security-readiness-review/02_evidence/phase_10/authorization_review/authorization_tests_review.md — EXISTS
+rag-security-readiness-review/02_evidence/phase_10/authorization_review/authorization_review_limitations.md — EXISTS
