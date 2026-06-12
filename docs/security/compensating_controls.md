@@ -1,0 +1,10 @@
+> This is the client-facing mirror of the PHASE 10 control gap analysis file. The canonical evidence copy remains under rag-security-readiness-review/02_evidence/phase_10/.
+
+# PHASE 10 Compensating Control Candidates
+
+Compensating candidate means a related control or process may reduce risk but does not directly close the primary gap.
+
+| Compensating ID | Category | Compensating control candidate | Related primary gap | Evidence file/path | What it may reduce | What it does not solve | Later validation method |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| COMP-10-019 | Governance/evidence controls | Maintain review traceability, client-facing mirrors, and limitation records. | Runtime/test/production validation gaps | rag-security-readiness-review/03_reports; rag-security-readiness-review/02_evidence; docs/security | Governance artifacts improve traceability but do not directly close technical control gaps. | Approval records, owner sign-off, and runtime validation artifacts. | Review governance artifacts with control owners and attach approvals. |
+| COMP-10-020 | Governance/evidence controls | Preserve source-only and current-checkout claim boundaries. | Runtime/test/production validation gaps | rag-security-readiness-review/02_evidence/phase_8/risk_to_code_limitations.md; rag-security-readiness-review/02_evidence/phase_9/phase_9_limitations.md; rag-security-readiness-review/02_evidence/phase_10/authorization_review/authorization_review_limitations.md | Limitation records reduce interpretation risk but do not prove any application control. | Original source, working-copy baseline, runtime, CI, and production evidence. | Update limitations after later validation phases and approval review. |

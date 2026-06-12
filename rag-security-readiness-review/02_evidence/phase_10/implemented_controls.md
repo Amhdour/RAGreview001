@@ -1,0 +1,9 @@
+# PHASE 10 Implemented Control Candidates
+
+Implemented candidate means source/evidence shows a relevant control candidate exists. It does not mean validated control.
+
+| Control ID | Category | Implemented candidate | Evidence file/path | Related risk/threat | What is supported | What is not proven | Later validation method |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| CTRL-10-001 | Authentication controls | Protect interactive and programmatic authentication entry points. | backend/onyx/auth/jwt.py; backend/onyx/auth/api_key.py; backend/onyx/auth/pat.py; web/src/app/auth/login/EmailPasswordForm.tsx | AUTH-01 / RAG-01 / TH-13 | Authentication control candidates exist, but effectiveness is not concluded. | Executed token/login lifecycle results; secret-storage validation. | Run targeted authentication integration and E2E lifecycle checks. |
+| CTRL-10-003 | Authorization controls | Enforce permission and role checks on protected backend operations. | backend/onyx/auth/permissions.py; backend/onyx/hooks/api_dependencies.py; backend/ee/onyx/server/auth_check.py | AUTHZ-01 / AUTHZ-02 / AUTHZ-04 / RAG-01 / TH-02 / TH-03 / TH-04 | Authorization enforcement candidates exist, with runtime behavior still unverified. | Route-by-route allow/deny execution evidence. | Run authorization matrix integration tests and capture results. |
+| CTRL-10-013 | Logging/telemetry controls | Tag, mask, and route observability data for LLM and application flows. | backend/onyx/tracing/flows.py; backend/onyx/tracing/llm_utils.py; backend/onyx/tracing/masking.py; backend/onyx/tracing/langfuse_tracing_processor.py | LOG-01 / LOG-02 / LOG-03 / LOG-04 / PI-05 / TH-10 / TH-13 / TH-15 | Observability control candidates exist but are not validated. | Runtime log samples and sink redaction evidence. | Inspect generated traces/logs in a safe test environment and confirm sensitive fields handling. |
