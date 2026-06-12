@@ -1,0 +1,14 @@
+backend/onyx/auth/jwt.py
+backend/onyx/auth/api_key.py
+backend/onyx/auth/pat.py
+backend/onyx/auth/oauth_token_manager.py
+backend/onyx/auth/oauth_refresher.py
+backend/onyx/auth/users.py
+backend/onyx/auth/utils.py
+backend/ee/onyx/server/oauth/api.py
+backend/ee/onyx/server/oauth/api_router.py
+web/src/app/auth/login/EmailPasswordForm.tsx
+web/src/app/auth/logout/route.ts
+web/src/app/auth/oauth/callback/route.ts
+web/src/app/auth/oidc/callback/route.ts
+web/src/app/auth/saml/callback/route.ts

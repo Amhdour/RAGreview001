@@ -1,0 +1,6 @@
+rag-security-readiness-review/03_reports/phase_6_threat_model_report.md
+rag-security-readiness-review/02_evidence/phase_6/threat_register.md
+rag-security-readiness-review/02_evidence/phase_6/threat_to_architecture_map.md
+rag-security-readiness-review/02_evidence/phase_6/abuse_cases.md
+rag-security-readiness-review/02_evidence/phase_6/highest_risk_paths.md
+rag-security-readiness-review/02_evidence/phase_6/threat_model_limitations.md

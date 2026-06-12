@@ -1,0 +1,9 @@
+backend/onyx/auth/permissions.py
+backend/onyx/hooks/api_dependencies.py
+backend/onyx/server/features/persona/api.py
+backend/ee/onyx/server/auth_check.py
+backend/ee/onyx/server/user_group/api.py
+backend/ee/onyx/db/user_group.py
+web/src/app/admin/layout.tsx
+web/src/app/admin/users/page.tsx
+web/src/app/admin/groups/page.tsx

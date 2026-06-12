@@ -1,0 +1,12 @@
+backend/onyx/server/features/tool/api.py
+backend/onyx/server/features/tool/models.py
+backend/onyx/server/features/tool/tool_visibility.py
+backend/onyx/mcp_server/api.py
+backend/onyx/mcp_server/auth.py
+backend/onyx/mcp_server/tools/search.py
+backend/onyx/mcp_server_main.py
+backend/onyx/hooks/registry.py
+backend/onyx/hooks/executor.py
+backend/onyx/hooks/api_dependencies.py
+backend/onyx/server/features/build/sandbox/util/agent_instructions.py
+backend/onyx/server/features/build/sandbox/tasks/tasks.py

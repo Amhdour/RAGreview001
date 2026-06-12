@@ -1,0 +1,14 @@
+rag-security-readiness-review/03_reports/phase_5_architecture_mapping_report.md
+rag-security-readiness-review/02_evidence/phase_5/architecture_map.md
+rag-security-readiness-review/02_evidence/phase_5/backend_architecture.md
+rag-security-readiness-review/02_evidence/phase_5/frontend_architecture.md
+rag-security-readiness-review/02_evidence/phase_5/api_routes_map.md
+rag-security-readiness-review/02_evidence/phase_5/auth_flow_map.md
+rag-security-readiness-review/02_evidence/phase_5/authorization_flow_map.md
+rag-security-readiness-review/02_evidence/phase_5/data_model_map.md
+rag-security-readiness-review/02_evidence/phase_5/rag_pipeline_map.md
+rag-security-readiness-review/02_evidence/phase_5/agent_tool_mcp_map.md
+rag-security-readiness-review/02_evidence/phase_5/logging_telemetry_map.md
+rag-security-readiness-review/02_evidence/phase_5/deployment_flow_map.md
+rag-security-readiness-review/02_evidence/phase_5/architecture_claims_register.md
+rag-security-readiness-review/02_evidence/phase_5/raw_outputs/
