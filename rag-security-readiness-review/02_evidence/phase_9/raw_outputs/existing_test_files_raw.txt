@@ -1,0 +1,10 @@
+backend/tests/unit/onyx/auth/test_user_registration.py
+backend/tests/unit/onyx/auth/test_permissions.py
+backend/tests/integration/multitenant_tests/syncing/test_search_permissions.py
+backend/tests/unit/onyx/background/celery/tasks/test_user_file_processing_no_vectordb.py
+backend/tests/unit/onyx/chat/test_citation_processor.py
+backend/tests/external_dependency_unit/tools/test_oauth_token_manager.py
+backend/tests/unit/onyx/server/features/mcp/test_per_user_listing_invariants.py
+backend/tests/unit/onyx/tracing/test_flows_registry.py
+backend/tests/unit/onyx/configs/test_sentry.py
+web/tests/e2e/mcp/mcp_oauth_flow.spec.ts

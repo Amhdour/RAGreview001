@@ -1,0 +1,4 @@
+backend/tests/unit/onyx/background/celery/tasks/test_user_file_processing_no_vectordb.py
+backend/tests/external_dependency_unit/search_settings/test_index_swap_workflow.py
+backend/tests/unit/onyx/connectors/test_document_metadata_coercion.py
+backend/tests/unit/onyx/background/celery/tasks/test_user_file_impl_redis_locking.py
