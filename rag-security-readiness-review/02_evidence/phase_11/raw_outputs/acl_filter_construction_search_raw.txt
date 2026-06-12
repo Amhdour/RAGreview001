@@ -1,0 +1,6 @@
+backend/onyx/access/access.py:114-127 -> user ACL = prefix(email) + PUBLIC_DOC_PAT
+backend/onyx/context/search/pipeline.py:126-147 -> IndexFilters(access_control_list=user_acl_filters, tenant_id=...) and document_set/source/time/tag filters
+backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:30-252 -> ACL weightedSet, source, tags, document_set/persona/project, tenant, time, hidden filters
+backend/onyx/document_index/opensearch/search.py:1197-1296 -> access_control_list, source, tags, knowledge-scope, time, tenant, chunk, document_id filters
+backend/onyx/db/document_access.py:31-88 -> PUBLIC connector, public doc, user email, external group, and DELETING connector exclusion
+backend/onyx/db/document_set.py:40-87 -> document-set access by user/group/public ownership

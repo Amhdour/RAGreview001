@@ -1,0 +1,5 @@
+backend/onyx/access/access.py:114-127 -> user email + public ACLs only for generic user ACL
+backend/ee/onyx/access/access.py:43-117 -> document ACL is widened with group names and external-public semantics
+backend/onyx/db/document_set.py:40-87 -> document-set visibility limited by user/group/public ownership
+backend/ee/onyx/external_permissions/post_query_censoring.py:34-89 -> post-query source-specific censoring by user email
+backend/ee/onyx/background/celery/tasks/external_group_syncing/tasks.py:112-220 -> group sync due/skip logic and deletion guard

@@ -1,0 +1,7 @@
+backend/onyx/server/features/search/api.py:58-147 -> POST /api/search (READ_SEARCH)
+backend/ee/onyx/server/query_and_chat/search_backend.py:51-140 -> POST /api/search/search-flow-classification, POST /api/search/send-search-message, GET /api/search/search-history
+backend/onyx/server/query_and_chat/chat_backend.py:528-620 -> POST /api/chat/send-chat-message
+backend/onyx/server/query_and_chat/query_backend.py:34-79 -> POST /api/admin/search
+web/src/ee/lib/search/svc.ts:17-95 -> /api/search/search-flow-classification, /api/search/send-search-message, /api/search/search-history
+web/src/ee/providers/QueryControllerProvider.tsx:92-238 -> search-vs-chat routing and searchDocuments invocation
+web/src/components/search/results/Citation.tsx:37-121 -> citation rendering/openDocument path

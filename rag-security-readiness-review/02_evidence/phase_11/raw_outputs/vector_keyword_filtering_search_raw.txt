@@ -1,0 +1,6 @@
+backend/onyx/context/search/retrieval/search_runner.py:52-166 -> keyword vs hybrid dispatch, federated retrieval, result combination
+backend/onyx/document_index/vespa/vespa_document_index.py:892-980 -> hybrid_retrieval and keyword_retrieval with ACL filters in Vespa YQL
+backend/onyx/document_index/vespa/chunk_retrieval.py:203-289 -> ACL post-filter on retrieved docs and tenant check
+backend/onyx/document_index/opensearch/search.py:315-421 -> hybrid search query with common filters
+backend/onyx/document_index/opensearch/search.py:424-503 -> keyword search query with common filters
+backend/onyx/document_index/opensearch/search.py:506-582 -> semantic search query with common filters

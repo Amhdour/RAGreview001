@@ -1,0 +1,7 @@
+backend/onyx/access/access.py:114-127 -> user email and public-doc token
+backend/ee/onyx/access/access.py:43-117 -> user groups, external groups, public external groups, document source, cc_pair state
+backend/onyx/context/search/pipeline.py:69-147 -> user-selected document sets, source/time filters, ACL filters, tenant_id, project/persona/attached docs, hierarchy ids
+backend/onyx/server/features/search/api.py:66-124 -> persona document sets, attached documents, hierarchy node ids, LLM provider access via user group ids and role
+backend/onyx/server/features/search/models.py:12-29 -> query, sources, document_sets, tags, time_cutoff, persona_id, provider/model, message_history
+backend/onyx/document_index/vespa/shared_utils/vespa_request_builders.py:176-232 -> ACL list, source_type, tags, document_set, persona_id, project_id, time_cutoff, tenant_id
+backend/onyx/db/connector.py:330-356 -> last_time_perm_sync and last_time_external_group_sync

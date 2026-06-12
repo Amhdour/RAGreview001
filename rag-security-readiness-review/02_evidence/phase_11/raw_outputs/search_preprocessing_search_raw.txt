@@ -1,0 +1,5 @@
+backend/onyx/server/features/search/models.py:12-37 -> SearchRequest validation and search inputs
+backend/onyx/server/features/search/api.py:126-147 -> time_cutoff UTC normalization, BaseFilters construction
+backend/ee/onyx/server/query_and_chat/search_backend.py:106-140 -> keyword-search defaulting and request handling
+backend/onyx/context/search/pipeline.py:59-147 -> document-set access validation, auto-detected time/source filters, tenant ACL filters
+backend/onyx/tools/tool_implementations/search/search_tool.py:647-850 -> query expansion, message history/memory inputs, weighted query ordering, search fan-out

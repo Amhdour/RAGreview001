@@ -1,0 +1,11 @@
+backend/tests/integration/multitenant_tests/syncing/test_search_permissions.py
+backend/tests/integration/tests/search/test_search_api.py
+backend/tests/integration/tests/permissions/test_doc_set_permissions.py
+backend/tests/integration/tests/permissions/test_connector_permissions.py
+backend/tests/integration/tests/permissions/test_file_connector_permissions.py
+backend/tests/integration/tests/permissions/test_admin_access.py
+backend/tests/integration/tests/permissions/test_chat_scopes.py
+backend/tests/integration/tests/indexing/test_initial_permission_sync.py
+backend/tests/unit/onyx/access/test_user_file_access.py
+backend/tests/unit/onyx/tools/test_search_utils.py
+backend/tests/external_dependency_unit/slack_bot/test_slack_bot_federated_search.py
