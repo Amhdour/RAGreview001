@@ -1,0 +1,7 @@
+
+Command family: source inspection for hallucinated citation risk.
+Key paths found:
+- backend/onyx/chat/citation_processor.py:484-503
+- backend/onyx/chat/citation_utils.py:100-221
+- backend/tests/unit/onyx/chat/test_citation_processor.py
+- backend/tests/unit/onyx/chat/test_citation_utils.py

@@ -1,0 +1,6 @@
+
+Command family: source inspection for stale source risk.
+Key paths found:
+- backend/onyx/db/document.py:667-736,943-972
+- backend/onyx/server/query_and_chat/session_loading.py:476-526,840-900
+- backend/onyx/db/models.py:963-1055,3409-3458

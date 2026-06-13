@@ -1,0 +1,7 @@
+
+Command family: source inspection for misleading source risk.
+Key paths found:
+- backend/onyx/connectors/models.py:214-236
+- backend/onyx/context/search/models.py:244-307
+- backend/onyx/tools/tool_implementations/utils.py:45-118
+- web/src/components/search/results/Citation.tsx:67-123

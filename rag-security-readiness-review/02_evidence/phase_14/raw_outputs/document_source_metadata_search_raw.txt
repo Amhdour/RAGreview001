@@ -1,0 +1,7 @@
+
+Command family: rg/nl source inspection for metadata handling paths.
+Key paths found:
+- backend/onyx/connectors/models.py:214-236
+- backend/onyx/db/models.py:963-1055,3409-3458
+- backend/onyx/file_processing/extract_file_text.py:153-210,310-361
+- backend/onyx/access/models.py:10-20,158-227

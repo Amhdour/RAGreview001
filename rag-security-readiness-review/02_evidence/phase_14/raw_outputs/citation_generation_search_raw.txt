@@ -1,0 +1,6 @@
+
+Command family: rg/nl source inspection for citation generation paths.
+Key paths found:
+- backend/onyx/chat/citation_processor.py:215-247,248-531
+- backend/onyx/chat/citation_utils.py:100-221
+- backend/onyx/chat/llm_loop.py:650-663,867-1074

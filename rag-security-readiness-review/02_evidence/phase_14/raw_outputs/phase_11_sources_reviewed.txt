@@ -1,0 +1,9 @@
+
+PHASE 11 source-review inventory used as upstream evidence for PHASE 14.
+Reviewed artifacts:
+- rag-security-readiness-review/03_reports/phase_11_retrieval_acl_review_report.md
+- rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_review.md
+- rag-security-readiness-review/02_evidence/phase_11/retrieval_acl_findings.md
+- rag-security-readiness-review/02_evidence/phase_11/retrieval_entry_points.md
+- rag-security-readiness-review/02_evidence/phase_11/acl_filter_construction.md
+- rag-security-readiness-review/02_evidence/phase_11/cross_user_group_connector_risks.md

@@ -1,0 +1,11 @@
+
+Command family: find/rg inspection for tests and evidence.
+Discovered tests include:
+- backend/tests/unit/onyx/chat/test_citation_processor.py
+- backend/tests/unit/onyx/chat/test_citation_utils.py
+- backend/tests/unit/onyx/chat/test_context_files.py
+- backend/tests/unit/onyx/chat/test_chat_utils.py
+- backend/tests/unit/onyx/tools/test_tool_runner_chat_files.py
+- backend/tests/unit/onyx/tools/test_search_utils.py
+- backend/tests/unit/onyx/tools/test_search_llm_json.py
+- web/tests/e2e/chat/chat_message_rendering.spec.ts
