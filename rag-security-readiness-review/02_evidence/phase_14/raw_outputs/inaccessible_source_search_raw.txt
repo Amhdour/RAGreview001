@@ -1,0 +1,6 @@
+
+Command family: source inspection for inaccessible source risk.
+Key paths found:
+- backend/onyx/access/models.py:174-227
+- backend/onyx/db/document_set.py:119-179,241-314
+- web/src/components/search/results/Citation.tsx:75-123

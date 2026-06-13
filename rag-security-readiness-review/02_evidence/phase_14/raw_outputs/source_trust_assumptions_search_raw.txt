@@ -1,0 +1,7 @@
+
+Command family: source inspection for trust-assumption paths.
+Key paths found:
+- backend/onyx/context/search/models.py:244-307
+- backend/onyx/connectors/web/connector.py:419-604
+- backend/onyx/db/document.py:667-736
+- web/src/refresh-components/buttons/source-tag/SourceTag.tsx:267-555

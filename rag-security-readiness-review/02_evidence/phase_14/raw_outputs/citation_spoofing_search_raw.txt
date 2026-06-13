@@ -1,0 +1,7 @@
+
+Command family: source inspection for citation spoofing risk.
+Key paths found:
+- backend/onyx/chat/citation_processor.py:310-382,498-529
+- backend/onyx/file_processing/html_utils.py:42-223
+- web/src/components/search/results/Citation.tsx:67-123
+- web/src/refresh-components/buttons/source-tag/SourceTag.tsx:267-555

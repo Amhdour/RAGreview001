@@ -1,0 +1,10 @@
+
+PHASE 8 source-review inventory used as upstream evidence for PHASE 14.
+Reviewed artifacts:
+- rag-security-readiness-review/03_reports/phase_8_risk_to_code_mapping_report.md
+- rag-security-readiness-review/02_evidence/phase_8/prompt_risk_to_code.md
+- rag-security-readiness-review/02_evidence/phase_8/retrieval_acl_risk_to_code.md
+- rag-security-readiness-review/02_evidence/phase_8/connector_risk_to_code.md
+- rag-security-readiness-review/02_evidence/phase_8/risk_to_code_map.md
+- rag-security-readiness-review/02_evidence/phase_8/control_candidate_register.md
+- rag-security-readiness-review/02_evidence/phase_8/unverified_mappings.md

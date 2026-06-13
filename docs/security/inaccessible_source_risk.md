@@ -1,0 +1,13 @@
+> This is the client-facing mirror of the PHASE 14 citation/source integrity review file. The canonical evidence copy remains under rag-security-readiness-review/02_evidence/phase_14/.
+
+
+# Inaccessible Source Risk
+
+| Inaccessible source path | File/path evidence | What is confirmed | What is unverified | Potential impact | Later validation method |
+| ------------------------ | ------------------ | ----------------- | ------------------ | ---------------- | ----------------------- |
+| Source displayed to unauthorized user | `backend/onyx/access/models.py`; `backend/onyx/db/document_set.py`; `web/src/components/search/results/Citation.tsx` | ACL and document-set state exist in the backend | Whether every rendered source is rechecked against live authorization | Unauthorized users may see source labels or links | Validate source display under different user contexts |
+| Citation metadata from inaccessible document | `backend/onyx/chat/citation_processor.py`; `backend/onyx/chat/llm_loop.py` | Citation maps can be built from retrieved documents | Whether inaccessible documents are excluded from all citation displays | A citation could expose document identity | Run ACL-aware chat tests with controlled access changes |
+| Link user cannot access | `backend/onyx/context/search/models.py`; `backend/onyx/refresh-components/buttons/source-tag/SourceTag.tsx` | Links are preserved for display and open actions | Whether the link is accessible to the current viewer | Broken or unauthorized navigation target | Validate access-controlled open-document flows |
+| Missing ACL recheck before display | `backend/onyx/db/document_set.py`; `web/src/components/search/results/Citation.tsx` | ACL state is present in backend models and filters | Whether the UI ever rechecks permissions before source rendering | Displays can outlive permission changes | Add runtime authorization checks in source-display tests |
+| Frontend display without backend authorization | `web/src/components/search/results/Citation.tsx`; `web/src/refresh-components/buttons/source-tag/SourceTag.tsx` | UI rendering depends on received document data | Whether backend authorization is guaranteed for every displayed source | Source disclosure to unauthorized viewers | Test display using revoked or restricted documents |
+| Shared/public/private source boundary | `backend/onyx/access/models.py`; `backend/onyx/db/models.py`; `backend/onyx/db/document_set.py` | Public/private access states are encoded in backend models | Whether boundary transitions are consistently reflected in rendered sources | Boundary confusion | Test boundary transitions after access changes |

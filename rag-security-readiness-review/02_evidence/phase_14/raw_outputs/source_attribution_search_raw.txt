@@ -1,0 +1,8 @@
+
+Command family: rg/nl source inspection for attribution paths.
+Key paths found:
+- backend/onyx/context/search/models.py:244-307
+- backend/onyx/tools/tool_implementations/utils.py:29-118
+- backend/onyx/chat/llm_loop.py:650-663,692-1074
+- backend/onyx/connectors/web/connector.py:419-604
+- backend/onyx/db/document.py:667-716

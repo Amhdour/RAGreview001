@@ -1,0 +1,8 @@
+
+Command family: rg/nl source inspection for frontend display paths.
+Key paths found:
+- web/src/components/search/results/Citation.tsx:37-123
+- web/src/components/search/DocumentDisplay.tsx:130-156
+- web/src/refresh-components/buttons/source-tag/SourceTag.tsx:267-555
+- web/src/refresh-components/buttons/source-tag/SourceTagDetailsCard.tsx:19-176
+- web/src/app/app/message/messageComponents/timeline/renderers/search/SearchChipList.tsx:1-127
