@@ -1,0 +1,1 @@
+Reviewed tool/agent instruction sources: prompts/tool_prompts.py tool guidance, prompts/coding_agent/coding_agent.py coding-agent system prompt, tools/tool_implementations/coding_agent/coding_agent_tool.py tool definition, server/features/mcp/api.py tool-description truncation, server/features/build/sandbox/util/agent_instructions.py attachment guidance.

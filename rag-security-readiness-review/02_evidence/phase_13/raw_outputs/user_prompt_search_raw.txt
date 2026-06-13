@@ -1,0 +1,1 @@
+Reviewed user-input flow: chat/process_message.py request handling, chat/chat_utils.py chat history conversion, chat/llm_step.py history to LLM formatting, chat/llm_loop.py message history construction and reminders.

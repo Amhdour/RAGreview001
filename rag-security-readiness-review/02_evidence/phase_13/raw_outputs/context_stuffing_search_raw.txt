@@ -1,0 +1,1 @@
+Reviewed stuffing controls: reserved-token calculation, available-context token endpoints, history truncation, message-count and token limits, max selected document tokens, section-selection and expansion limits, query/result deduplication. Runtime adversarial validation not performed.

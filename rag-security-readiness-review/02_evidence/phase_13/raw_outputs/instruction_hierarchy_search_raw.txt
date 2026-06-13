@@ -1,0 +1,1 @@
+Reviewed hierarchy sources: system prompt construction, reminder messages, context-file messages, chat history flattening, tool-call response insertion, coding-agent prompts, attachment instructions. No explicit instruction-hierarchy policy language or anti-override filter was identified in the reviewed sources.

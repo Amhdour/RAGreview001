@@ -1,0 +1,1 @@
+Reviewed search/evidence sources: search_tool.py search flow, search_utils.py ranking/section merging, context/search/models.py chunk and section models, context/search/utils.py combined content formatting, context/search/pipeline.py index filter assembly, context/search/preprocessing/access_filters.py ACL helpers.

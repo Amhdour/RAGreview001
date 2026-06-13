@@ -1,0 +1,1 @@
+Reviewed retrieved-content insertion: tools/tool_implementations/utils.py LLM-facing section formatting, chat/llm_loop.py context-file serialization, search_tool.py SearchDocsResponse construction and LLM-facing response generation.

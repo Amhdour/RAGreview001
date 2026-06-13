@@ -1,0 +1,1 @@
+Reviewed prompt templates: prompts/prompt_template.py placeholder replacement, prompts/chat_prompts.py system/user reminder templates, prompts/search_prompts.py retrieval/search templates, prompts/chat_tools.py legacy tool templates, prompts/coding_agent/coding_agent.py agent prompt.

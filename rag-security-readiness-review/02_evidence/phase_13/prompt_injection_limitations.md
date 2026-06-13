@@ -1,0 +1,23 @@
+# Prompt-Injection Review Limitations
+
+- Source-only limitation.
+- Current-checkout limitation.
+- Original source unavailable.
+- Working copy unavailable.
+- Tests discovered but not executed.
+- CI not executed.
+- Runtime RAG behavior not validated.
+- Runtime LLM behavior not validated.
+- Runtime prompt-injection control behavior not validated.
+- Runtime tool/agent behavior not validated.
+- Production behavior not validated.
+- Live database unavailable.
+- Live vector/keyword index unavailable.
+- Live connector state unavailable.
+- Live LLM provider unavailable.
+- No customer data.
+- No real secrets.
+- Source evidence does not prove runtime enforcement.
+- Existing test file does not prove test passed.
+- Missing evidence does not prove control absence.
+- This review does not provide exploit instructions or validated attack results.
