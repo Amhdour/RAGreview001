@@ -1,0 +1,1 @@
+Reviewed prompt sources: chat/prompt_utils.py system prompt builder, prompts/chat_prompts.py default prompt fragments, prompts/tool_prompts.py tool guidance, chat/llm_loop.py system prompt assembly, chat_backend.py persona prompt selection.

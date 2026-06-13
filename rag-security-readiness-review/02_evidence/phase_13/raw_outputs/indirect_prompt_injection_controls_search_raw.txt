@@ -1,0 +1,1 @@
+Reviewed indirect-control candidates: file upload/context-file handling, connector content ingestion into search docs, search/tool responses that preserve source metadata, persona/project/document-set scoping, MCP tool description handling. No explicit indirect-prompt-injection blocklist or detector was identified in the reviewed sources.

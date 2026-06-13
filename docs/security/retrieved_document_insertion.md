@@ -1,0 +1,15 @@
+> This is the client-facing mirror of the PHASE 13 prompt-injection review file. The canonical evidence copy remains under rag-security-readiness-review/02_evidence/phase_13/.
+
+# Retrieved Document Insertion
+
+| Insertion path | File/path | Line reference if available | Retrieved content inserted | Formatting/delimiter evidence | Trusted/untrusted separation evidence | Evidence label | Limitation |
+| -------------- | --------- | --------------------------- | -------------------------- | ----------------------------- | ------------------------------------- | -------------- | ---------- |
+| LLM-facing search-doc serialization | backend/onyx/tools/tool_implementations/utils.py:21-119; backend/onyx/chat/llm_loop.py:570-602; backend/onyx/tools/tool_implementations/search/search_tool.py:847-1002 | tools/tool_implementations/utils.py:21-119 | Section content, title, metadata, source URL, file name | JSON-like wrapper per section | Structured output exists, but no explicit untrusted-content banner | OBSERVATION | No runtime prompt-safety proof |
+| File-associated content insertion | backend/onyx/tools/tool_implementations/utils.py:21-119; backend/onyx/chat/llm_loop.py:570-602; backend/onyx/tools/tool_implementations/search/search_tool.py:847-1002 | tools/tool_implementations/utils.py:21-119 | File chunk content from retrieved docs | `FILE_ASSOCIATED_GUIDANCE` wrapper | File content is distinguished from regular sections, not labeled untrusted | OBSERVATION | Formatting is not a security boundary |
+| Context-file prompt insertion | backend/onyx/tools/tool_implementations/utils.py:21-119; backend/onyx/chat/llm_loop.py:570-602; backend/onyx/tools/tool_implementations/search/search_tool.py:847-1002 | chat/llm_loop.py:570-602 | Attached context files and their text | JSON documents array with descriptive lead-in | The text is framed as context, but not sanitized for prompt injection | OBSERVATION | Runtime validation not shown |
+| Search-tool final response assembly | backend/onyx/tools/tool_implementations/utils.py:21-119; backend/onyx/chat/llm_loop.py:570-602; backend/onyx/tools/tool_implementations/search/search_tool.py:847-1002 | search_tool.py:847-1002 | Selected chunks/sections and metadata | SearchDocsResponse and LLM-facing string | Search output is structured before being returned to the chat stack | OBSERVATION | No malicious-content filter found |
+| Retrieved section expansion | backend/onyx/tools/tool_implementations/utils.py:21-119; backend/onyx/chat/llm_loop.py:570-602; backend/onyx/tools/tool_implementations/search/search_tool.py:847-1002 | search_utils.py:351-470; secondary_llm_flows/document_filter.py:93-203 | Adjacent chunks / full document text | Section joining and classification prompts | Expanded content is passed forward as section text | OBSERVATION | No quarantine/rejection path identified |
+
+## Notes
+- Retrieved document insertion is explicit and structured.
+- No source-only evidence showed a dedicated untrusted-content separator or anti-injection annotation for retrieved text.

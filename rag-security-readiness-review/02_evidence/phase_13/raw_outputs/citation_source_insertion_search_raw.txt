@@ -1,0 +1,1 @@
+Reviewed citation flow: chat/citation_processor.py citation modes and markdown link conversion, chat/citation_utils.py citation mapping updates and renumbering, tools/tool_runner.py citation reservation and mapping merge, tools/tool_implementations/utils.py source metadata in tool output.

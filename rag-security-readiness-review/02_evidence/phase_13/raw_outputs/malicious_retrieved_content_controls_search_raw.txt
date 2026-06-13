@@ -1,0 +1,1 @@
+Reviewed malicious-content handling: search retrieval and section expansion, context-file inclusion, HTML cleanup and string sanitization, but no post-retrieval malicious-instruction scanner or quarantine path was identified in the reviewed sources.

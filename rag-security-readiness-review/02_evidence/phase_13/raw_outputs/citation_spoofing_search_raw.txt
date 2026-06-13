@@ -1,0 +1,1 @@
+Reviewed citation-spoofing signals: citation processor markdown conversion, citation renumbering, tool output metadata fields, UI citation display. No explicit anti-spoofing validation or citation-title/url normalization policy was identified.

@@ -1,0 +1,1 @@
+Reviewed sanitization: utils/postgres_sanitization.py sanitize_string/sanitize_json_like, utils/text_processing.py unicode cleanup, document_index/vespa/indexing_utils.py metadata/content sanitization, document_index/opensearch/opensearch_document_index.py content sanitization, file_processing/html_utils.py HTML cleanup.

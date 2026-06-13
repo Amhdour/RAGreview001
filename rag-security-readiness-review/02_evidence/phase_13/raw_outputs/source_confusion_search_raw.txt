@@ -1,0 +1,1 @@
+Reviewed source-confusion signals: SearchDocsResponse metadata, citation mapping from tool responses, source_type/semantic_identifier display in UI citation component, sandbox filename derivation, document-set and ACL scoping. No explicit source-identity verification or answer-source alignment check was identified.
