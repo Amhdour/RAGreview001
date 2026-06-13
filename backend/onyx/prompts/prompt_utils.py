@@ -176,6 +176,19 @@ def clean_up_source(source_str: str) -> str:
     return source_str.replace("_", " ").title()
 
 
+def _escape_markdown_code_fence_delimiters(content: str) -> str:
+    """Prevent retrieved document text from breaking out of prompt fences.
+
+    Retrieved RAG content is wrapped in a Markdown fenced block before being sent
+    to the LLM. If the document itself contains a raw triple-backtick delimiter,
+    it can close that wrapper and turn following document text into surrounding
+    prompt instructions. Insert a zero-width space into nested delimiters so the
+    model still sees the characters while Markdown/fence parsers no longer treat
+    them as a fence boundary.
+    """
+    return content.replace("```", "``​`")
+
+
 def build_doc_context_str(
     semantic_identifier: str,
     source_type: DocumentSource,
@@ -200,7 +213,8 @@ def build_doc_context_str(
         if updated_at:
             update_str = updated_at.strftime("%B %d, %Y %H:%M")
             context_str += f"Updated: {update_str}\n"
-    context_str += f"{CODE_BLOCK_PAT.format(content.strip())}\n\n\n"
+    safe_content = _escape_markdown_code_fence_delimiters(content.strip())
+    context_str += f"{CODE_BLOCK_PAT.format(safe_content)}\n\n\n"
     return context_str
 
 
